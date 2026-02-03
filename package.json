@@ -1,0 +1,25 @@
+{
+  "name": "whatsapp-bot",
+  "version": "1.0.0",
+  "description": "Bot WhatsApp profissional com Baileys",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "baileys"
+  ],
+  "author": "Gabriel Santana @gabrielxsanttana",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@whiskeysockets/baileys": "^6.7.8",
+    "pino": "^9.5.0",
+    "qrcode-terminal": "^0.12.0",
+    "xlsx": "^0.18.5"
+  }
+}
