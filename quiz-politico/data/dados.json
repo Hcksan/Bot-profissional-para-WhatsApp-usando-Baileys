@@ -1098,5 +1098,869 @@
         }
       ]
     }
+  ],
+  "planos": [
+    {
+      "id": "pl-lula-2002",
+      "politico": "lula",
+      "ano": "2002",
+      "titulo": "\"Um Brasil para Todos\" (1º mandato)",
+      "resumo": "Foco em combate à fome (Fome Zero), geração de empregos e aumento do salário mínimo, com compromisso de manter metas de inflação e contratos. Um estudo acadêmico classificou 47% das promessas do programa como retóricas, isto é, difíceis de verificar.",
+      "fontes": [
+        {
+          "titulo": "SciELO — Programas de governo e promessas de campanha (Diniz e Oliveira)",
+          "url": "https://www.scielo.br/j/rsocp/a/hQX3HgYDXMqZxMwWKJN8dZQ/?format=pdf&lang=pt"
+        },
+        {
+          "titulo": "Alagoas 24 Horas — Época faz balanço das promessas de Lula (nota 5,2)",
+          "url": "https://www.alagoas24horas.com.br/848187/revista-epoca-faz-balanco-das-promessas-de-lula-nota-foi-52/"
+        }
+      ]
+    },
+    {
+      "id": "pl-lula-2006",
+      "politico": "lula",
+      "ano": "2006",
+      "titulo": "Programa de Governo 2007/2010 (2º mandato)",
+      "resumo": "Seis eixos, com desenvolvimento com distribuição de renda e educação de qualidade no centro. Previa obras de infraestrutura (que viraram o PAC), reforma urbana, avanços no SUS e reforma trabalhista. Cerca de 85% das promessas eram verificáveis, bem mais que em 2002.",
+      "fontes": [
+        {
+          "titulo": "Wilson Center — Programa de Governo 2007/2010 (íntegra)",
+          "url": "https://www.wilsoncenter.org/sites/default/files/media/documents/article/Plano_Governo_Lula.pdf"
+        },
+        {
+          "titulo": "Congresso em Foco — as prioridades do segundo governo Lula",
+          "url": "https://www.congressoemfoco.com.br/noticia/88691/as-prioridades-do-segundo-governo-lula"
+        }
+      ]
+    },
+    {
+      "id": "pl-lula-2022",
+      "politico": "lula",
+      "ano": "2022",
+      "titulo": "Diretrizes para a Reconstrução e Transformação do Brasil (3º mandato)",
+      "resumo": "Bolsa Família de R$ 600 com R$ 150 por criança, isenção de IR até R$ 5 mil, valorização do salário mínimo, substituição do teto de gastos, reforma tributária, desmatamento zero e volta do Ministério da Segurança Pública. Lula também prometeu fazer um mandato só. Abaixo há uma seleção de 12 promessas, com mais peso nas que ficaram pendentes. No balanço completo do g1 (36 compromissos, até junho de 2026), foram 26 cumpridas, 4 em parte e 6 não cumpridas. A Folha, que acompanhou 103 promessas, contava 28% concluídas na metade do mandato.",
+      "fontes": [
+        {
+          "titulo": "Bahia Econômica — g1: 26 das 36 promessas cumpridas",
+          "url": "https://bahiaeconomica.com.br/wp/2026/07/22/governo-lula-cumpriu-26-das-promessas-de-campanha-mostra-levantamento/"
+        },
+        {
+          "titulo": "Jornal de Brasília — metade do mandato com 28% das promessas",
+          "url": "https://jornaldebrasilia.com.br/noticias/politica-e-poder/lula-chega-a-metade-do-mandato-com-28-das-promessas-concluidas-e-17-paralisadas/"
+        }
+      ]
+    },
+    {
+      "id": "pl-lula-2026",
+      "politico": "lula",
+      "ano": "2026",
+      "titulo": "Diretrizes para o Programa de Transformação do Brasil (candidatura ao 4º mandato)",
+      "resumo": "13 eixos e 84 páginas. Fim da escala 6x1 com jornada de 40 horas, Ministério da Segurança Pública, regulação do trabalho por aplicativo e das plataformas digitais, educação integral e manutenção do arcabouço fiscal. Duas propostas repetem promessas de 2022 que não saíram do papel: o Ministério da Segurança e a regulação dos aplicativos.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra do plano 2026",
+          "url": "https://www.congressoemfoco.com.br/noticia/121121/pt-registra-novo-plano-de-governo-de-lula-no-tse-veja-a-integra"
+        },
+        {
+          "titulo": "Gazeta do Povo — plano mantém gastos e não prevê cortes",
+          "url": "https://www.gazetadopovo.com.br/eleicoes/2026/plano-de-governo-lula-economia/"
+        },
+        {
+          "titulo": "TSE — programa de governo (documento oficial)",
+          "url": "https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/120016993257"
+        }
+      ]
+    }
+  ],
+  "promessas": [
+    {
+      "id": "pr-2002-fome",
+      "politico": "lula",
+      "plano": "2002",
+      "texto": "Acabar com a fome (Fome Zero): \"três refeições por dia\" para todo brasileiro",
+      "resultado": "parcial",
+      "nota": "O Fome Zero foi criado em 2003 e serviu de embrião do Bolsa Família, mas a fome não acabou no mandato. A subalimentação caiu 82% entre 2002 e 2013, e o Brasil saiu do Mapa da Fome em 2014, já no governo Dilma.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — promessa de acabar com a fome não foi cumprida",
+          "url": "https://www.gazetadopovo.com.br/vida-e-cidadania/promessa-de-acabar-com-a-fome-nao-foi-cumprida-abis72hwstr1drxcamfg788cu/"
+        },
+        {
+          "titulo": "Instituto Lula (ligado ao ex-presidente) — Fome Zero completa 22 anos",
+          "url": "https://institutolula.org/noticias/noticias/programa-fome-zero-completa-22-anos"
+        }
+      ]
+    },
+    {
+      "id": "pr-2002-empregos",
+      "politico": "lula",
+      "plano": "2002",
+      "texto": "Criar 10 milhões de empregos",
+      "resultado": "parcial",
+      "nota": "Não atingido no 1º mandato, segundo material do PSDB (cerca de 9 milhões). Somando os dois mandatos, a RAIS registra cerca de 14,5 milhões de vínculos formais a mais entre 2002 e 2010.",
+      "fontes": [
+        {
+          "titulo": "PSDB (oposição) — governo Lula descumpre ao menos nove promessas",
+          "url": "https://www.psdb.org.br/acompanhe/noticias/governo-lula-descumpre-pelo-menos-nove-promessas/"
+        },
+        {
+          "titulo": "Unicamp — renda, emprego e desigualdade de Lula a Bolsonaro",
+          "url": "https://www.eco.unicamp.br/noticias/dimensoes-da-economia-brasileira-renda-emprego-e-desigualdade-nos-governos-lula-a-bolsonaro"
+        }
+      ]
+    },
+    {
+      "id": "pr-2002-salario",
+      "politico": "lula",
+      "plano": "2002",
+      "texto": "Dobrar o poder de compra do salário mínimo",
+      "resultado": "parcial",
+      "nota": "Alta real de cerca de 54% a 57% entre 2003 e 2010 (DIEESE e Unicamp). Foi um ganho expressivo, mas o salário mínimo não dobrou.",
+      "fontes": [
+        {
+          "titulo": "Unicamp — o poder de compra do salário mínimo de Lula a Bolsonaro",
+          "url": "https://www.eco.unicamp.br/noticias/o-poder-de-compra-do-salario-minimo-dos-governos-lula-a-bolsonaro-nota-do-cecon-n-18"
+        },
+        {
+          "titulo": "InfoMoney — reajuste real do mínimo desde o 1º ano de Lula",
+          "url": "https://www.infomoney.com.br/carreira/reajuste-real-do-minimo-foi-de-7049-desde-primeiro-ano-do-governo-lula/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2002-trabalhista",
+      "politico": "lula",
+      "plano": "2002",
+      "texto": "Reformas trabalhista e sindical",
+      "resultado": "nao_cumprida",
+      "nota": "Não avançou no 1º mandato e voltou a aparecer no programa de 2006.",
+      "fontes": [
+        {
+          "titulo": "Wilson Center — Programa de Governo 2007/2010",
+          "url": "https://www.wilsoncenter.org/sites/default/files/media/documents/article/Plano_Governo_Lula.pdf"
+        }
+      ]
+    },
+    {
+      "id": "pr-2006-pac",
+      "politico": "lula",
+      "plano": "2006",
+      "texto": "Programa de Aceleração do Crescimento (PAC) com grandes obras de infraestrutura",
+      "resultado": "parcial",
+      "nota": "Lançado em janeiro de 2007, virou a marca do 2º mandato. Um levantamento do Estadão de 2016 mostrou que, nove anos depois, só 2 das 10 principais obras anunciadas tinham sido concluídas.",
+      "fontes": [
+        {
+          "titulo": "Observatório da Imprensa — PAC, a marca do segundo mandato",
+          "url": "https://www.observatoriodaimprensa.com.br/jornal-de-debates/pac-a-marca-do-segundo-mandato-de-lula/"
+        },
+        {
+          "titulo": "Revista Oeste (oposição) — O PAC empacou",
+          "url": "https://revistaoeste.com/revista/edicao-327/o-pac-empacou/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2006-moradia",
+      "politico": "lula",
+      "plano": "2006",
+      "texto": "Reforma urbana e moradia popular",
+      "resultado": "cumprida",
+      "nota": "O Minha Casa, Minha Vida foi criado em março de 2009.",
+      "fontes": [
+        {
+          "titulo": "NSC Total — programas de Lula",
+          "url": "https://www.nsctotal.com.br/?p=2346739"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-bolsa",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Bolsa Família de R$ 600 com R$ 150 a mais por criança de até 6 anos",
+      "resultado": "cumprida",
+      "nota": "Relançado em janeiro de 2023 e consolidado na Lei 14.601/2023.",
+      "fontes": [
+        {
+          "titulo": "Câmara — Lei 14.601/2023",
+          "url": "https://www2.camara.leg.br/legin/fed/lei/2023/lei-14601-19-junho-2023-794341-normaatualizada-pl.pdf"
+        },
+        {
+          "titulo": "Exame — Bolsa Família 2023",
+          "url": "https://exame.com/brasil/guia-do-cidadao/bolsa-familia-2023-calendario-o-que-pode-mudar"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-ir",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Isentar do Imposto de Renda quem ganha até R$ 5 mil",
+      "resultado": "cumprida",
+      "nota": "Lei 15.270/2025, sancionada em novembro de 2025 e em vigor desde 2026, compensada por imposto mínimo sobre rendas acima de R$ 600 mil por ano. Analistas chegaram a considerar a promessa improvável.",
+      "fontes": [
+        {
+          "titulo": "Hondatar — Lei 15.270/2025",
+          "url": "https://www.hondatar.com.br/publicada-a-lei-15-270-2025-sancao-do-pl-1087-2025-que-amplia-a-isencao-do-irpf-e-tributa-lucros-e-dividendos-a-partir-de-2026/"
+        },
+        {
+          "titulo": "Jornal Opção — 10 promessas que Lula não cumpriu",
+          "url": "https://www.jornalopcao.com.br/colunas-e-blogs/faltou-dizer-colunas-e-blogs/10-promessas-que-lula-nao-cumpriu-e-talvez-nem-cumprira-737944/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-salario",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Voltar a dar aumento real ao salário mínimo",
+      "resultado": "cumprida",
+      "nota": "Ganhos reais de cerca de 2,8% (2023), 4,7% (2024) e 2,6% (2025), segundo o DIEESE.",
+      "fontes": [
+        {
+          "titulo": "Fundação Perseu Abramo (ligada ao PT) — indicadores de 2025",
+          "url": "https://fpabramo.org.br/indicadores-de-emprego-renda-e-pobreza-apontam-retomada-do-papel-do-estado-em-2025/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-teto",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Substituir o teto de gastos por uma nova regra fiscal",
+      "resultado": "cumprida",
+      "nota": "O arcabouço fiscal (Lei Complementar 200/2023) substituiu o teto. O déficit primário caiu de 2,28% do PIB (2023) para 0,43% (2025), mas os gastos com juros subiram e a dívida bruta continuou crescendo.",
+      "fontes": [
+        {
+          "titulo": "Planalto — Lei Complementar 200/2023",
+          "url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp200.htm"
+        },
+        {
+          "titulo": "CEPR — balanço do terceiro governo Lula",
+          "url": "https://cepr.net/pt/publications/o-brasil-no-terceiro-governo-lula-balanco-social-e-economico/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-tributaria",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Aprovar uma reforma tributária",
+      "resultado": "cumprida",
+      "nota": "EC 132/2023 e LC 214/2025. Transição de 2027 a 2033.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra da EC 132",
+          "url": "https://www.congressoemfoco.com.br/temas/economia/reforma-tributaria-veja-a-integra-da-versao-final-a-emenda-constitucional-132/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-fome",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Tirar o Brasil do Mapa da Fome até 2026",
+      "resultado": "cumprida",
+      "nota": "A FAO confirmou a saída em julho de 2025, com base na média de 2022 a 2024.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — saída do Mapa da Fome",
+          "url": "https://www.poder360.com.br/poder-governo/lula-e-governistas-comemoram-saida-do-brasil-do-mapa-da-fome/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-desmatamento",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Desmatamento zero na Amazônia (meta: 2030)",
+      "resultado": "em_andamento",
+      "nota": "Pelo PRODES, a área desmatada caiu de 9.064 km² (2022/23) para 5.796 km² (2024/25), cerca de metade do nível de 2022. Ainda está longe de zero, e o PRODES não mede a degradação por queimadas, que cresceu.",
+      "fontes": [
+        {
+          "titulo": "Olhar Digital — menor área desmatada em 11 anos (INPE)",
+          "url": "https://olhardigital.com.br/2025/10/30/ciencia-e-espaco/area-desmatada-na-amazonia-e-a-menor-em-11-anos-diz-inpe/"
+        },
+        {
+          "titulo": "IPAM — raio-x da redução do desmatamento",
+          "url": "https://ipam.org.br/wp-content/uploads/2025/09/NT_RaioX_Reducao_Desmatamento_AMZ_v03-1-2.pdf"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-seguranca",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Recriar o Ministério da Segurança Pública",
+      "resultado": "nao_cumprida",
+      "nota": "Não foi recriado e voltou a ser prometido no plano de 2026.",
+      "fontes": [
+        {
+          "titulo": "Bahia Econômica — g1: promessas não cumpridas",
+          "url": "https://bahiaeconomica.com.br/wp/2026/07/22/governo-lula-cumpriu-26-das-promessas-de-campanha-mostra-levantamento/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-orcamento",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Acabar com o orçamento secreto",
+      "resultado": "nao_cumprida",
+      "nota": "O STF proibiu o modelo em 2022, mas bilhões em emendas seguem sendo indicados sem transparência sobre os autores. O g1 lista o item como pendente.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — Lula disse, mas não fez",
+          "url": "https://www.gazetadopovo.com.br/ideias/lula-disse-mas-nao-fez-balanco-mandato-furadas/"
+        },
+        {
+          "titulo": "News Rondônia — balanço do g1",
+          "url": "https://newsrondonia.com.br/politica/2026/07/22/balanco-de-governo-de-lula-aponta-26-promessas-cumpridas"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-sigilo",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Derrubar os sigilos de 100 anos",
+      "resultado": "parcial",
+      "nota": "Alguns sigilos do governo anterior foram revistos, mas o g1 aponta que a revogação integral não ocorreu. Reportagem do Estadão indica que o governo também usou a justificativa de sigilo para negar dados.",
+      "fontes": [
+        {
+          "titulo": "ND+ — três anos: promessas não cumpridas",
+          "url": "https://ndmais.com.br/politica/promessas-de-lula-balanco-tres-anos-governo/"
+        },
+        {
+          "titulo": "Diário do Comércio — o que falta das 36 promessas",
+          "url": "https://diariodocomercio.com.br/mix/presidente-lula-fez-36-promessas-ao-ser-eleito-mas-ainda-nao-cumpriu-6-veja-quais-faltam/"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-mandato",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Fazer um mandato só (não disputar a reeleição)",
+      "resultado": "nao_cumprida",
+      "nota": "Em 2022 Lula disse que \"com 81 anos não é possível\" querer a reeleição. Em abril de 2025 anunciou que seria candidato, e disputa o 2º turno de 2026.",
+      "fontes": [
+        {
+          "titulo": "O Povo — Lula descarta novo mandato (2022)",
+          "url": "https://www.opovo.com.br/eleicoes-2022/2022/09/27/caso-venca-eleicao-lula-descarta-novo-mandato-com-81-anos-nao-e-possivel.html"
+        },
+        {
+          "titulo": "Correio Braziliense — Lula reforça que não terá segundo mandato",
+          "url": "https://www.correiobraziliense.com.br/politica/2022/10/5046831-lula-reforca-que-nao-tera-segundo-mandato-caso-venca-eleicao.html"
+        }
+      ]
+    },
+    {
+      "id": "pr-2022-apps",
+      "politico": "lula",
+      "plano": "2022",
+      "texto": "Regulamentar o trabalho por aplicativo",
+      "resultado": "nao_cumprida",
+      "nota": "O PL 12/2024 está parado na Câmara por falta de consenso. A proposta foi repetida no plano de 2026.",
+      "fontes": [
+        {
+          "titulo": "ND+ — três anos: promessas não cumpridas",
+          "url": "https://ndmais.com.br/politica/promessas-de-lula-balanco-tres-anos-governo/"
+        }
+      ]
+    }
+  ],
+  "eventos": [
+    {
+      "id": "ev-2003-fome",
+      "politico": "lula",
+      "data": "2003-01",
+      "tipo": "feito",
+      "titulo": "Posse e lançamento do Fome Zero",
+      "descricao": "Primeiro programa social do governo, depois incorporado ao Bolsa Família.",
+      "fontes": [
+        {
+          "titulo": "SciELO — Fome Zero e Renda Básica de Cidadania",
+          "url": "https://www.scielo.br/j/sausoc/a/qbJJtdWW7cw6BG69XFJY7Rk/?format=html&lang=pt"
+        }
+      ]
+    },
+    {
+      "id": "ev-2003-bf",
+      "politico": "lula",
+      "data": "2003-10",
+      "tipo": "feito",
+      "titulo": "Criação do Bolsa Família",
+      "descricao": "Unificou programas de transferência de renda do governo FHC. Passou de 3,6 milhões de famílias (2003) para 12,7 milhões (2010).",
+      "fontes": [
+        {
+          "titulo": "NSC Total — programas de Lula",
+          "url": "https://www.nsctotal.com.br/?p=2346739"
+        }
+      ]
+    },
+    {
+      "id": "ev-2004-waldomiro",
+      "politico": "lula",
+      "data": "2004-02",
+      "tipo": "escandalo",
+      "titulo": "Caso Waldomiro Diniz",
+      "descricao": "Assessor de José Dirceu na Casa Civil foi flagrado em gravação (de 2002) pedindo propina ao bicheiro Carlinhos Cachoeira. Foi condenado pela Justiça do RJ.",
+      "status": "Waldomiro condenado; Lula não foi acusado.",
+      "fontes": [
+        {
+          "titulo": "O Debate — principais escândalos nos governos Lula e Dilma",
+          "url": "https://odebateon.com.br/corrupcao-relembre-os-principais-escandalos-nos-governos-de-lula-e-dilma/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2005-mensalao",
+      "politico": "lula",
+      "data": "2005-06",
+      "tipo": "escandalo",
+      "titulo": "Mensalão",
+      "descricao": "Roberto Jefferson denunciou pagamentos mensais a deputados da base aliada. José Dirceu deixou a Casa Civil e teve o mandato de deputado cassado.",
+      "status": "STF condenou 25 de 37 réus em 2012; Lula não foi réu.",
+      "fontes": [
+        {
+          "titulo": "O Povo — Mensalão, 20 anos",
+          "url": "https://mais.opovo.com.br/jornal/politica/2025/06/06/mensalao-20-anosonde-estao-os-personagens-de-um-dos-maiores-escandalos-do-brasil-ate-entao.html"
+        }
+      ]
+    },
+    {
+      "id": "ev-2006-palocci",
+      "politico": "lula",
+      "data": "2006-03",
+      "tipo": "escandalo",
+      "titulo": "Palocci deixa o Ministério da Fazenda",
+      "descricao": "Saiu após a quebra ilegal do sigilo bancário de um caseiro que o havia acusado de frequentar uma casa usada para negociatas.",
+      "fontes": [
+        {
+          "titulo": "Wikipedia — Antonio Palocci",
+          "url": "https://en.wikipedia.org/wiki/Antonio_Palocci"
+        }
+      ]
+    },
+    {
+      "id": "ev-2006-aloprados",
+      "politico": "lula",
+      "data": "2006-09",
+      "tipo": "escandalo",
+      "titulo": "Dossiê dos \"aloprados\"",
+      "descricao": "Petistas foram presos com R$ 1,7 milhão em dinheiro vivo para comprar um dossiê contra José Serra. Lula chamou os envolvidos de \"aloprados\".",
+      "status": "Em 2007 o TSE concluiu, por unanimidade, não haver prova ligando Lula ou o PT ao caso.",
+      "fontes": [
+        {
+          "titulo": "Wikipédia — Escândalo do dossiê",
+          "url": "https://pt.wikipedia.org/wiki/Esc%C3%A2ndalo_do_dossi%C3%AA"
+        }
+      ]
+    },
+    {
+      "id": "ev-2007-pac",
+      "politico": "lula",
+      "data": "2007-01",
+      "tipo": "feito",
+      "titulo": "Lançamento do PAC",
+      "descricao": "Programa de obras que marcou o 2º mandato. Muitas das grandes obras atrasaram por anos.",
+      "fontes": [
+        {
+          "titulo": "Observatório da Imprensa — PAC, a marca do 2º mandato",
+          "url": "https://www.observatoriodaimprensa.com.br/jornal-de-debates/pac-a-marca-do-segundo-mandato-de-lula/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2008-cartoes",
+      "politico": "lula",
+      "data": "2008-02",
+      "tipo": "escandalo",
+      "titulo": "Cartões corporativos",
+      "descricao": "Revelação de gastos pessoais de altos funcionários com cartões do governo federal. A ministra da Igualdade Racial deixou o cargo.",
+      "fontes": [
+        {
+          "titulo": "Revista Oeste (oposição) — histórico de escândalos do PT",
+          "url": "https://revistaoeste.com/politica/pt-acumula-historico-de-escandalos-de-corrupcao-veja-lista/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2009-mcmv",
+      "politico": "lula",
+      "data": "2009-03",
+      "tipo": "feito",
+      "titulo": "Criação do Minha Casa, Minha Vida",
+      "descricao": "Programa de moradia popular com subsídio.",
+      "fontes": [
+        {
+          "titulo": "NSC Total — programas de Lula",
+          "url": "https://www.nsctotal.com.br/?p=2346739"
+        }
+      ]
+    },
+    {
+      "id": "ev-2010-erenice",
+      "politico": "lula",
+      "data": "2010-09",
+      "tipo": "escandalo",
+      "titulo": "Erenice Guerra deixa a Casa Civil",
+      "descricao": "A sucessora de Dilma na Casa Civil caiu após denúncias de tráfico de influência envolvendo negócios de familiares.",
+      "fontes": [
+        {
+          "titulo": "Wikipedia — Erenice Guerra",
+          "url": "https://en.wikipedia.org/wiki/Erenice_Guerra"
+        }
+      ]
+    },
+    {
+      "id": "ev-2010-balanco",
+      "politico": "lula",
+      "data": "2010-12",
+      "tipo": "numeros",
+      "titulo": "Fim dos dois primeiros mandatos",
+      "descricao": "Salário mínimo com alta real de cerca de 54% a 57%; cerca de 14,5 milhões de empregos formais a mais (RAIS 2002–2010); PIB crescendo em média 3,9% ao ano (2003–2011).",
+      "fontes": [
+        {
+          "titulo": "Unicamp — salário mínimo de Lula a Bolsonaro",
+          "url": "https://www.eco.unicamp.br/noticias/o-poder-de-compra-do-salario-minimo-dos-governos-lula-a-bolsonaro-nota-do-cecon-n-18"
+        },
+        {
+          "titulo": "UDESC — estudo sobre crescimento 2003–2011",
+          "url": "https://eventos.udesc.br/ocs/index.php/STPII/IIISIHTP/paper/download/551/481"
+        }
+      ]
+    },
+    {
+      "id": "ev-2012-mensalao",
+      "politico": "lula",
+      "data": "2012-12",
+      "tipo": "escandalo",
+      "titulo": "STF conclui o julgamento do Mensalão",
+      "descricao": "25 condenados, entre eles José Dirceu (10 anos e 10 meses), José Genoino e Delúbio Soares.",
+      "fontes": [
+        {
+          "titulo": "Wikipedia — Mensalão scandal",
+          "url": "https://en.wikipedia.org/wiki/Mensal%C3%A3o_scandal"
+        }
+      ]
+    },
+    {
+      "id": "ev-2017-condenacao",
+      "politico": "lula",
+      "data": "2017-07",
+      "tipo": "escandalo",
+      "titulo": "Condenação na Lava Jato e prisão",
+      "descricao": "Condenado pelo então juiz Sergio Moro no caso do triplex. Ficou preso por 580 dias, entre abril de 2018 e novembro de 2019.",
+      "status": "Condenações anuladas pelo STF em 2021.",
+      "fontes": [
+        {
+          "titulo": "Correio Braziliense — o que está em jogo no julgamento do STF",
+          "url": "https://www.correiobraziliense.com.br/politica/2021/04/4918324-o-que-esta-em-jogo-em-novo-julgamento-do-stf-sobre-anulacao-das-condenacoes-de-lula.html"
+        }
+      ]
+    },
+    {
+      "id": "ev-2021-anulacao",
+      "politico": "lula",
+      "data": "2021-03",
+      "tipo": "marco",
+      "titulo": "STF anula as condenações",
+      "descricao": "Fachin anulou as condenações por incompetência da 13ª Vara de Curitiba, e o plenário confirmou. Em junho de 2021, o STF manteve a decisão que declarou Moro parcial. Lula recuperou os direitos políticos.",
+      "fontes": [
+        {
+          "titulo": "Migalhas — STF: Moro foi parcial",
+          "url": "https://www.migalhas.com.br/quentes/347494/stf-moro-foi-parcial-ao-condenar-lula"
+        },
+        {
+          "titulo": "ConJur — anulação das sentenças",
+          "url": "https://www.conjur.com.br/2021-mar-12/fachin-calcula-apoio-colegas-anulacao-sentencas-lula//?print=1"
+        }
+      ]
+    },
+    {
+      "id": "ev-2022-eleito",
+      "politico": "lula",
+      "data": "2022-10",
+      "tipo": "marco",
+      "titulo": "Eleito para o 3º mandato prometendo mandato único",
+      "descricao": "\"Se eleito, serei presidente de um mandato só\", escreveu na campanha.",
+      "fontes": [
+        {
+          "titulo": "Correio Braziliense — Lula reforça que não terá 2º mandato",
+          "url": "https://www.correiobraziliense.com.br/politica/2022/10/5046831-lula-reforca-que-nao-tera-segundo-mandato-caso-venca-eleicao.html"
+        }
+      ]
+    },
+    {
+      "id": "ev-2023-bf",
+      "politico": "lula",
+      "data": "2023-01",
+      "tipo": "feito",
+      "titulo": "Bolsa Família volta com piso de R$ 600",
+      "descricao": "Mais R$ 150 por criança de até 6 anos. Cerca de R$ 170 bilhões por ano entre 2023 e 2025.",
+      "fontes": [
+        {
+          "titulo": "Câmara — Lei 14.601/2023",
+          "url": "https://www2.camara.leg.br/legin/fed/lei/2023/lei-14601-19-junho-2023-794341-normaatualizada-pl.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ev-2023-ppcdam",
+      "politico": "lula",
+      "data": "2023-01",
+      "tipo": "feito",
+      "titulo": "Retomada do plano contra o desmatamento (PPCDAm)",
+      "descricao": "O desmatamento na Amazônia caiu cerca de 50% entre 2022 e 2025, segundo o PRODES/INPE.",
+      "fontes": [
+        {
+          "titulo": "Olhar Digital — menor área desmatada em 11 anos",
+          "url": "https://olhardigital.com.br/2025/10/30/ciencia-e-espaco/area-desmatada-na-amazonia-e-a-menor-em-11-anos-diz-inpe/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2023-arcabouco",
+      "politico": "lula",
+      "data": "2023-08",
+      "tipo": "feito",
+      "titulo": "Arcabouço fiscal substitui o teto de gastos",
+      "descricao": "Nova regra limita o crescimento da despesa a uma fração do aumento da receita.",
+      "fontes": [
+        {
+          "titulo": "Planalto — LC 200/2023",
+          "url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp200.htm"
+        }
+      ]
+    },
+    {
+      "id": "ev-2023-tributaria",
+      "politico": "lula",
+      "data": "2023-12",
+      "tipo": "feito",
+      "titulo": "Reforma tributária promulgada",
+      "descricao": "EC 132/2023 cria IVA dual, cesta básica com alíquota zero e cashback.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra da EC 132",
+          "url": "https://www.congressoemfoco.com.br/temas/economia/reforma-tributaria-veja-a-integra-da-versao-final-a-emenda-constitucional-132/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2024-gaza",
+      "politico": "lula",
+      "data": "2024-02",
+      "tipo": "escandalo",
+      "titulo": "Fala sobre Gaza e Holocausto",
+      "descricao": "Lula comparou a ofensiva israelense ao Holocausto e foi declarado persona non grata por Israel.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — falas polêmicas do 3º mandato",
+          "url": "https://www.gazetadopovo.com.br/republica/quais-sao-as-declaracoes-mais-polemicas-de-lula-no-terceiro-mandato/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2024-juscelino",
+      "politico": "lula",
+      "data": "2024-06",
+      "tipo": "escandalo",
+      "titulo": "Ministro das Comunicações indiciado",
+      "descricao": "A PF indiciou Juscelino Filho por corrupção passiva e organização criminosa (uso de emendas). Lula o manteve no cargo; ele saiu em abril de 2025, após ser denunciado pela PGR.",
+      "status": "Denunciado pela PGR; a defesa nega.",
+      "fontes": [
+        {
+          "titulo": "Terra — saída de Juscelino Filho é a 10ª troca de ministro",
+          "url": "https://www.terra.com.br/noticias/brasil/politica/saida-de-juscelino-filho-apos-denuncia-e-a-10-troca-de-ministro-do-governo-lula-veja-lista,ed9d3138bde9241addb29baa076168595i8n9grf.html"
+        }
+      ]
+    },
+    {
+      "id": "ev-2024-silvio",
+      "politico": "lula",
+      "data": "2024-09",
+      "tipo": "escandalo",
+      "titulo": "Ministro dos Direitos Humanos demitido",
+      "descricao": "Silvio Almeida foi demitido após denúncias de assédio sexual confirmadas pela ONG Me Too Brasil. A PF depois o indiciou por importunação sexual.",
+      "status": "Indiciado pela PF; ele nega.",
+      "fontes": [
+        {
+          "titulo": "CNN Brasil — cronologia da crise",
+          "url": "https://www.cnnbrasil.com.br/politica/silvio-almeida-veja-a-cronologia-da-crise-que-derrubou-ministro/"
+        },
+        {
+          "titulo": "Congresso em Foco — indiciado por assédio",
+          "url": "https://www.congressoemfoco.com.br/noticia/113903/ex-ministro-silvio-almeida-e-indiciado-por-assedio-pela-pf"
+        }
+      ]
+    },
+    {
+      "id": "ev-2025-folha",
+      "politico": "lula",
+      "data": "2025-01",
+      "tipo": "numeros",
+      "titulo": "Metade do mandato: 28% das promessas cumpridas",
+      "descricao": "A Folha acompanhou 103 promessas: 28% concluídas, 29% em andamento, 25% lentas e 17% paradas.",
+      "fontes": [
+        {
+          "titulo": "Jornal de Brasília — 28% concluídas e 17% paralisadas",
+          "url": "https://jornaldebrasilia.com.br/noticias/politica-e-poder/lula-chega-a-metade-do-mandato-com-28-das-promessas-concluidas-e-17-paralisadas/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2025-inss",
+      "politico": "lula",
+      "data": "2025-04",
+      "tipo": "escandalo",
+      "titulo": "Fraude no INSS (Operação Sem Desconto)",
+      "descricao": "PF e CGU revelaram descontos não autorizados de associações em aposentadorias: cerca de R$ 6,3 bilhões entre 2019 e 2024. Os descontos começaram a crescer em 2019 e aceleraram a partir de 2023. O presidente do INSS foi afastado e o governo prometeu ressarcir as vítimas.",
+      "status": "Em investigação; ressarcimentos em andamento.",
+      "fontes": [
+        {
+          "titulo": "Bahia Notícias — o que se sabe sobre a fraude",
+          "url": "https://www.bahianoticias.com.br/noticia/306717-fraude-do-inss-o-que-se-sabe-ate-agora-sobre-o-esquema-de-descontos-ilegais-na-folha-de-aposentados-e-pensionistas"
+        },
+        {
+          "titulo": "O Povo — governo suspende descontos",
+          "url": "https://www.opovo.com.br/noticias/economia/2025/04/24/fraude-no-inss-governo-suspende-descontos-e-diz-que-valores-serao-restituidos-aos-aposentados.html"
+        }
+      ]
+    },
+    {
+      "id": "ev-2025-reeleicao",
+      "politico": "lula",
+      "data": "2025-04",
+      "tipo": "pendente",
+      "titulo": "Anuncia que vai disputar a reeleição",
+      "descricao": "Contraria a promessa de mandato único feita em 2022.",
+      "fontes": [
+        {
+          "titulo": "Portal Tela — candidatura desconsidera promessa de mandato único",
+          "url": "https://www.portaltela.com/noticias/politica/2025/04/27/lula-anuncia-candidatura-a-reeleicao-desconsiderando-promessas-de-mandato-unico/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2025-iof",
+      "politico": "lula",
+      "data": "2025-06",
+      "tipo": "marco",
+      "titulo": "Congresso derruba o aumento do IOF",
+      "descricao": "A Câmara derrubou o decreto por 383 a 98. O STF depois restabeleceu a maior parte do aumento.",
+      "fontes": [
+        {
+          "titulo": "Nord Investimentos — Congresso revoga aumento do IOF",
+          "url": "https://www.nordinvestimentos.com.br/blog/amp/congresso-revoga-aumento-iof-2025/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2025-fome",
+      "politico": "lula",
+      "data": "2025-07",
+      "tipo": "feito",
+      "titulo": "Brasil sai do Mapa da Fome",
+      "descricao": "Relatório da FAO, com dados de 2022 a 2024, cumprindo a meta de 2026 com antecedência.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — saída do Mapa da Fome",
+          "url": "https://www.poder360.com.br/poder-governo/lula-e-governistas-comemoram-saida-do-brasil-do-mapa-da-fome/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2025-ir",
+      "politico": "lula",
+      "data": "2025-11",
+      "tipo": "feito",
+      "titulo": "Sancionada a isenção de IR até R$ 5 mil",
+      "descricao": "Lei 15.270/2025: cerca de 10 milhões deixam de pagar e 5 milhões pagam menos, com imposto mínimo para rendas altas.",
+      "fontes": [
+        {
+          "titulo": "Hondatar — Lei 15.270/2025",
+          "url": "https://www.hondatar.com.br/publicada-a-lei-15-270-2025-sancao-do-pl-1087-2025-que-amplia-a-isencao-do-irpf-e-tributa-lucros-e-dividendos-a-partir-de-2026/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2025-desemprego",
+      "politico": "lula",
+      "data": "2025-12",
+      "tipo": "numeros",
+      "titulo": "Desemprego de 5,1%, o menor da série",
+      "descricao": "Trimestre encerrado em dezembro de 2025 (PNAD Contínua). Por outro lado, os juros (Selic em 15%) e a dívida bruta subiram.",
+      "fontes": [
+        {
+          "titulo": "CEPR — balanço do terceiro governo Lula",
+          "url": "https://cepr.net/pt/publications/o-brasil-no-terceiro-governo-lula-balanco-social-e-economico/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2026-pib",
+      "politico": "lula",
+      "data": "2026-03",
+      "tipo": "numeros",
+      "titulo": "PIB: 3,2% (2023), 3,4% (2024) e 2,3% (2025)",
+      "descricao": "O crescimento de 2025 foi puxado pela agropecuária (+11,7%), com desaceleração no fim do ano.",
+      "fontes": [
+        {
+          "titulo": "IBGE — PIB cresce 2,3% em 2025",
+          "url": "https://agenciadenoticias.ibge.gov.br/agencia-noticias/2012-agencia-de-noticias/noticias/45969-pib-cresce-2-3-em-2025"
+        }
+      ]
+    },
+    {
+      "id": "ev-2026-cpmi",
+      "politico": "lula",
+      "data": "2026-03",
+      "tipo": "escandalo",
+      "titulo": "CPMI do INSS e o filho do presidente",
+      "descricao": "O relator propôs indiciar Fábio Luís Lula da Silva (Lulinha) como possível sócio oculto do lobista conhecido como \"Careca do INSS\". O relatório foi rejeitado por 19 a 12, e a CPMI terminou sem texto final.",
+      "status": "Indiciamento de CPMI não tem força judicial; nenhum relatório aprovado.",
+      "fontes": [
+        {
+          "titulo": "CNN Brasil — relatório aponta Lulinha em atividades do lobista",
+          "url": "https://www.cnnbrasil.com.br/politica/analise-relatorio-aponta-lulinha-em-atividades-de-careca-do-inss/"
+        },
+        {
+          "titulo": "Jovem Pan — relatório que indiciava Lulinha é rejeitado",
+          "url": "https://jovempan.com.br/noticias/politica/cpmi-do-inss-relatorio-que-indiciava-lulinha-e-rejeitado.html"
+        }
+      ]
+    },
+    {
+      "id": "ev-2026-g1",
+      "politico": "lula",
+      "data": "2026-07",
+      "tipo": "numeros",
+      "titulo": "g1: 26 de 36 promessas cumpridas",
+      "descricao": "De janeiro de 2023 a junho de 2026: 26 cumpridas integralmente, 4 em parte e 6 não cumpridas, entre elas o Ministério da Segurança Pública e o mandato único.",
+      "fontes": [
+        {
+          "titulo": "Bahia Econômica — levantamento do g1",
+          "url": "https://bahiaeconomica.com.br/wp/2026/07/22/governo-lula-cumpriu-26-das-promessas-de-campanha-mostra-levantamento/"
+        }
+      ]
+    },
+    {
+      "id": "ev-2026-plano",
+      "politico": "lula",
+      "data": "2026-08",
+      "tipo": "marco",
+      "titulo": "Registra o plano de governo 2026",
+      "descricao": "13 eixos, com destaque para o fim da escala 6x1. Repete o Ministério da Segurança Pública e a regulação dos aplicativos prometidos em 2022.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra do plano",
+          "url": "https://www.congressoemfoco.com.br/noticia/121121/pt-registra-novo-plano-de-governo-de-lula-no-tse-veja-a-integra"
+        }
+      ]
+    }
   ]
 }

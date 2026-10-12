@@ -6,10 +6,11 @@ import Quiz from './components/Quiz.jsx';
 import Resultado from './components/Resultado.jsx';
 import Fichas from './components/Fichas.jsx';
 import Admin from './components/Admin.jsx';
+import LinhaDoTempo from './components/LinhaDoTempo.jsx';
 
 function rotaAtual() {
     const hash = window.location.hash.replace(/^#\/?/, '');
-    return ['fichas', 'admin'].includes(hash) ? hash : 'inicio';
+    return ['fichas', 'linha', 'admin'].includes(hash) ? hash : 'inicio';
 }
 
 export default function App() {
@@ -66,6 +67,7 @@ export default function App() {
             />
         );
     } else if (tela === 'fichas') conteudo = <Fichas dados={dados} />;
+    else if (tela === 'linha') conteudo = <LinhaDoTempo dados={dados} />;
     else if (tela === 'admin') conteudo = <Admin dados={dados} aoAlterar={recarregar} />;
     else conteudo = <Inicio dados={dados} aoComecar={comecar} />;
 
@@ -76,6 +78,7 @@ export default function App() {
                 <nav>
                     <button className={tela === 'inicio' ? 'ativo' : ''} onClick={() => irPara('inicio')}>Jogar</button>
                     <button className={tela === 'fichas' ? 'ativo' : ''} onClick={() => irPara('fichas')}>Fichas</button>
+                    <button className={tela === 'linha' ? 'ativo' : ''} onClick={() => irPara('linha')}>Linha do tempo</button>
                 </nav>
             </header>
             <main>{conteudo}</main>

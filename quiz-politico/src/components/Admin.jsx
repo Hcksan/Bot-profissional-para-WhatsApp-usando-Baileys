@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { login, criar, atualizar, remover } from '../api.js';
 import { TIPOS } from '../quiz.js';
 import { CATEGORIAS } from './Fichas.jsx';
+import { RESULTADOS, TIPOS_EVENTO, formatarData } from '../linhaDoTempo.js';
 
 const CHAVE_TOKEN = 'quiz-politico-token';
 
@@ -44,6 +45,33 @@ function camposDe(colecao, politicos) {
             { nome: 'titulo', rotulo: 'Título' },
             { nome: 'descricao', rotulo: 'Descrição', tipo: 'textarea' },
             { nome: 'status', rotulo: 'Situação (para processos: indiciado, réu, condenado, arquivado…)' }
+        ];
+    }
+    if (colecao === 'planos') {
+        return [
+            { nome: 'politico', rotulo: 'Político', tipo: 'select', opcoes: opcoesPoliticos },
+            { nome: 'ano', rotulo: 'Ano da eleição (ex.: 2022)' },
+            { nome: 'titulo', rotulo: 'Nome do plano' },
+            { nome: 'resumo', rotulo: 'Resumo das principais propostas', tipo: 'textarea' }
+        ];
+    }
+    if (colecao === 'promessas') {
+        return [
+            { nome: 'politico', rotulo: 'Político', tipo: 'select', opcoes: opcoesPoliticos },
+            { nome: 'plano', rotulo: 'Ano do plano em que foi prometida (ex.: 2022)' },
+            { nome: 'texto', rotulo: 'Promessa' },
+            { nome: 'resultado', rotulo: 'Resultado', tipo: 'select', opcoes: Object.entries(RESULTADOS) },
+            { nome: 'nota', rotulo: 'O que de fato aconteceu (com números)', tipo: 'textarea' }
+        ];
+    }
+    if (colecao === 'eventos') {
+        return [
+            { nome: 'politico', rotulo: 'Político', tipo: 'select', opcoes: opcoesPoliticos },
+            { nome: 'data', rotulo: 'Data no formato AAAA-MM (ex.: 2025-04)' },
+            { nome: 'tipo', rotulo: 'Tipo', tipo: 'select', opcoes: Object.entries(TIPOS_EVENTO) },
+            { nome: 'titulo', rotulo: 'Título' },
+            { nome: 'descricao', rotulo: 'Descrição', tipo: 'textarea' },
+            { nome: 'status', rotulo: 'Situação (para escândalos: indiciado, réu, condenado, arquivado…)' }
         ];
     }
     return [
@@ -159,7 +187,26 @@ function Login({ aoEntrar }) {
     );
 }
 
-const ABAS = { itens: 'Perguntas do quiz', fatos: 'Fichas (fatos)', politicos: 'Políticos' };
+const ABAS = {
+    itens: 'Perguntas do quiz',
+    fatos: 'Fichas (fatos)',
+    planos: 'Planos de governo',
+    promessas: 'Promessas',
+    eventos: 'Linha do tempo',
+    politicos: 'Políticos'
+};
+
+// Etiqueta secundária e texto principal de cada registro na lista do admin
+function resumoDoRegistro(aba, x) {
+    switch (aba) {
+        case 'itens': return [TIPOS[x.tipo] || x.tipo, x.texto];
+        case 'fatos': return [CATEGORIAS[x.categoria] || x.categoria, x.titulo];
+        case 'planos': return [x.ano, x.titulo];
+        case 'promessas': return [`${x.plano} · ${RESULTADOS[x.resultado] || x.resultado}`, x.texto];
+        case 'eventos': return [`${formatarData(x.data)} · ${TIPOS_EVENTO[x.tipo] || x.tipo}`, x.titulo];
+        default: return [null, x.nome];
+    }
+}
 
 export default function Admin({ dados, aoAlterar }) {
     const [token, setToken] = useState(lerToken);
@@ -233,20 +280,22 @@ export default function Admin({ dados, aoAlterar }) {
                         <input placeholder="Filtrar…" value={filtro} onChange={e => setFiltro(e.target.value)} />
                     </div>
                     <ul className="lista-admin">
-                        {lista.map(x => (
+                        {lista.map(x => {
+                            const [secundaria, principal] = resumoDoRegistro(aba, x);
+                            return (
                             <li key={x.id}>
                                 <div>
                                     <span className="etiqueta">{aba === 'politicos' ? x.partido : nomePolitico[x.politico] ?? x.politico}</span>
-                                    {aba === 'itens' && <span className="etiqueta tema">{TIPOS[x.tipo] || x.tipo}</span>}
-                                    {aba === 'fatos' && <span className="etiqueta tema">{CATEGORIAS[x.categoria] || x.categoria}</span>}
-                                    <p>{aba === 'itens' ? x.texto : aba === 'fatos' ? x.titulo : x.nome}</p>
+                                    {secundaria && <span className="etiqueta tema">{secundaria}</span>}
+                                    <p>{principal}</p>
                                 </div>
                                 <div className="acoes">
                                     <button className="link" onClick={() => setEditando(x)}>Editar</button>
                                     <button className="link perigo" onClick={() => apagar(x)}>Remover</button>
                                 </div>
                             </li>
-                        ))}
+                            );
+                        })}
                     </ul>
                 </>
             )}

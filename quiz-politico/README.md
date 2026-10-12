@@ -37,7 +37,12 @@ Acesse `/#/admin` (há um link discreto no rodapé) e entre com a senha. Nele d�
 
 - **Perguntas do quiz**: autor (oculto no jogo), tipo (fez, falou, defendeu, apoiou, propõe), tema, texto anonimizado, contexto revelado no final e fontes.
 - **Fichas**: realizações, polêmicas/processos e propostas de cada político.
+- **Planos de governo**: um registro por eleição (ano, nome do plano, resumo).
+- **Promessas**: ligadas ao ano do plano, com resultado (cumprida, em parte, em andamento, não cumprida) e o que de fato aconteceu.
+- **Linha do tempo**: eventos com data `AAAA-MM` e tipo (entregue, ficou para trás, escândalo/polêmica, marco, números).
 - **Políticos**: para incluir outros nomes no jogo.
+
+A tela **Linha do tempo** (`/#/linha`) compara os planos de governo ano a ano, com o placar de promessas, e mostra a cronologia com filtros. Hoje ela tem dados de Lula (planos de 2002, 2006, 2022 e 2026); outros políticos aparecem nela assim que forem cadastrados pelo admin.
 
 Fontes são digitadas uma por linha no formato `Título | https://link`.
 

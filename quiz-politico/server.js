@@ -14,13 +14,18 @@ const VALIDADE_TOKEN_MS = 8 * 60 * 60 * 1000;
 const COLECOES = {
     itens: ['politico', 'tipo', 'texto'],
     fatos: ['politico', 'categoria', 'titulo'],
+    planos: ['politico', 'ano', 'titulo'],
+    promessas: ['politico', 'plano', 'texto', 'resultado'],
+    eventos: ['politico', 'data', 'tipo', 'titulo'],
     politicos: ['id', 'nome']
 };
 
 const tokens = new Map();
 
 async function lerDados() {
-    return JSON.parse(await fs.readFile(ARQUIVO_DADOS, 'utf8'));
+    const dados = JSON.parse(await fs.readFile(ARQUIVO_DADOS, 'utf8'));
+    for (const c of Object.keys(COLECOES)) dados[c] ??= [];
+    return dados;
 }
 
 // Escrita atômica: grava num arquivo temporário e renomeia
@@ -116,8 +121,10 @@ for (const colecao of Object.keys(COLECOES)) {
     app.delete(`/api/${colecao}/:id`, exigirAdmin, (req, res, next) => comLock(async () => {
         const dados = await lerDados();
         if (colecao === 'politicos') {
-            const emUso = [...dados.itens, ...dados.fatos].some(x => x.politico === req.params.id);
-            if (emUso) return res.status(409).json({ erro: 'Remova antes os itens e fatos deste político' });
+            const emUso = Object.keys(COLECOES)
+                .filter(c => c !== 'politicos')
+                .some(c => (dados[c] || []).some(x => x.politico === req.params.id));
+            if (emUso) return res.status(409).json({ erro: 'Remova antes os registros deste político' });
         }
         const antes = dados[colecao].length;
         dados[colecao] = dados[colecao].filter(x => x.id !== req.params.id);

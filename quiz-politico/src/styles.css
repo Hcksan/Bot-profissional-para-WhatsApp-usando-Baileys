@@ -150,3 +150,69 @@ h2 { font-size: 1.3rem; margin: 32px 0 12px; }
     .botoes-inicio button { width: 100%; }
     .rodape { flex-direction: column; }
 }
+
+/* Linha do tempo */
+:root {
+    --ok: #15803d; --parcial: #b45309; --andamento: #1d4ed8; --falhou: #b91c1c;
+    --ev-feito: #15803d; --ev-pendente: #b45309; --ev-escandalo: #b91c1c; --ev-marco: #1d4ed8; --ev-numeros: #64748b;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ok: #4ade80; --parcial: #fbbf24; --andamento: #93b4ff; --falhou: #f87171;
+        --ev-feito: #4ade80; --ev-pendente: #fbbf24; --ev-escandalo: #f87171; --ev-marco: #93b4ff; --ev-numeros: #a5a29b;
+    }
+}
+.res-cumprida, .ev-feito { --c: var(--ok); }
+.res-parcial { --c: var(--parcial); }
+.res-em_andamento { --c: var(--andamento); }
+.res-nao_cumprida { --c: var(--falhou); }
+.ev-pendente { --c: var(--ev-pendente); }
+.ev-escandalo { --c: var(--ev-escandalo); }
+.ev-marco { --c: var(--ev-marco); }
+.ev-numeros { --c: var(--ev-numeros); }
+
+.selo { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--c); border: 1px solid var(--c); border-radius: 6px; padding: 1px 7px; white-space: nowrap; }
+.bolinha { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-right: 6px; vertical-align: middle; }
+
+.planos { display: grid; gap: 14px; }
+.plano { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 18px; }
+.plano-topo { display: flex; gap: 12px; align-items: baseline; }
+.plano-topo h3 { margin: 0; font-size: 1.05rem; }
+.ano { font-size: 1.6rem; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
+.plano > p { color: var(--texto-suave); margin: 10px 0; }
+
+.placar-promessas { margin: 12px 0; }
+.barra-empilhada { display: flex; gap: 2px; height: 12px; border-radius: 999px; overflow: hidden; }
+.barra-empilhada .seg { background: var(--c); min-width: 6px; }
+.legenda { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 0.85rem; color: var(--texto-suave); }
+
+.promessas { list-style: none; padding: 0; margin: 0 0 8px; border-top: 1px solid var(--borda); }
+.promessas li { border-bottom: 1px solid var(--borda); }
+.promessas summary { display: flex; gap: 10px; align-items: baseline; padding: 10px 0; cursor: pointer; list-style: none; }
+.promessas summary::-webkit-details-marker { display: none; }
+.promessas summary::after { content: '+'; margin-left: auto; color: var(--texto-suave); }
+.promessas details[open] summary::after { content: '–'; }
+.promessas summary .selo { flex-shrink: 0; min-width: 104px; text-align: center; }
+.promessas details > p { margin: 0 0 6px; font-size: 0.95rem; }
+.promessas details { padding-bottom: 2px; }
+.promessas details[open] { padding-bottom: 10px; }
+
+.filtros { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.filtros button { border: 1px solid var(--borda); background: var(--superficie); border-radius: 999px; padding: 5px 12px; font-size: 0.9rem; }
+.filtros button.ativo { background: var(--texto); color: var(--fundo); border-color: var(--texto); }
+
+.cronologia, .cronologia ol { list-style: none; padding: 0; margin: 0; }
+.ano-bloco { position: relative; padding-left: 22px; border-left: 2px solid var(--borda); margin-left: 6px; padding-bottom: 8px; }
+.ano-titulo { margin: 0 0 10px; font-size: 1.15rem; position: relative; }
+.ano-titulo::before { content: ''; position: absolute; left: -30px; top: 0.35em; width: 12px; height: 12px; border-radius: 50%; background: var(--texto); border: 2px solid var(--fundo); }
+.evento { background: var(--superficie); border: 1px solid var(--borda); border-left: 4px solid var(--c); border-radius: var(--raio); padding: 14px 16px; margin-bottom: 10px; }
+.evento-topo { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.evento time { font-size: 0.85rem; color: var(--texto-suave); font-variant-numeric: tabular-nums; }
+.evento h4 { margin: 8px 0 4px; font-size: 1rem; }
+.evento p { margin: 0 0 6px; }
+
+@media (max-width: 480px) {
+    .promessas summary { flex-direction: column; gap: 4px; }
+    .promessas summary::after { display: none; }
+    .topo nav button { padding: 6px 8px; }
+}
