@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { carregarDados } from './api.js';
+import { carregarDados, modoEstatico } from './api.js';
 import { montarRodada } from './quiz.js';
 import Inicio from './components/Inicio.jsx';
 import Quiz from './components/Quiz.jsx';
@@ -68,7 +68,11 @@ export default function App() {
         );
     } else if (tela === 'fichas') conteudo = <Fichas dados={dados} />;
     else if (tela === 'linha') conteudo = <LinhaDoTempo dados={dados} />;
-    else if (tela === 'admin') conteudo = <Admin dados={dados} aoAlterar={recarregar} />;
+    else if (tela === 'admin') {
+        conteudo = modoEstatico
+            ? <p className="aviso">Esta é uma versão de demonstração sem servidor, então o painel admin não está disponível. Rode o projeto com <code>npm start</code> para usá-lo.</p>
+            : <Admin dados={dados} aoAlterar={recarregar} />;
+    }
     else conteudo = <Inicio dados={dados} aoComecar={comecar} />;
 
     return (
@@ -87,7 +91,7 @@ export default function App() {
                     Ferramenta educativa, não é recomendação de voto. Todo conteúdo tem fonte; confira e tire suas conclusões.
                     {dados?.meta?.atualizadoEm && <> Dados atualizados em {new Date(dados.meta.atualizadoEm + 'T12:00').toLocaleDateString('pt-BR')}.</>}
                 </p>
-                <button className="link-discreto" onClick={() => irPara('admin')}>Admin</button>
+                {!modoEstatico && <button className="link-discreto" onClick={() => irPara('admin')}>Admin</button>}
             </footer>
         </div>
     );

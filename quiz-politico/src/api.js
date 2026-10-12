@@ -19,7 +19,11 @@ async function requisicao(caminho, { metodo = 'GET', corpo, token } = {}) {
     return dados;
 }
 
-export const carregarDados = () => requisicao('/dados');
+// Versão estática (sem servidor): os dados vêm embutidos na página e o admin fica desativado
+export const modoEstatico = typeof window !== 'undefined' && Boolean(window.__DADOS__);
+
+export const carregarDados = () =>
+    modoEstatico ? Promise.resolve(window.__DADOS__) : requisicao('/dados');
 export const login = senha => requisicao('/login', { metodo: 'POST', corpo: { senha } });
 export const criar = (colecao, item, token) => requisicao(`/${colecao}`, { metodo: 'POST', corpo: item, token });
 export const atualizar = (colecao, id, item, token) =>
