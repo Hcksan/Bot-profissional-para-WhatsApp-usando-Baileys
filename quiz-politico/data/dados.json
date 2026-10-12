@@ -1171,6 +1171,57 @@
           "url": "https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/120016993257"
         }
       ]
+    },
+    {
+      "id": "pl-jair-2018",
+      "politico": "jair",
+      "ano": "2018",
+      "titulo": "\"O Caminho da Prosperidade\" (mandato 2019–2022)",
+      "resumo": "81 páginas. Combate à criminalidade e à corrupção como prioridades, superministério da Economia, reforma da Previdência (com capitalização), privatizações e venda de imóveis para reduzir a dívida, superávit primário já em 2020, armas para o cidadão e fim do \"toma lá dá cá\". Abaixo há uma seleção das promessas mais marcantes. No balanço completo do g1 (58 compromissos), foram 19 cumpridas (33%), 17% em parte e 50% não cumpridas até dezembro de 2022.",
+      "fontes": [
+        {
+          "titulo": "InfoMoney — plano propõe superministério e nova carteira de trabalho",
+          "url": "https://www.infomoney.com.br/?p=59998"
+        },
+        {
+          "titulo": "O Povo — governo Bolsonaro cumpriu um terço das promessas (g1)",
+          "url": "https://www.opovo.com.br/noticias/politica/2023/01/05/governo-bolsonaro-cumpriu-um-terco-das-promessas-feitas-durante-a-campanha-eleitoral.html"
+        }
+      ]
+    },
+    {
+      "id": "pl-jair-2022",
+      "politico": "jair",
+      "ano": "2022",
+      "titulo": "Plano para a reeleição (derrotado)",
+      "resumo": "Prioridades: manter o Auxílio Brasil em R$ 600 a partir de 2023 e isentar do IR quem ganha até cinco salários mínimos, que já era promessa de 2018. Como Bolsonaro perdeu a eleição, as propostas não chegaram a ser testadas. O orçamento de 2023 enviado pelo próprio governo, porém, previa benefício médio de R$ 405.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — Auxílio de R$ 600 em 2023 precisará de PEC",
+          "url": "https://www.poder360.com.br/governo/auxilio-brasil-de-r-600-em-2023-precisara-de-pec-diz-bolsonaro/"
+        },
+        {
+          "titulo": "Jornal de Brasília — mesmo sem recursos, fala em novo aumento",
+          "url": "https://jornaldebrasilia.com.br/noticias/politica-e-poder/mesmo-sem-recursos-bolsonaro-fala-em-novo-aumento-para-o-auxilio/"
+        }
+      ]
+    },
+    {
+      "id": "pl-flavio-2026",
+      "politico": "flavio",
+      "ano": "2026",
+      "titulo": "Plano de governo 2026 (candidatura a presidente)",
+      "resumo": "75 a 76 páginas e 9 eixos, de linha liberal-conservadora. Segurança como prioridade, Estado enxuto, revisão da reforma tributária e manutenção dos programas sociais. Flávio nunca governou, então não há como medir o cumprimento. Ao lado de cada proposta está o que ele fez sobre o tema como senador, quando há registro.",
+      "fontes": [
+        {
+          "titulo": "Estado de Minas — principais propostas",
+          "url": "https://www.em.com.br/politica/2026/08/7490602-flavio-bolsonaro-2026-conheca-as-principais-propostas-do-plano-de-governo.html"
+        },
+        {
+          "titulo": "Plano de Governo 2026 — Flávio Bolsonaro",
+          "url": "https://planodegoverno2026.com.br/candidatos/presidente/flavio-bolsonaro/"
+        }
+      ]
     }
   ],
   "promessas": [
@@ -1467,6 +1518,298 @@
         {
           "titulo": "ND+ — três anos: promessas não cumpridas",
           "url": "https://ndmais.com.br/politica/promessas-de-lula-balanco-tres-anos-governo/"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-previdencia",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Reforma da Previdência",
+      "resultado": "parcial",
+      "nota": "Aprovada em 2019 (EC 103), com idade mínima e economia estimada em R$ 800 bilhões em 10 anos. O modelo de capitalização, que estava no plano, ficou de fora.",
+      "fontes": [
+        {
+          "titulo": "Câmara — aprovação do texto-base",
+          "url": "https://www.camara.leg.br/noticias/562111-com-379-votos-favoraveis-camara-aprova-texto-base-da-reforma-da-previdencia/"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-bc",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Autonomia do Banco Central",
+      "resultado": "cumprida",
+      "nota": "Lei Complementar 179/2021, confirmada pelo STF.",
+      "fontes": [
+        {
+          "titulo": "O Povo — balanço do g1",
+          "url": "https://www.opovo.com.br/noticias/politica/2023/01/05/governo-bolsonaro-cumpriu-um-terco-das-promessas-feitas-durante-a-campanha-eleitoral.html"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-armas",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Facilitar o acesso a armas pelo cidadão",
+      "resultado": "cumprida",
+      "nota": "Feito por decretos: os registros de CACs subiram cerca de 474%. O STF suspendeu trechos em 2022, e os decretos foram revogados em 2023.",
+      "fontes": [
+        {
+          "titulo": "O Povo — registro de armas dispara quase 500%",
+          "url": "https://www.opovo.com.br/noticias/mundo/2022/06/10260014-registro-de-armas-pessoais-dispara-quase-500-sob-governo-bolsonaro.html"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-privatizacoes",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Privatizar estatais para reduzir a dívida",
+      "resultado": "parcial",
+      "nota": "Em 2019 nenhuma estatal tinha sido privatizada. A principal venda foi a Eletrobras, em 2022 (cerca de R$ 33 bilhões). Privatizações estão entre as áreas com mais promessas não cumpridas no balanço do g1.",
+      "fontes": [
+        {
+          "titulo": "Terra — Bolsonaro deixa de lado 12 grandes promessas",
+          "url": "https://www.terra.com.br/noticias/brasil/politica/bolsonaro-deixa-de-lado-12-grandes-promessas-da-campanha,8c4efcb4873316ba8d4e20655650fa87vvargg4k.html"
+        },
+        {
+          "titulo": "Money Times — oferta da Eletrobras",
+          "url": "https://www.moneytimes.com.br/eletrobras-elet3-confirma-oferta-de-privatizacao-ao-preco-de-r-42-por-acao/"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-ir",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Isentar do IR quem ganha até cinco salários mínimos",
+      "resultado": "nao_cumprida",
+      "nota": "Em 2019 a meta foi reduzida para R$ 3 mil, que também não saiu, e a defasagem da tabela bateu recorde. A promessa voltou no plano de 2022. A isenção até R$ 5 mil só foi aprovada em 2025, no governo Lula.",
+      "fontes": [
+        {
+          "titulo": "UFPel — promessa não sai do papel e defasagem do IR bate recorde",
+          "url": "https://wp.ufpel.edu.br/superavit/2022/04/26/promessa-de-bolsonaro-nao-sai-do-papel-e-defasagem-do-ir-quebra-recorde-historico/"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-reeleicao",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Acabar com a reeleição",
+      "resultado": "nao_cumprida",
+      "nota": "A reeleição continuou valendo, e Bolsonaro disputou um segundo mandato em 2022.",
+      "fontes": [
+        {
+          "titulo": "O Povo — balanço do g1",
+          "url": "https://www.opovo.com.br/noticias/politica/2023/01/05/governo-bolsonaro-cumpriu-um-terco-das-promessas-feitas-durante-a-campanha-eleitoral.html"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-jerusalem",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Transferir a embaixada do Brasil em Israel para Jerusalém",
+      "resultado": "nao_cumprida",
+      "nota": "Em março de 2019 o governo abriu apenas um escritório comercial em Jerusalém, após ameaça de boicote de países árabes às exportações brasileiras.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — escritório comercial em Jerusalém",
+          "url": "https://www.poder360.com.br/governo/bolsonaro-confirma-abertura-de-escritorio-comercial-em-jerusalem/"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-excludente",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Excludente de ilicitude para policiais",
+      "resultado": "nao_cumprida",
+      "nota": "Projetos enviados em 2019 e 2022 não foram aprovados pelo Congresso.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — projeto de excludente para GLO",
+          "url": "https://www.poder360.com.br/governo/bolsonaro-envia-projeto-sobre-excludente-de-ilicitude-para-militares-em-glo/"
+        }
+      ]
+    },
+    {
+      "id": "pr-j18-tomaladaca",
+      "politico": "jair",
+      "plano": "2018",
+      "texto": "Governar sem \"toma lá dá cá\" e apoiar a Lava Jato",
+      "resultado": "nao_cumprida",
+      "nota": "O governo distribuiu cargos a partidos do Centrão em troca de apoio, e o ex-juiz Sergio Moro deixou o Ministério da Justiça em 2020 acusando interferência na PF.",
+      "fontes": [
+        {
+          "titulo": "FGV Social — clipping (checagem Lupa)",
+          "url": "https://www.cps.fgv.br/cps/bd/clippings/zc3780.pdf"
+        },
+        {
+          "titulo": "Jovem Pan — promessas realizadas e deixadas de lado",
+          "url": "https://jovempan.com.br/noticias/politica/apos-meio-mandato-veja-promessas-de-bolsonaro-que-foram-realizadas-e-as-deixadas-de-lado.html"
+        }
+      ]
+    },
+    {
+      "id": "pr-j22-auxilio",
+      "politico": "jair",
+      "plano": "2022",
+      "texto": "Manter o Auxílio Brasil em R$ 600 em 2023",
+      "resultado": "proposta",
+      "nota": "Não testada, porque ele perdeu a eleição. O orçamento de 2023 enviado pelo próprio governo previa média de R$ 405 por família, e a manutenção dos R$ 600 dependeria de PEC (custo de cerca de R$ 60 bilhões por ano).",
+      "fontes": [
+        {
+          "titulo": "Poder360 — R$ 600 em 2023 precisará de PEC",
+          "url": "https://www.poder360.com.br/governo/auxilio-brasil-de-r-600-em-2023-precisara-de-pec-diz-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "pr-j22-ir",
+      "politico": "jair",
+      "plano": "2022",
+      "texto": "Isentar do IR quem ganha até cinco salários mínimos (repetida de 2018)",
+      "resultado": "proposta",
+      "nota": "Não testada. Era a mesma promessa de 2018, não cumprida nos quatro anos de governo, e não tinha espaço no orçamento de 2023.",
+      "fontes": [
+        {
+          "titulo": "Correio Braziliense — edição de 11/08/2022",
+          "url": "https://edicao.correiobraziliense.com.br/correiobraziliense/2022/08/11/1457df/pdf/A02-POL-1108-DIG.pdf"
+        }
+      ]
+    },
+    {
+      "id": "pr-f26-seguranca",
+      "politico": "flavio",
+      "plano": "2026",
+      "texto": "Classificar facções e milícias como terroristas, reduzir a maioridade penal e adotar castração química para estupradores",
+      "resultado": "proposta",
+      "nota": "Eixo prioritário (\"Brasil sem Medo\").",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — propostas para a segurança",
+          "url": "https://www.gazetadopovo.com.br/eleicoes/2026/propostas-flavio-bolsonaro-plano-de-governo-seguranca-publica/"
+        }
+      ]
+    },
+    {
+      "id": "pr-f26-ministerios",
+      "politico": "flavio",
+      "plano": "2026",
+      "texto": "Cortar ao menos 10 ministérios e reduzir cargos comissionados",
+      "resultado": "proposta",
+      "nota": "O pai prometeu algo parecido em 2018 e criou o superministério da Economia.",
+      "fontes": [
+        {
+          "titulo": "Folha/QConcursos — propostas de Lula e Flávio",
+          "url": "https://folha.qconcursos.com/n/eleicoes-2026-segundo-turno-propostas-concursos"
+        }
+      ]
+    },
+    {
+      "id": "pr-f26-ir",
+      "politico": "flavio",
+      "plano": "2026",
+      "texto": "Manter a isenção do IR para quem ganha até R$ 5 mil",
+      "resultado": "proposta",
+      "nota": "Coerente com seu voto: o Senado aprovou a isenção por unanimidade em novembro de 2025, e ele votou a favor, criticando pontos do texto. A Lupa classificou como falso que ele queira revogá-la.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — Flávio defende Bolsa Família e isenção do IR",
+          "url": "https://www.poder360.com.br/poder-eleicoes/flavio-bolsonaro-defende-bolsa-familia-e-isencao-de-ir-ate-r-5-000/"
+        },
+        {
+          "titulo": "Lupa — é falso que Flávio prometeu revogar a isenção",
+          "url": "https://www.agencialupa.org/noticias/2026/04/29/e-falso-que-flavio-bolsonaro-prometeu-revogar-isencao-do-ir"
+        }
+      ]
+    },
+    {
+      "id": "pr-f26-sociais",
+      "politico": "flavio",
+      "plano": "2026",
+      "texto": "Manter os programas sociais existentes, como o Bolsa Família, com combate a fraudes",
+      "resultado": "proposta",
+      "nota": "O plano não cita o Bolsa Família pelo nome, mas Flávio passou a defender o programa publicamente. Checagens classificaram como falsas as montagens que diziam que ele acabaria com o programa.",
+      "fontes": [
+        {
+          "titulo": "Brasil em Folhas — plano contradiz montagens",
+          "url": "https://www.brasilemfolhas.com.br/2026/10/plano-de-flavio-bolsonaro-contradiz-montagens-sobre-fim-do-bolsa-familia-e-do-sus/"
+        }
+      ]
+    },
+    {
+      "id": "pr-f26-tributaria",
+      "politico": "flavio",
+      "plano": "2026",
+      "texto": "Rever a reforma tributária para reduzir o IVA e cortar exceções setoriais",
+      "resultado": "proposta",
+      "nota": "Dependeria de nova emenda constitucional aprovada pelo Congresso.",
+      "fontes": [
+        {
+          "titulo": "Band — perfil e propostas",
+          "url": "https://www.band.com.br/politica/eleicoes/eleicoes-2026-conheca-as-propostas-e-o-perfil-de-flavio-bolsonaro-pl"
+        }
+      ]
+    },
+    {
+      "id": "pr-f26-privatizacoes",
+      "politico": "flavio",
+      "plano": "2026",
+      "texto": "Retomar privatizações \"com critério\", sem vender Petrobras, Banco do Brasil e Caixa",
+      "resultado": "proposta",
+      "nota": "A exclusão das três estatais foi dita pelo coordenador econômico Adolfo Sachsida; o plano escrito não cita a Petrobras.",
+      "fontes": [
+        {
+          "titulo": "Forbes — Petrobras, BB e Caixa serão privatizados?",
+          "url": "https://forbes.com.br/forbes-money/2026/10/petrobras-bb-e-caixa-serao-privatizados-veja-o-que-diz-coordenador-de-flavio-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "pr-l26-6x1",
+      "politico": "lula",
+      "plano": "2026",
+      "texto": "Fim da escala 6x1, com jornada de 40 horas sem corte de salário",
+      "resultado": "proposta",
+      "nota": "Principal novidade do plano. Depende de aprovação do Congresso.",
+      "fontes": [
+        {
+          "titulo": "Band — propostas de Lula",
+          "url": "https://www.band.com.br/politica/eleicoes/eleicoes-2026-conheca-o-perfil-e-as-principais-propostas-de-lula-pt"
+        }
+      ]
+    },
+    {
+      "id": "pr-l26-seguranca",
+      "politico": "lula",
+      "plano": "2026",
+      "texto": "Criar o Ministério da Segurança Pública (repetida de 2022)",
+      "resultado": "proposta",
+      "nota": "Prometida em 2022 e não cumprida no 3º mandato.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra do plano",
+          "url": "https://www.congressoemfoco.com.br/noticia/121121/pt-registra-novo-plano-de-governo-de-lula-no-tse-veja-a-integra"
+        }
+      ]
+    },
+    {
+      "id": "pr-l26-apps",
+      "politico": "lula",
+      "plano": "2026",
+      "texto": "Regular o trabalho por aplicativo (repetida de 2022)",
+      "resultado": "proposta",
+      "nota": "O PL 12/2024 está parado na Câmara.",
+      "fontes": [
+        {
+          "titulo": "Band — propostas de Lula",
+          "url": "https://www.band.com.br/politica/eleicoes/eleicoes-2026-conheca-o-perfil-e-as-principais-propostas-de-lula-pt"
         }
       ]
     }
@@ -1959,6 +2302,630 @@
         {
           "titulo": "Congresso em Foco — íntegra do plano",
           "url": "https://www.congressoemfoco.com.br/noticia/121121/pt-registra-novo-plano-de-governo-de-lula-no-tse-veja-a-integra"
+        }
+      ]
+    },
+    {
+      "id": "ej-2018-facada",
+      "politico": "jair",
+      "data": "2018-09",
+      "tipo": "marco",
+      "titulo": "Esfaqueado em campanha e, em outubro, eleito presidente",
+      "descricao": "Atacado a faca em Juiz de Fora durante um ato de campanha; venceu Fernando Haddad no 2º turno.",
+      "fontes": [
+        {
+          "titulo": "Wikipedia — Attempted assassination of Jair Bolsonaro",
+          "url": "https://en.wikipedia.org/wiki/Attempted_assassination_of_Jair_Bolsonaro"
+        }
+      ]
+    },
+    {
+      "id": "ej-2019-armas",
+      "politico": "jair",
+      "data": "2019-01",
+      "tipo": "feito",
+      "titulo": "Primeiros decretos de flexibilização de armas",
+      "descricao": "Série de decretos até 2022 ampliou posse, porte e compras por CACs (registros de CACs subiram cerca de 474%).",
+      "fontes": [
+        {
+          "titulo": "O Povo — registro de armas dispara quase 500%",
+          "url": "https://www.opovo.com.br/noticias/mundo/2022/06/10260014-registro-de-armas-pessoais-dispara-quase-500-sob-governo-bolsonaro.html"
+        }
+      ]
+    },
+    {
+      "id": "ej-2019-jerusalem",
+      "politico": "jair",
+      "data": "2019-03",
+      "tipo": "pendente",
+      "titulo": "Embaixada em Jerusalém vira escritório comercial",
+      "descricao": "Recuo após ameaça de boicote de países árabes a exportações de carne de frango.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — escritório comercial em Jerusalém",
+          "url": "https://www.poder360.com.br/governo/bolsonaro-confirma-abertura-de-escritorio-comercial-em-jerusalem/"
+        }
+      ]
+    },
+    {
+      "id": "ej-2019-liberdade",
+      "politico": "jair",
+      "data": "2019-09",
+      "tipo": "feito",
+      "titulo": "Lei da Liberdade Econômica",
+      "descricao": "Dispensa de alvará para atividades de baixo risco.",
+      "fontes": [
+        {
+          "titulo": "Planalto — Lei 13.874/2019",
+          "url": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13874.htm"
+        }
+      ]
+    },
+    {
+      "id": "ej-2019-previdencia",
+      "politico": "jair",
+      "data": "2019-11",
+      "tipo": "feito",
+      "titulo": "Reforma da Previdência promulgada",
+      "descricao": "EC 103/2019: idade mínima de 65/62 anos. A capitalização ficou de fora.",
+      "fontes": [
+        {
+          "titulo": "Senado — aprovação em 2º turno",
+          "url": "https://www12.senado.leg.br/noticias/materias/2019/10/22/aprovado-o-texto-base-da-reforma-da-previdencia-senado-vota-ultimos-destaques-nesta-quarta"
+        }
+      ]
+    },
+    {
+      "id": "ej-2020-gripezinha",
+      "politico": "jair",
+      "data": "2020-03",
+      "tipo": "escandalo",
+      "titulo": "Pronunciamento sobre a covid: \"gripezinha\"",
+      "descricao": "A CPI listou mais de 200 falas minimizando a pandemia ou promovendo remédios sem eficácia.",
+      "fontes": [
+        {
+          "titulo": "Carta Capital — falas listadas pela CPI",
+          "url": "https://www.cartacapital.com.br/?p=202572"
+        }
+      ]
+    },
+    {
+      "id": "ej-2020-auxilio",
+      "politico": "jair",
+      "data": "2020-04",
+      "tipo": "feito",
+      "titulo": "Auxílio Emergencial",
+      "descricao": "Cerca de R$ 295 bilhões pagos em 2020 a trabalhadores informais e de baixa renda. O valor de R$ 600 saiu da negociação com o Congresso.",
+      "fontes": [
+        {
+          "titulo": "Agência Brasil — balanço dos mil dias",
+          "url": "https://agenciabrasil.ebc.com.br/geral/noticia/2021-09/governo-federal-faz-balanco-sobre-acoes-dos-mil-dias-de-gestao"
+        }
+      ]
+    },
+    {
+      "id": "ej-2020-moro",
+      "politico": "jair",
+      "data": "2020-04",
+      "tipo": "escandalo",
+      "titulo": "Moro sai do governo acusando interferência na PF",
+      "descricao": "O ministro da Justiça pediu demissão após a troca do diretor-geral da PF, dizendo que o presidente queria acesso a relatórios de inteligência.",
+      "status": "Em 2022 a PF concluiu não haver indícios de crime, e a PGR pediu o arquivamento.",
+      "fontes": [
+        {
+          "titulo": "Migalhas — Moro faz graves acusações",
+          "url": "https://www.migalhas.com.br/quentes/325430/moro-faz-graves-acusacoes-a-bolsonaro-ao-anunciar-saida-do-governo-assista"
+        },
+        {
+          "titulo": "Infobae — PF conclui que não houve interferência",
+          "url": "https://www.infobae.com/en/2022/03/31/the-brazilian-federal-police-concluded-that-bolsonaro-did-not-interfere-with-the-police-institution"
+        }
+      ]
+    },
+    {
+      "id": "ej-2020-saneamento",
+      "politico": "jair",
+      "data": "2020-07",
+      "tipo": "feito",
+      "titulo": "Novo marco do saneamento",
+      "descricao": "Metas de universalização de água e esgoto até 2033, com abertura ao setor privado.",
+      "fontes": [
+        {
+          "titulo": "Planalto — Lei 14.026/2020",
+          "url": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14026.htm"
+        }
+      ]
+    },
+    {
+      "id": "ej-2020-pib",
+      "politico": "jair",
+      "data": "2020-12",
+      "tipo": "numeros",
+      "titulo": "PIB cai 3,3% na pandemia",
+      "descricao": "Crescimento de 1,2% (2019), −3,3% (2020), 4,8% (2021) e 3,0% (2022).",
+      "fontes": [
+        {
+          "titulo": "Tira-Teima do Voto — o Brasil em números",
+          "url": "https://tirateimadovoto.com.br/"
+        }
+      ]
+    },
+    {
+      "id": "ej-2021-bc",
+      "politico": "jair",
+      "data": "2021-02",
+      "tipo": "feito",
+      "titulo": "Autonomia do Banco Central",
+      "descricao": "Lei Complementar 179/2021.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — sanção",
+          "url": "https://congressoemfoco.com.br/economia/bolsonaro-sanciona-autonomia-do-banco-central-com-vetos-veja-integra-da-lei"
+        }
+      ]
+    },
+    {
+      "id": "ej-2021-covaxin",
+      "politico": "jair",
+      "data": "2021-06",
+      "tipo": "escandalo",
+      "titulo": "Caso Covaxin",
+      "descricao": "Servidor do Ministério da Saúde denunciou pressão por pagamento antecipado de US$ 45 milhões na compra da vacina indiana, intermediada pela Precisa Medicamentos. O MPF viu indícios de crime, e o contrato foi suspenso.",
+      "fontes": [
+        {
+          "titulo": "Crusoé — MPF fala em suspeita de corrupção",
+          "url": "https://crusoe.com.br/?p=161012"
+        },
+        {
+          "titulo": "O Povo — fiscal do contrato depõe à CPI",
+          "url": "https://www.opovo.com.br/noticias/politica/2021/07/06/amp/regina-celia-diz-que-suspensao-do-contrato-so-veio-apos-relatorio-de-junho.html"
+        }
+      ]
+    },
+    {
+      "id": "ej-2021-voto",
+      "politico": "jair",
+      "data": "2021-08",
+      "tipo": "pendente",
+      "titulo": "Câmara rejeita o voto impresso",
+      "descricao": "A PEC defendida pelo presidente teve 229 votos; eram necessários 308.",
+      "fontes": [
+        {
+          "titulo": "Rolling Stone — Câmara rejeita PEC do voto impresso",
+          "url": "https://rollingstone.com.br/noticia/pec-de-voto-impresso-defendida-por-bolsonaro-e-derrotada-na-camara-dos-deputados/"
+        }
+      ]
+    },
+    {
+      "id": "ej-2021-cpi",
+      "politico": "jair",
+      "data": "2021-10",
+      "tipo": "escandalo",
+      "titulo": "CPI da Covid pede seu indiciamento",
+      "descricao": "O relatório final recomendou indiciar 68 pessoas, entre elas o presidente, e apontou atraso na compra de vacinas.",
+      "status": "Recomendação de CPI; não é condenação.",
+      "fontes": [
+        {
+          "titulo": "Diário de Pernambuco — CPI culpa Bolsonaro",
+          "url": "https://www.diariodepernambuco.com.br/noticia/politica/2021/10/cpi-encerra-atividades-e-culpa-bolsonaro-por-tragedia-da-covid.html"
+        }
+      ]
+    },
+    {
+      "id": "ej-2021-numeros",
+      "politico": "jair",
+      "data": "2021-12",
+      "tipo": "numeros",
+      "titulo": "Inflação de 10,06% e desmatamento recorde",
+      "descricao": "O IPCA de 2021 foi mais que o dobro da meta. O desmatamento na Amazônia (PRODES) chegou a 13.038 km², o pico do período, com média de 11.403 km²/ano em 2019–2022.",
+      "fontes": [
+        {
+          "titulo": "IHU Unisinos — a economia sob Bolsonaro",
+          "url": "https://ihu.unisinos.br/categorias/622716-a-economia-sob-bolsonaro-radiografia-do-desastre"
+        },
+        {
+          "titulo": "Tira-Teima do Voto — o Brasil em números",
+          "url": "https://tirateimadovoto.com.br/"
+        }
+      ]
+    },
+    {
+      "id": "ej-2022-mec",
+      "politico": "jair",
+      "data": "2022-03",
+      "tipo": "escandalo",
+      "titulo": "Pastores no MEC e prisão do ex-ministro",
+      "descricao": "Pastores sem cargo cobravam propina de prefeitos para liberar verbas do FNDE. Milton Ribeiro deixou o ministério e foi preso em junho de 2022, sendo solto no dia seguinte.",
+      "status": "Investigado por corrupção passiva e tráfico de influência.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — entenda o esquema no MEC",
+          "url": "https://www.congressoemfoco.com.br/noticia/11560/entenda-o-esquema-de-corrupcao-no-mec-envolvendo-milton-ribeiro"
+        },
+        {
+          "titulo": "Congresso em Foco — juiz manda soltar Milton Ribeiro",
+          "url": "https://www.congressoemfoco.com.br/noticia/11587/juiz-manda-soltar-milton-ribeiro-e-pastores-envolvidos-em-escandalo-do-mec"
+        }
+      ]
+    },
+    {
+      "id": "ej-2022-eletrobras",
+      "politico": "jair",
+      "data": "2022-06",
+      "tipo": "feito",
+      "titulo": "Privatização da Eletrobras e teto do ICMS",
+      "descricao": "Oferta de cerca de R$ 33 bilhões. No mesmo mês, a LC 194/2022 limitou o ICMS sobre combustíveis.",
+      "fontes": [
+        {
+          "titulo": "Money Times — oferta da Eletrobras",
+          "url": "https://www.moneytimes.com.br/eletrobras-elet3-confirma-oferta-de-privatizacao-ao-preco-de-r-42-por-acao/"
+        },
+        {
+          "titulo": "Planalto — LC 194/2022",
+          "url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp194.htm"
+        }
+      ]
+    },
+    {
+      "id": "ej-2022-pec",
+      "politico": "jair",
+      "data": "2022-07",
+      "tipo": "marco",
+      "titulo": "PEC eleva auxílio a R$ 600 até dezembro",
+      "descricao": "Aprovada a três meses da eleição, fora do teto de gastos (R$ 41,2 bilhões). No mesmo mês, reunião com embaixadores para atacar as urnas.",
+      "fontes": [
+        {
+          "titulo": "FGV Social — clipping (Folhapress)",
+          "url": "https://www.cps.fgv.br/cps/bd/clippings/zc1697.pdf"
+        }
+      ]
+    },
+    {
+      "id": "ej-2022-fim",
+      "politico": "jair",
+      "data": "2022-10",
+      "tipo": "numeros",
+      "titulo": "Derrota para Lula; como a economia terminou",
+      "descricao": "Desemprego caiu de 11,7% para 7,9%, o menor desde 2014. PIB de 2022 +3,0%, IPCA de 5,79%. O Brasil voltou ao Mapa da Fome no período 2018–2020.",
+      "fontes": [
+        {
+          "titulo": "Wikipédia — Governo Jair Bolsonaro",
+          "url": "https://pt.wikipedia.org/wiki/Governo_Jair_Bolsonaro"
+        },
+        {
+          "titulo": "Diário do Nordeste — Brasil sai do Mapa da Fome (histórico)",
+          "url": "https://diariodonordeste.verdesmares.com.br/ultima-hora/pais/brasil-sai-do-mapa-da-fome-diz-onu-1.3674647"
+        }
+      ]
+    },
+    {
+      "id": "ej-2023-tse",
+      "politico": "jair",
+      "data": "2023-06",
+      "tipo": "escandalo",
+      "titulo": "TSE o torna inelegível até 2030",
+      "descricao": "Abuso de poder político na reunião com embaixadores (5 votos a 2).",
+      "fontes": [
+        {
+          "titulo": "Migalhas — por 5 votos a 2",
+          "url": "https://www.migalhas.com.br/quentes/389164/por-5-votos-a-2-tse-torna-bolsonaro-inelegivel"
+        }
+      ]
+    },
+    {
+      "id": "ej-2024-vacina",
+      "politico": "jair",
+      "data": "2024-03",
+      "tipo": "escandalo",
+      "titulo": "Indiciado por fraude no cartão de vacina e, em julho, no caso das joias",
+      "descricao": "A PF o indiciou por inserir dados falsos de vacinação e, depois, por apropriação de joias recebidas da Arábia Saudita.",
+      "status": "Indiciamentos da PF; a defesa nega.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — fraude em cartão de vacina",
+          "url": "https://www.congressoemfoco.com.br/noticia/8690/bolsonaro-e-outros-16-sao-indiciados-por-fraude-em-cartao-de-vacina"
+        },
+        {
+          "titulo": "CNN Brasil — caso das joias",
+          "url": "https://www.cnnbrasil.com.br/politica/pf-indicia-bolsonaro-no-caso-das-joias/"
+        }
+      ]
+    },
+    {
+      "id": "ej-2024-golpe",
+      "politico": "jair",
+      "data": "2024-11",
+      "tipo": "escandalo",
+      "titulo": "PF o indicia pela trama golpista",
+      "descricao": "Ele e mais 36 pessoas. A PGR o denunciou em fevereiro de 2025, citando o plano \"Punhal Verde e Amarelo\", que previa matar Lula, Alckmin e Moraes. Bolsonaro nega conhecer o plano.",
+      "fontes": [
+        {
+          "titulo": "O Povo — PGR denuncia Bolsonaro e mais 33",
+          "url": "https://www.opovo.com.br/noticias/politica/2025/02/18/pgr-envia-ao-stf-denuncia-contra-bolsonaro-por-trama-golpista.html"
+        }
+      ]
+    },
+    {
+      "id": "ej-2025-condenacao",
+      "politico": "jair",
+      "data": "2025-09",
+      "tipo": "escandalo",
+      "titulo": "Condenado pelo STF a 27 anos e 3 meses",
+      "descricao": "Por 4 a 1 na 1ª Turma, por golpe de Estado, organização criminosa armada e outros três crimes. Luiz Fux votou pela absolvição.",
+      "status": "Condenação definitiva.",
+      "fontes": [
+        {
+          "titulo": "Itatiaia — STF condena Bolsonaro",
+          "url": "https://www.itatiaia.com.br/politica/stf-condena-bolsonaro-a-27-anos-e-3-meses-pela-trama-golpista/"
+        }
+      ]
+    },
+    {
+      "id": "ej-2025-prisao",
+      "politico": "jair",
+      "data": "2025-11",
+      "tipo": "marco",
+      "titulo": "Preso para cumprir a pena",
+      "descricao": "A prisão domiciliar de agosto foi convertida em preventiva por descumprimento de medidas. Em 2026 ele voltou à prisão domiciliar, mantida em julho por tempo indeterminado.",
+      "fontes": [
+        {
+          "titulo": "CNN Brasil — um ano preso",
+          "url": "https://www.cnnbrasil.com.br/politica/jair-bolsonaro-completa-um-ano-preso-relembre-os-principais-acontecimentos/"
+        }
+      ]
+    },
+    {
+      "id": "ej-2025-flavio",
+      "politico": "jair",
+      "data": "2025-12",
+      "tipo": "marco",
+      "titulo": "Indica Flávio como candidato a presidente",
+      "descricao": "Inelegível, apresenta o filho mais velho como candidato do PL.",
+      "fontes": [
+        {
+          "titulo": "Yahoo/Reuters — Datafolha: Flávio empata com Lula",
+          "url": "https://www.yahoo.com/news/articles/flavio-bolsonaro-draws-even-lula-161733328.html"
+        }
+      ]
+    },
+    {
+      "id": "ef-2003-alerj",
+      "politico": "flavio",
+      "data": "2003-02",
+      "tipo": "marco",
+      "titulo": "Começa como deputado estadual no RJ",
+      "descricao": "Ficou na Assembleia Legislativa (Alerj) por quatro mandatos, até 2018.",
+      "fontes": [
+        {
+          "titulo": "ND+ — trajetória e polêmicas",
+          "url": "https://ndmais.com.br/politica/flavio-bolsonaro-trajetoria/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2016-prefeitura",
+      "politico": "flavio",
+      "data": "2016-10",
+      "tipo": "marco",
+      "titulo": "Candidato a prefeito do Rio",
+      "descricao": "Ficou em 4º lugar no 1º turno, com cerca de 14% dos votos válidos.",
+      "fontes": [
+        {
+          "titulo": "Portal Tela — derrota no Rio, 10 anos depois",
+          "url": "https://www.portaltela.com/noticias/politica/2026/03/18/quase-desmaio-e-derrota-no-rio-mudancas-em-flavio-bolsonaro-10-anos-depois/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2018-senado",
+      "politico": "flavio",
+      "data": "2018-10",
+      "tipo": "marco",
+      "titulo": "Eleito senador pelo Rio de Janeiro",
+      "descricao": "Na mesma eleição em que o pai chegou à Presidência.",
+      "fontes": [
+        {
+          "titulo": "ND+ — trajetória e polêmicas",
+          "url": "https://ndmais.com.br/politica/flavio-bolsonaro-trajetoria/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2018-coaf",
+      "politico": "flavio",
+      "data": "2018-12",
+      "tipo": "escandalo",
+      "titulo": "Relatório do Coaf sobre Fabrício Queiroz",
+      "descricao": "Movimentação atípica de R$ 1,2 milhão na conta do ex-assessor de Flávio na Alerj (2016–2017), incluindo depósitos de outros funcionários do gabinete. Foi o início do caso das \"rachadinhas\". Queiroz atribuiu o dinheiro à venda de carros.",
+      "fontes": [
+        {
+          "titulo": "IHU Unisinos — caso Coaf (dez/2018)",
+          "url": "https://ihu.unisinos.br/585454"
+        },
+        {
+          "titulo": "Crusoé — íntegra do relatório do Coaf",
+          "url": "https://crusoe.com.br/?p=49775"
+        }
+      ]
+    },
+    {
+      "id": "ef-2020-queiroz",
+      "politico": "flavio",
+      "data": "2020-06",
+      "tipo": "escandalo",
+      "titulo": "Queiroz é preso em imóvel do advogado de Flávio",
+      "descricao": "A prisão foi em Atibaia (SP), numa casa de Frederick Wassef, advogado da família Bolsonaro, dentro da investigação das rachadinhas.",
+      "fontes": [
+        {
+          "titulo": "CNN Brasil — Queiroz preso em imóvel de Wassef",
+          "url": "https://www.cnnbrasil.com.br/politica/queiroz-foi-preso-em-imovel-de-frederick-wassef-advogado-de-flavio-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2020-denuncia",
+      "politico": "flavio",
+      "data": "2020-11",
+      "tipo": "escandalo",
+      "titulo": "MP do Rio o denuncia pelas rachadinhas",
+      "descricao": "Acusação de liderar esquema de devolução de salários de funcionários (cerca de R$ 6,1 milhões, segundo o MP).",
+      "status": "Depois anulada e arquivada; nunca houve julgamento de mérito.",
+      "fontes": [
+        {
+          "titulo": "ND+ — trajetória e polêmicas",
+          "url": "https://ndmais.com.br/politica/flavio-bolsonaro-trajetoria/"
+        },
+        {
+          "titulo": "Fundação Perseu Abramo (ligada ao PT) — quem é Flávio",
+          "url": "https://fpabramo.org.br/quem-e-flavio-bolsonaro-conheca-a-historia-do-senador/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2021-mansao",
+      "politico": "flavio",
+      "data": "2021-03",
+      "tipo": "escandalo",
+      "titulo": "Compra de mansão de R$ 5,97 milhões em Brasília",
+      "descricao": "R$ 3,1 milhões foram financiados pelo banco estatal BRB, a 3,65% ao ano, em condições que especialistas chamaram de atípicas. Ele declarou renda de R$ 56,8 mil por mês, e o MP-DF abriu apuração. Flávio diz que usou recursos próprios, como a venda de um imóvel no Rio, e que está \"tudo dentro da lei\".",
+      "fontes": [
+        {
+          "titulo": "Poder360 — MP investiga empréstimo do BRB",
+          "url": "https://www.poder360.com.br/congresso/mp-investiga-emprestimo-do-brb-para-flavio-bolsonaro-comprar-mansao/"
+        },
+        {
+          "titulo": "Jovem Pan — \"tudo dentro da lei\"",
+          "url": "https://jovempan.com.br/noticias/politica/tudo-dentro-da-lei-diz-flavio-bolsonaro-sobre-compra-de-mansao-de-r-6-milhoes.html"
+        }
+      ]
+    },
+    {
+      "id": "ef-2021-anulacao",
+      "politico": "flavio",
+      "data": "2021-11",
+      "tipo": "marco",
+      "titulo": "Justiça anula as provas das rachadinhas",
+      "descricao": "O STJ anulou as quebras de sigilo, reconhecendo foro especial. Depois a 2ª Turma do STF arquivou a investigação por 3 a 1, e Gilmar Mendes negou recursos do MP para reabrir o caso.",
+      "status": "Arquivado.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — STF arquiva investigação",
+          "url": "https://www.congressoemfoco.com.br/artigo/13095/stf-arquiva-denuncia-contra-flavio-bolsonaro-foro-privilegiado-em-caso-rachadinhas"
+        },
+        {
+          "titulo": "Gazeta do Povo — mudança de postura em relação ao STF",
+          "url": "https://www.gazetadopovo.com.br/republica/mudanca-de-postura-em-relacao-ao-stf-marca-trajetoria-recente-de-flavio-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2025-anistia",
+      "politico": "flavio",
+      "data": "2025-07",
+      "tipo": "escandalo",
+      "titulo": "Vincula o fim do tarifaço dos EUA à anistia",
+      "descricao": "Disse que a tarifa de 50% era injusta com o setor produtivo, mas que seria \"fácil de resolver\" aprovando anistia aos condenados do 8 de janeiro e da trama golpista.",
+      "fontes": [
+        {
+          "titulo": "SBT News — \"Não vejo possibilidade de Trump voltar atrás\"",
+          "url": "https://sbtnews.sbt.com.br/noticia/politica/nao-vejo-possibilidade-de-trump-voltar-atras-diz-flavio-bolsonaro-sobre-tarifaco-dos-eua"
+        }
+      ]
+    },
+    {
+      "id": "ef-2025-ir",
+      "politico": "flavio",
+      "data": "2025-11",
+      "tipo": "feito",
+      "titulo": "Vota a favor da isenção do IR até R$ 5 mil",
+      "descricao": "Aprovada por unanimidade no Senado. Ele criticou o texto, dizendo que prejudicava profissionais liberais fora do Simples.",
+      "fontes": [
+        {
+          "titulo": "Folha PE — Flávio defende isenção do IR",
+          "url": "https://www.folhape.com.br/politica/flavio-defende-bolsa-familia-e-isencao-do-ir-para-quem-ganha-ate-r-5/494103/"
+        },
+        {
+          "titulo": "O Cafezinho — Senado aprova por unanimidade",
+          "url": "https://www.ocafezinho.com/2025/11/05/por-unanimidade-senado-aprova-isentar-ir-para-quem-ganha-ate-rs-5-mil/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2025-candidato",
+      "politico": "flavio",
+      "data": "2025-12",
+      "tipo": "marco",
+      "titulo": "Lançado candidato a presidente pelo pai",
+      "descricao": "Em março de 2026, o Datafolha mostrava empate técnico com Lula no 2º turno (46% a 43%).",
+      "fontes": [
+        {
+          "titulo": "Yahoo/Reuters — Datafolha",
+          "url": "https://www.yahoo.com/news/articles/flavio-bolsonaro-draws-even-lula-161733328.html"
+        }
+      ]
+    },
+    {
+      "id": "ef-2026-senado",
+      "politico": "flavio",
+      "data": "2026-01",
+      "tipo": "numeros",
+      "titulo": "Sete anos de Senado: dois projetos próprios aprovados",
+      "descricao": "PL 3.071/2019 (recursos de loterias) e PL 2.327/2021 (logística reversa de baterias), ambos aprovados no Senado e ainda parados na Câmara.",
+      "fontes": [
+        {
+          "titulo": "Terra — o que Flávio apresentou e aprovou em 7 anos",
+          "url": "https://www.terra.com.br/noticias/eleicoes/o-que-flavio-bolsonaro-apresentou-e-aprovou-em-7-anos-como-senador-confira,709a6d1735d0c39798f0791bbf270fb13mbzupcp.html"
+        }
+      ]
+    },
+    {
+      "id": "ef-2026-master",
+      "politico": "flavio",
+      "data": "2026-05",
+      "tipo": "escandalo",
+      "titulo": "Banco Master e o filme \"Dark Horse\"",
+      "descricao": "Um áudio mostra Flávio cobrando de Daniel Vorcaro, dono do banco liquidado, o financiamento de um filme sobre o pai (cerca de US$ 10,6 milhões pagos). Ele diz que era \"dinheiro privado\" e pede uma CPMI do Master. O Aos Fatos apontou dezenas de declarações enganosas dele sobre o caso.",
+      "status": "A PF investiga o destino do dinheiro; Flávio não é réu.",
+      "fontes": [
+        {
+          "titulo": "SBT News — nada a esconder",
+          "url": "https://sbtnews.sbt.com.br/noticia/politica/flavio-bolsonaro-diz-nao-ter-nada-a-esconder-sobre-relacao-com-vorcaro-e-volta-a-pedir-cpmi-do-master"
+        },
+        {
+          "titulo": "Aos Fatos — declarações sobre Vorcaro",
+          "url": "https://www.aosfatos.org/noticias/flavio-mentiu-ao-menos-43-vezes-sobre-envolvimento-com-vorcaro/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2026-plano",
+      "politico": "flavio",
+      "data": "2026-08",
+      "tipo": "marco",
+      "titulo": "Registra o plano de governo",
+      "descricao": "9 eixos, com prioridade para a segurança pública. Promete indicar ao STF apenas ministros contrários ao aborto e às drogas.",
+      "fontes": [
+        {
+          "titulo": "Agência Brasil — enxugar Estado e endurecer segurança",
+          "url": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-09/flavio-bolsonaro-propoe-enxugar-estado-e-endurecer-acoes-de-seguranca"
+        },
+        {
+          "titulo": "CNN Brasil — ministros contra aborto e drogas",
+          "url": "https://www.cnnbrasil.com.br/eleicoes/flavio-promete-indicar-ministros-do-stf-contra-aborto-e-drogas/"
+        }
+      ]
+    },
+    {
+      "id": "ef-2026-turno",
+      "politico": "flavio",
+      "data": "2026-10",
+      "tipo": "marco",
+      "titulo": "Vai ao 2º turno contra Lula",
+      "descricao": "Votação marcada para 25 de outubro de 2026.",
+      "fontes": [
+        {
+          "titulo": "Folha Vitória — propostas no 2º turno",
+          "url": "https://www.folhavitoria.com.br/eleicoes/eleicoes-2026-veja-as-propostas-de-governo-de-flavio-bolsonaro-e-lula/"
         }
       ]
     }

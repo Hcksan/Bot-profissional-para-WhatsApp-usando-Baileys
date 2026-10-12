@@ -166,6 +166,7 @@ h2 { font-size: 1.3rem; margin: 32px 0 12px; }
 .res-parcial { --c: var(--parcial); }
 .res-em_andamento { --c: var(--andamento); }
 .res-nao_cumprida { --c: var(--falhou); }
+.res-proposta { --c: var(--ev-numeros); }
 .ev-pendente { --c: var(--ev-pendente); }
 .ev-escandalo { --c: var(--ev-escandalo); }
 .ev-marco { --c: var(--ev-marco); }
@@ -192,7 +193,7 @@ h2 { font-size: 1.3rem; margin: 32px 0 12px; }
 .promessas summary::-webkit-details-marker { display: none; }
 .promessas summary::after { content: '+'; margin-left: auto; color: var(--texto-suave); }
 .promessas details[open] summary::after { content: '–'; }
-.promessas summary .selo { flex-shrink: 0; min-width: 104px; text-align: center; }
+.promessas summary .selo { flex-shrink: 0; min-width: 104px; text-align: center; white-space: normal; }
 .promessas details > p { margin: 0 0 6px; font-size: 0.95rem; }
 .promessas details { padding-bottom: 2px; }
 .promessas details[open] { padding-bottom: 10px; }

@@ -42,7 +42,7 @@ Acesse `/#/admin` (há um link discreto no rodapé) e entre com a senha. Nele d�
 - **Linha do tempo**: eventos com data `AAAA-MM` e tipo (entregue, ficou para trás, escândalo/polêmica, marco, números).
 - **Políticos**: para incluir outros nomes no jogo.
 
-A tela **Linha do tempo** (`/#/linha`) compara os planos de governo ano a ano, com o placar de promessas, e mostra a cronologia com filtros. Hoje ela tem dados de Lula (planos de 2002, 2006, 2022 e 2026); outros políticos aparecem nela assim que forem cadastrados pelo admin.
+A tela **Linha do tempo** (`/#/linha`) compara os planos de governo ano a ano, com o placar de promessas, e mostra a cronologia com filtros. Hoje ela tem dados de Lula (planos de 2002, 2006, 2022 e 2026), Jair Bolsonaro (2018 e 2022) e Flávio Bolsonaro (2026, mais a trajetória como deputado estadual e senador). Promessas de planos que não chegaram a ser testados aparecem como "Proposta (não testada)".
 
 Fontes são digitadas uma por linha no formato `Título | https://link`.
 

@@ -2,7 +2,8 @@ export const RESULTADOS = {
     cumprida: 'Cumprida',
     parcial: 'Em parte',
     em_andamento: 'Em andamento',
-    nao_cumprida: 'Não cumprida'
+    nao_cumprida: 'Não cumprida',
+    proposta: 'Proposta (não testada)'
 };
 
 export const TIPOS_EVENTO = {
