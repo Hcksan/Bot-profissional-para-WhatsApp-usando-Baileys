@@ -1,0 +1,1102 @@
+{
+  "meta": {
+    "atualizadoEm": "2026-10-12",
+    "aviso": "Conteúdo compilado a partir de reportagens, documentos oficiais e checagens de fatos. Indiciamento não é condenação. Algumas fontes têm alinhamento político declarado e estão sinalizadas no título."
+  },
+  "politicos": [
+    {
+      "id": "lula",
+      "nome": "Luiz Inácio Lula da Silva",
+      "apelido": "Lula",
+      "partido": "PT",
+      "cor": "#0f766e",
+      "resumo": "Presidente da República em 2003–2010 e desde 2023. Candidato à reeleição em 2026, no 2º turno contra Flávio Bolsonaro (25/10/2026).",
+      "fontes": [
+        {
+          "titulo": "Folha Vitória — propostas de Flávio Bolsonaro e Lula (2º turno)",
+          "url": "https://www.folhavitoria.com.br/eleicoes/eleicoes-2026-veja-as-propostas-de-governo-de-flavio-bolsonaro-e-lula/"
+        }
+      ]
+    },
+    {
+      "id": "jair",
+      "nome": "Jair Messias Bolsonaro",
+      "apelido": "Jair Bolsonaro",
+      "partido": "PL",
+      "cor": "#b45309",
+      "resumo": "Presidente da República em 2019–2022. Inelegível até 2030 (TSE, 2023) e condenado pelo STF a 27 anos e 3 meses (2025). Não é candidato em 2026; apoia o filho Flávio.",
+      "fontes": [
+        {
+          "titulo": "InfoMoney — TSE torna Bolsonaro inelegível até 2030",
+          "url": "https://www.infomoney.com.br/politica/tse-forma-maioria-e-torna-bolsonaro-inelegivel-ate-2030-por-abuso-de-poder-politico-em-reuniao-com-embaixadores/amp/"
+        },
+        {
+          "titulo": "Bloomberg Línea — Bolsonaro é condenado pelo STF",
+          "url": "https://www.bloomberglinea.com.br/brasil/jair-bolsonaro-e-considerado-culpado-pelo-stf-por-golpe-de-estado-e-mais-quatro-crimes/"
+        }
+      ]
+    },
+    {
+      "id": "flavio",
+      "nome": "Flávio Nantes Bolsonaro",
+      "apelido": "Flávio Bolsonaro",
+      "partido": "PL",
+      "cor": "#6d28d9",
+      "resumo": "Senador pelo Rio de Janeiro desde 2019 e antes deputado estadual no RJ. Candidato a presidente em 2026, no 2º turno contra Lula (25/10/2026). Nunca exerceu cargo no Executivo.",
+      "fontes": [
+        {
+          "titulo": "Band — perfil e propostas de Flávio Bolsonaro",
+          "url": "https://www.band.com.br/politica/eleicoes/eleicoes-2026-conheca-as-propostas-e-o-perfil-de-flavio-bolsonaro-pl"
+        }
+      ]
+    }
+  ],
+  "itens": [
+    {
+      "id": "l01",
+      "politico": "lula",
+      "tipo": "fez",
+      "tema": "Impostos",
+      "texto": "Uma pessoa sancionou uma lei que isenta do Imposto de Renda quem ganha até R$ 5 mil por mês e, para compensar, criou um imposto mínimo de até 10% para quem recebe mais de R$ 600 mil por ano, além de tributar dividendos acima de R$ 50 mil por mês.",
+      "revelacao": "Lei 15.270/2025, sancionada em novembro de 2025. Vale a partir de 2026.",
+      "fontes": [
+        {
+          "titulo": "Hondatar — Publicada a Lei 15.270/2025",
+          "url": "https://www.hondatar.com.br/publicada-a-lei-15-270-2025-sancao-do-pl-1087-2025-que-amplia-a-isencao-do-irpf-e-tributa-lucros-e-dividendos-a-partir-de-2026/"
+        },
+        {
+          "titulo": "Fortes Advogados — Nova tributação de altas rendas",
+          "url": "https://www.fortes.adv.br/2025/12/03/a-nova-tributacao-de-altas-rendas-o-que-muda-com-a-lei-15-270-2025/"
+        }
+      ]
+    },
+    {
+      "id": "l02",
+      "politico": "lula",
+      "tipo": "fez",
+      "tema": "Trabalho",
+      "texto": "Uma pessoa retomou uma regra que reajusta o salário mínimo todo ano pela inflação mais o crescimento da economia, garantindo aumento real.",
+      "revelacao": "Política de valorização retomada em 2023. Ganhos reais de cerca de 2,8% (2023), 4,7% (2024) e 2,6% (2025), segundo o DIEESE.",
+      "fontes": [
+        {
+          "titulo": "Fundação Perseu Abramo (ligada ao PT) — indicadores de 2025",
+          "url": "https://fpabramo.org.br/indicadores-de-emprego-renda-e-pobreza-apontam-retomada-do-papel-do-estado-em-2025/"
+        },
+        {
+          "titulo": "CEPR — O Brasil no terceiro governo Lula",
+          "url": "https://cepr.net/pt/publications/o-brasil-no-terceiro-governo-lula-balanco-social-e-economico/"
+        }
+      ]
+    },
+    {
+      "id": "l03",
+      "politico": "lula",
+      "tipo": "propõe",
+      "tema": "Trabalho",
+      "texto": "Uma pessoa propõe reduzir a jornada de trabalho para 40 horas semanais, sem corte de salário, acabando com a escala 6x1 (seis dias de trabalho para um de folga).",
+      "revelacao": "Plano de governo 2026 registrado no TSE.",
+      "fontes": [
+        {
+          "titulo": "Band — perfil e propostas de Lula",
+          "url": "https://www.band.com.br/politica/eleicoes/eleicoes-2026-conheca-o-perfil-e-as-principais-propostas-de-lula-pt"
+        },
+        {
+          "titulo": "Congresso em Foco — íntegra do plano de governo",
+          "url": "https://www.congressoemfoco.com.br/noticia/121121/pt-registra-novo-plano-de-governo-de-lula-no-tse-veja-a-integra"
+        }
+      ]
+    },
+    {
+      "id": "l04",
+      "politico": "lula",
+      "tipo": "propõe",
+      "tema": "Segurança",
+      "texto": "Uma pessoa propõe criar um Ministério da Segurança Pública, separado do Ministério da Justiça, para coordenar ações com estados e municípios.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra do plano de governo",
+          "url": "https://www.congressoemfoco.com.br/noticia/121121/pt-registra-novo-plano-de-governo-de-lula-no-tse-veja-a-integra"
+        },
+        {
+          "titulo": "A Crítica — plano de Lula: soberania, segurança e arcabouço",
+          "url": "https://acritica.net/politica/plano-governo-lula-2026-soberania-seguranca-arcabouco-fiscal/"
+        }
+      ]
+    },
+    {
+      "id": "l05",
+      "politico": "lula",
+      "tipo": "falou",
+      "tema": "Política externa",
+      "texto": "Uma pessoa comparou a ofensiva militar de Israel na Faixa de Gaza ao Holocausto. Israel declarou essa pessoa \"persona non grata\" e ela não se retratou.",
+      "revelacao": "Fevereiro de 2024.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — as 13 falas mais polêmicas do terceiro mandato",
+          "url": "https://www.gazetadopovo.com.br/republica/quais-sao-as-declaracoes-mais-polemicas-de-lula-no-terceiro-mandato/"
+        },
+        {
+          "titulo": "Ranking dos Políticos — falas polêmicas",
+          "url": "https://ranking.org.br/en/articles/falas-polemicas-lula-terceiro-mandato"
+        }
+      ]
+    },
+    {
+      "id": "l06",
+      "politico": "lula",
+      "tipo": "falou",
+      "tema": "Política externa",
+      "texto": "Uma pessoa disse que as acusações de autoritarismo contra o governo da Venezuela eram uma \"narrativa\" construída.",
+      "revelacao": "Maio de 2023, ao receber Nicolás Maduro. A fala voltou a ser criticada após as denúncias de fraude na eleição venezuelana de 2024.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — 13 falas \"mal colocadas\" de Lula",
+          "url": "https://www.gazetadopovo.com.br/republica/13-falas-de-lula-no-terceiro-mandato/"
+        }
+      ]
+    },
+    {
+      "id": "l07",
+      "politico": "lula",
+      "tipo": "fez",
+      "tema": "Impostos",
+      "texto": "Uma pessoa aumentou por decreto o IOF (imposto sobre operações financeiras) para reforçar a arrecadação. O Congresso derrubou o decreto, e o STF depois restabeleceu a maior parte do aumento.",
+      "revelacao": "Governo editou o decreto em 2025; Câmara derrubou por 383 a 98; o ministro Alexandre de Moraes restabeleceu o decreto, exceto a cobrança sobre o \"risco sacado\".",
+      "fontes": [
+        {
+          "titulo": "Nord Investimentos — Congresso revoga aumento do IOF",
+          "url": "https://www.nordinvestimentos.com.br/blog/amp/congresso-revoga-aumento-iof-2025/"
+        },
+        {
+          "titulo": "Correio Braziliense (edição impressa, 17/07/2025)",
+          "url": "https://edicao.correiobraziliense.com.br/correiobraziliense/2025/07/17/09538f/pdf/A08-ECO-1707-DIG.pdf"
+        }
+      ]
+    },
+    {
+      "id": "l08",
+      "politico": "lula",
+      "tipo": "fez",
+      "tema": "Impostos",
+      "texto": "Uma pessoa aprovou uma reforma que junta os impostos sobre consumo num IVA, com cesta básica de imposto zero e devolução de parte do imposto (cashback) para famílias de baixa renda.",
+      "revelacao": "Emenda Constitucional 132/2023 e Lei Complementar 214/2025. Transição de 2027 a 2033.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra da EC 132",
+          "url": "https://www.congressoemfoco.com.br/temas/economia/reforma-tributaria-veja-a-integra-da-versao-final-a-emenda-constitucional-132/"
+        },
+        {
+          "titulo": "Politize! — Reforma tributária",
+          "url": "https://www.politize.com.br/reforma-tributaria/"
+        }
+      ]
+    },
+    {
+      "id": "l09",
+      "politico": "lula",
+      "tipo": "fez",
+      "tema": "Educação",
+      "texto": "Uma pessoa criou uma poupança paga pelo governo a estudantes de baixa renda do ensino médio público, condicionada à frequência e à conclusão dos estudos.",
+      "revelacao": "Programa Pé-de-Meia (2024). Cerca de R$ 12,5 bilhões por ano e 3,9 milhões de estudantes em 2024.",
+      "fontes": [
+        {
+          "titulo": "MEC — Pé-de-Meia",
+          "url": "https://www.gov.br/mec/pt-br/pe-de-meia"
+        },
+        {
+          "titulo": "Fequimfar (sindical) — balanço 2023–2024",
+          "url": "https://fequimfar.org.br/governo-lula-iii-balanco-do-bienio-2023-2024/"
+        }
+      ]
+    },
+    {
+      "id": "l10",
+      "politico": "lula",
+      "tipo": "falou",
+      "tema": "Costumes",
+      "texto": "Uma pessoa disse ser pessoalmente contra o aborto, mas defendeu que o tema seja tratado como questão de saúde pública e chamou de \"insanidade\" um projeto que equiparava o aborto após 22 semanas a homicídio, inclusive em caso de estupro.",
+      "revelacao": "Declarações de 2022 e de 2024.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — Lula critica \"PL do estupro\"",
+          "url": "https://www.congressoemfoco.com.br/area/governo/lula-volta-a-criticar-pl-do-estupro-e-defende-que-aborto-seja-tratado-como-questao-de-saude-publica/"
+        },
+        {
+          "titulo": "Jovem Pan — Lula afirma ser contra o aborto",
+          "url": "https://jovempan.com.br/politica/lula-afirma-ser-contra-o-aborto-mas-chama-de-insanidade-pl-antiaborto-por-estupro/"
+        }
+      ]
+    },
+    {
+      "id": "l11",
+      "politico": "lula",
+      "tipo": "propõe",
+      "tema": "Internet",
+      "texto": "Uma pessoa propõe ampliar a regulação das plataformas digitais e criar medidas de combate à desinformação.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "ABC do ABC — planos de governo de Lula e Flávio",
+          "url": "https://abcdoabc.com.br/eleicoes-2026-saiba-planos-governo-lula-flavio"
+        }
+      ]
+    },
+    {
+      "id": "l12",
+      "politico": "lula",
+      "tipo": "fez",
+      "tema": "Habitação",
+      "texto": "Uma pessoa criou um programa de moradia popular que financia casas com subsídio do governo para famílias de baixa renda.",
+      "revelacao": "Minha Casa, Minha Vida, criado em março de 2009 e retomado em 2023.",
+      "fontes": [
+        {
+          "titulo": "NSC Total — programas de Lula quando foi presidente",
+          "url": "https://www.nsctotal.com.br/?p=2346739"
+        }
+      ]
+    },
+    {
+      "id": "j01",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Previdência",
+      "texto": "Uma pessoa aprovou uma reforma da Previdência que criou idade mínima para aposentadoria (65 anos para homens e 62 para mulheres) e mudou o cálculo dos benefícios, com economia estimada em R$ 800 bilhões em 10 anos.",
+      "revelacao": "Emenda Constitucional 103/2019.",
+      "fontes": [
+        {
+          "titulo": "Câmara dos Deputados — aprovação do texto-base",
+          "url": "https://www.camara.leg.br/noticias/562111-com-379-votos-favoraveis-camara-aprova-texto-base-da-reforma-da-previdencia/"
+        },
+        {
+          "titulo": "Senado Notícias — aprovação no Senado",
+          "url": "https://www12.senado.leg.br/noticias/materias/2019/10/22/aprovado-o-texto-base-da-reforma-da-previdencia-senado-vota-ultimos-destaques-nesta-quarta"
+        }
+      ]
+    },
+    {
+      "id": "j02",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Economia",
+      "texto": "Uma pessoa sancionou a lei que deu autonomia ao Banco Central, com mandatos fixos para a diretoria que não coincidem com o do presidente da República.",
+      "revelacao": "Lei Complementar 179/2021. O STF confirmou a lei por 8 a 2.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — sanção da autonomia do BC",
+          "url": "https://congressoemfoco.com.br/economia/bolsonaro-sanciona-autonomia-do-banco-central-com-vetos-veja-integra-da-lei"
+        },
+        {
+          "titulo": "IstoÉ Dinheiro — STF confirma autonomia do BC",
+          "url": "https://istoedinheiro.com.br/stf-confirma-autonomia-do-banco-central"
+        }
+      ]
+    },
+    {
+      "id": "j03",
+      "politico": "jair",
+      "tipo": "apoiou",
+      "tema": "Assistência social",
+      "texto": "Uma pessoa apoiou uma emenda constitucional que, a três meses da eleição, aumentou o principal benefício social de R$ 400 para R$ 600 e criou um auxílio para caminhoneiros, fora do teto de gastos e válido só até dezembro.",
+      "revelacao": "Auxílio Brasil, julho de 2022. Custo estimado de R$ 41,2 bilhões; a oposição votou a favor, mas chamou a medida de eleitoreira.",
+      "fontes": [
+        {
+          "titulo": "FGV Social — clipping (Folhapress)",
+          "url": "https://www.cps.fgv.br/cps/bd/clippings/zc1697.pdf"
+        },
+        {
+          "titulo": "CUT (sindical) — Câmara aprova PEC",
+          "url": "https://www.cut.org.br/noticias/deputados-aprovam-pec-que-aumenta-valor-de-auxilio-aos-mais-pobres-so-ate-dezemb-ec6e/"
+        }
+      ]
+    },
+    {
+      "id": "j04",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Economia",
+      "texto": "Uma pessoa privatizou a maior empresa de energia elétrica do país, diluindo a participação da União numa oferta de ações de cerca de R$ 33 bilhões.",
+      "revelacao": "Capitalização da Eletrobras, junho de 2022.",
+      "fontes": [
+        {
+          "titulo": "Money Times — Eletrobras confirma oferta a R$ 42 por ação",
+          "url": "https://www.moneytimes.com.br/eletrobras-elet3-confirma-oferta-de-privatizacao-ao-preco-de-r-42-por-acao/"
+        },
+        {
+          "titulo": "SBT News — TCU aprova a privatização",
+          "url": "https://sbtnews.sbt.com.br/noticia/economia/209101-tribunal-de-contas-da-uniao-aprova-a-privatizacao-da-eletrobras"
+        }
+      ]
+    },
+    {
+      "id": "j05",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Armas",
+      "texto": "Uma pessoa editou decretos que facilitaram a compra e o uso de armas por civis. O número de caçadores, atiradores e colecionadores registrados subiu cerca de 474% em quatro anos.",
+      "revelacao": "Decretos de 2019 a 2022. Trechos foram suspensos pelo STF em 2022 e revogados em 2023.",
+      "fontes": [
+        {
+          "titulo": "O Povo — registro de armas dispara quase 500%",
+          "url": "https://www.opovo.com.br/noticias/mundo/2022/06/10260014-registro-de-armas-pessoais-dispara-quase-500-sob-governo-bolsonaro.html"
+        },
+        {
+          "titulo": "IHU Unisinos — revogar normas sobre armas é insuficiente",
+          "url": "https://ihu.unisinos.br/623792-revogar-normas-sobre-armas-e-insuficiente-para-reverter-quadro-criado-por-bolsonaro"
+        }
+      ]
+    },
+    {
+      "id": "j06",
+      "politico": "jair",
+      "tipo": "falou",
+      "tema": "Saúde",
+      "texto": "Uma pessoa, em pronunciamento nacional no início da pandemia de covid-19, minimizou a doença ao dizer que, se fosse infectada, teria no máximo \"uma gripezinha ou resfriadinho\".",
+      "revelacao": "Março de 2020. Mais tarde ele negou ter usado a palavra.",
+      "fontes": [
+        {
+          "titulo": "Carta Capital — falas sobre a pandemia listadas pela CPI",
+          "url": "https://www.cartacapital.com.br/?p=202572"
+        },
+        {
+          "titulo": "Carta Capital — Bolsonaro nega ter dito \"gripezinha\"",
+          "url": "https://www.cartacapital.com.br/?p=203449"
+        }
+      ]
+    },
+    {
+      "id": "j07",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Saúde",
+      "texto": "O governo de uma pessoa deixou sem resposta ou recusou ofertas de vacinas contra a covid-19 em 2020, segundo uma CPI que pediu seu indiciamento por esse e outros fatos.",
+      "revelacao": "CPI da Covid (2021). O relatório recomendou indiciamentos; isso não é condenação.",
+      "fontes": [
+        {
+          "titulo": "Estado de Minas — depois de recusar vacinas da Pfizer…",
+          "url": "https://www.em.com.br/app/noticia/politica/2021/06/18/interna_politica,1278079/depois-de-recusar-vacinas-da-pfizer-bolsonaro-comemora-entrega-antecipada.shtml"
+        },
+        {
+          "titulo": "Correio Braziliense — minuta do relatório da CPI",
+          "url": "https://www.correiobraziliense.com.br/politica/2021/10/4956511-jair-bolsonaro-e-citado-94-vezes-na-minuta-do-relatorio-da-cpi-da-covid.html"
+        }
+      ]
+    },
+    {
+      "id": "j08",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Democracia",
+      "texto": "Uma pessoa reuniu embaixadores estrangeiros, com transmissão pela TV pública, para levantar dúvidas sobre a segurança das urnas eletrônicas, sem apresentar provas de fraude.",
+      "revelacao": "Julho de 2022. Por isso o TSE o tornou inelegível até 2030 (5 votos a 2).",
+      "fontes": [
+        {
+          "titulo": "InfoMoney — TSE torna Bolsonaro inelegível",
+          "url": "https://www.infomoney.com.br/politica/tse-forma-maioria-e-torna-bolsonaro-inelegivel-ate-2030-por-abuso-de-poder-politico-em-reuniao-com-embaixadores/amp/"
+        },
+        {
+          "titulo": "Migalhas — por 5 votos a 2",
+          "url": "https://www.migalhas.com.br/quentes/389164/por-5-votos-a-2-tse-torna-bolsonaro-inelegivel"
+        }
+      ]
+    },
+    {
+      "id": "j09",
+      "politico": "jair",
+      "tipo": "defendeu",
+      "tema": "Democracia",
+      "texto": "Uma pessoa defendeu o voto impresso, que seria depositado numa urna separada para conferência. A proposta foi rejeitada pela Câmara.",
+      "revelacao": "PEC do voto impresso, rejeitada em agosto de 2021 (229 votos a favor; eram necessários 308).",
+      "fontes": [
+        {
+          "titulo": "Rolling Stone — Câmara rejeita PEC do voto impresso",
+          "url": "https://rollingstone.com.br/noticia/pec-de-voto-impresso-defendida-por-bolsonaro-e-derrotada-na-camara-dos-deputados/"
+        },
+        {
+          "titulo": "InfoMoney — Bolsonaro volta a defender voto impresso",
+          "url": "https://www.infomoney.com.br/?p=1679518"
+        }
+      ]
+    },
+    {
+      "id": "j10",
+      "politico": "jair",
+      "tipo": "defendeu",
+      "tema": "Segurança",
+      "texto": "Uma pessoa enviou ao Congresso um projeto para ampliar o \"excludente de ilicitude\", livrando de punição policiais e militares que matarem durante operações em determinadas situações.",
+      "revelacao": "Projeto de novembro de 2019 (operações de GLO), com nova versão em 2022.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — projeto de excludente de ilicitude para GLO",
+          "url": "https://www.poder360.com.br/governo/bolsonaro-envia-projeto-sobre-excludente-de-ilicitude-para-militares-em-glo/"
+        },
+        {
+          "titulo": "O Povo — Bolsonaro envia projeto à Câmara",
+          "url": "https://www.opovo.com.br/noticias/politica/2019/11/20/bolsonaro-enviara-hoje-a-camara-projeto-de-excludente-de-ilicitude.html"
+        }
+      ]
+    },
+    {
+      "id": "j11",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Economia",
+      "texto": "Uma pessoa sancionou uma lei que dispensa de alvará e licenças prévias as atividades econômicas de baixo risco, para reduzir a burocracia para quem quer empreender.",
+      "revelacao": "Lei da Liberdade Econômica (Lei 13.874/2019).",
+      "fontes": [
+        {
+          "titulo": "Planalto — Lei 13.874/2019",
+          "url": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13874.htm"
+        }
+      ]
+    },
+    {
+      "id": "j12",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Saneamento",
+      "texto": "Uma pessoa sancionou um novo marco do saneamento básico, com meta de levar água e esgoto a quase toda a população até 2033 e abrindo o setor para empresas privadas.",
+      "revelacao": "Lei 14.026/2020.",
+      "fontes": [
+        {
+          "titulo": "Planalto — Lei 14.026/2020",
+          "url": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14026.htm"
+        }
+      ]
+    },
+    {
+      "id": "j13",
+      "politico": "jair",
+      "tipo": "fez",
+      "tema": "Impostos",
+      "texto": "Uma pessoa sancionou uma lei que limitou o ICMS cobrado pelos estados sobre combustíveis, energia e telecomunicações, baixando o preço da gasolina, mas reduzindo a arrecadação estadual.",
+      "revelacao": "Lei Complementar 194/2022, sancionada em junho de 2022.",
+      "fontes": [
+        {
+          "titulo": "Planalto — Lei Complementar 194/2022",
+          "url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp194.htm"
+        }
+      ]
+    },
+    {
+      "id": "f01",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Segurança",
+      "texto": "Uma pessoa propõe classificar facções criminosas e milícias como organizações terroristas e usar as Forças Armadas em apoio às polícias estaduais.",
+      "revelacao": "Plano de governo 2026, eixo \"Brasil sem Medo\".",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — propostas de Flávio para a segurança",
+          "url": "https://www.gazetadopovo.com.br/eleicoes/2026/propostas-flavio-bolsonaro-plano-de-governo-seguranca-publica/"
+        },
+        {
+          "titulo": "Agência Brasil — Flávio propõe enxugar Estado e endurecer segurança",
+          "url": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-09/flavio-bolsonaro-propoe-enxugar-estado-e-endurecer-acoes-de-seguranca"
+        }
+      ]
+    },
+    {
+      "id": "f02",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Segurança",
+      "texto": "Uma pessoa propõe reduzir a maioridade penal.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — propostas de Flávio para a segurança",
+          "url": "https://www.gazetadopovo.com.br/eleicoes/2026/propostas-flavio-bolsonaro-plano-de-governo-seguranca-publica/"
+        }
+      ]
+    },
+    {
+      "id": "f03",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Segurança",
+      "texto": "Uma pessoa propõe a castração química para condenados por estupro.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "Band — perfil e propostas de Flávio Bolsonaro",
+          "url": "https://www.band.com.br/politica/eleicoes/eleicoes-2026-conheca-as-propostas-e-o-perfil-de-flavio-bolsonaro-pl"
+        }
+      ]
+    },
+    {
+      "id": "f04",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Gestão pública",
+      "texto": "Uma pessoa propõe cortar pelo menos dez ministérios e reduzir os cargos comissionados (de livre nomeação) no governo federal.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "Folha/QConcursos — o que Lula e Flávio propõem para concursos",
+          "url": "https://folha.qconcursos.com/n/eleicoes-2026-segundo-turno-propostas-concursos"
+        },
+        {
+          "titulo": "Agência Brasil — Flávio propõe enxugar Estado",
+          "url": "https://agenciabrasil.ebc.com.br/politica/noticia/2026-09/flavio-bolsonaro-propoe-enxugar-estado-e-endurecer-acoes-de-seguranca"
+        }
+      ]
+    },
+    {
+      "id": "f05",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Impostos",
+      "texto": "Uma pessoa propõe rever a reforma tributária recém-aprovada para reduzir a alíquota do novo IVA e cortar exceções concedidas a setores específicos.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "Band — perfil e propostas de Flávio Bolsonaro",
+          "url": "https://www.band.com.br/politica/eleicoes/eleicoes-2026-conheca-as-propostas-e-o-perfil-de-flavio-bolsonaro-pl"
+        },
+        {
+          "titulo": "Plano de Governo 2026 — Flávio Bolsonaro",
+          "url": "https://planodegoverno2026.com.br/candidatos/presidente/flavio-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "f06",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Economia",
+      "texto": "Uma pessoa propõe retomar o programa de privatizações \"com critério\", mas mantendo como estatais a Petrobras, o Banco do Brasil e a Caixa.",
+      "revelacao": "Plano de governo 2026 e declaração do coordenador econômico Adolfo Sachsida (outubro de 2026).",
+      "fontes": [
+        {
+          "titulo": "Forbes — Petrobras, BB e Caixa serão privatizados?",
+          "url": "https://forbes.com.br/forbes-money/2026/10/petrobras-bb-e-caixa-serao-privatizados-veja-o-que-diz-coordenador-de-flavio-bolsonaro/"
+        },
+        {
+          "titulo": "Plano de Governo 2026 — Flávio Bolsonaro",
+          "url": "https://planodegoverno2026.com.br/candidatos/presidente/flavio-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "f07",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Família",
+      "texto": "Uma pessoa propõe um voucher-creche, em que o governo paga uma vaga em creche escolhida pela família, como parte de um eixo de autonomia financeira das mulheres.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "Folha Vitória — propostas de Flávio e Lula",
+          "url": "https://www.folhavitoria.com.br/eleicoes/eleicoes-2026-veja-as-propostas-de-governo-de-flavio-bolsonaro-e-lula/"
+        }
+      ]
+    },
+    {
+      "id": "f08",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Política externa",
+      "texto": "Uma pessoa propõe retomar a entrada do Brasil na OCDE e reaproximar o país dos Estados Unidos, da Argentina e de Israel.",
+      "revelacao": "Plano de governo 2026.",
+      "fontes": [
+        {
+          "titulo": "Plano de Governo 2026 — Flávio Bolsonaro",
+          "url": "https://planodegoverno2026.com.br/candidatos/presidente/flavio-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "f09",
+      "politico": "flavio",
+      "tipo": "falou",
+      "tema": "Costumes",
+      "texto": "Uma pessoa disse que, se eleita, só indicaria para o STF ministros contrários ao aborto e às drogas.",
+      "revelacao": "Entrevista à Record, agosto de 2026.",
+      "fontes": [
+        {
+          "titulo": "CNN Brasil — Flávio promete indicar ministros contra aborto e drogas",
+          "url": "https://www.cnnbrasil.com.br/eleicoes/flavio-promete-indicar-ministros-do-stf-contra-aborto-e-drogas/"
+        },
+        {
+          "titulo": "O Tempo — perfil de quem ele vai indicar ao STF",
+          "url": "https://www.otempo.com.br/eleicoes/2026/presidentes/2026/8/30/homens-e-mulheres-contra-o-aborto-flavio-detalha-o-perfil-de-quem-ele-vai-indicar-ao-stf"
+        }
+      ]
+    },
+    {
+      "id": "f10",
+      "politico": "flavio",
+      "tipo": "falou",
+      "tema": "Democracia",
+      "texto": "Uma pessoa reconheceu que a tarifa de 50% imposta pelos EUA a produtos brasileiros era injusta com o setor produtivo, mas defendeu como solução aprovar uma anistia aos condenados pelos atos de 8 de janeiro.",
+      "revelacao": "Julho de 2025.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — Flávio diz que tarifa tem motivação política",
+          "url": "https://www.gazetadopovo.com.br/republica/flavio-bolsonaro-diz-que-tarifa-de-trump-tem-motivacao-politica-e-volta-a-defender-anistia/"
+        },
+        {
+          "titulo": "SBT News — \"Não vejo possibilidade de Trump voltar atrás\"",
+          "url": "https://sbtnews.sbt.com.br/noticia/politica/nao-vejo-possibilidade-de-trump-voltar-atras-diz-flavio-bolsonaro-sobre-tarifaco-dos-eua"
+        }
+      ]
+    },
+    {
+      "id": "f11",
+      "politico": "flavio",
+      "tipo": "propõe",
+      "tema": "Assistência social",
+      "texto": "Uma pessoa propõe manter os programas sociais existentes, com melhorias de gestão, correção de distorções e combate a fraudes.",
+      "revelacao": "Plano de governo 2026. Checagens classificaram como falso que o plano acabaria com o Bolsa Família.",
+      "fontes": [
+        {
+          "titulo": "Brasil em Folhas — plano contradiz montagens sobre fim do Bolsa Família",
+          "url": "https://www.brasilemfolhas.com.br/2026/10/plano-de-flavio-bolsonaro-contradiz-montagens-sobre-fim-do-bolsa-familia-e-do-sus/"
+        },
+        {
+          "titulo": "ND+ — o que Flávio não pretende acabar",
+          "url": "https://ndmais.com.br/politica/fake-news-sobre-flavio-bolsonaro-propostas-de-campanha-noticias-falsas/"
+        }
+      ]
+    }
+  ],
+  "fatos": [
+    {
+      "id": "fl-r1",
+      "politico": "lula",
+      "categoria": "realizacao",
+      "titulo": "Bolsa Família (2003)",
+      "descricao": "Unificou programas de transferência de renda do governo anterior; passou de 3,6 milhões de famílias em 2003 para 12,7 milhões em 2010.",
+      "fontes": [
+        {
+          "titulo": "NSC Total — programas de Lula",
+          "url": "https://www.nsctotal.com.br/?p=2346739"
+        }
+      ]
+    },
+    {
+      "id": "fl-r2",
+      "politico": "lula",
+      "categoria": "realizacao",
+      "titulo": "Minha Casa, Minha Vida (2009)",
+      "descricao": "Programa de moradia popular com subsídio, criado no segundo mandato e retomado em 2023.",
+      "fontes": [
+        {
+          "titulo": "NSC Total — programas de Lula",
+          "url": "https://www.nsctotal.com.br/?p=2346739"
+        }
+      ]
+    },
+    {
+      "id": "fl-r3",
+      "politico": "lula",
+      "categoria": "realizacao",
+      "titulo": "Saída do Mapa da Fome da ONU (2025)",
+      "descricao": "Relatório da FAO de julho de 2025 colocou o Brasil abaixo de 2,5% de subnutridos (média 2022–2024). O país já tinha saído em 2014 e voltado no período 2018–2020.",
+      "fontes": [
+        {
+          "titulo": "Poder360 — Lula comemora saída do Mapa da Fome",
+          "url": "https://www.poder360.com.br/poder-governo/lula-e-governistas-comemoram-saida-do-brasil-do-mapa-da-fome/"
+        },
+        {
+          "titulo": "Diário do Nordeste — Brasil sai do Mapa da Fome, diz ONU",
+          "url": "https://diariodonordeste.verdesmares.com.br/ultima-hora/pais/brasil-sai-do-mapa-da-fome-diz-onu-1.3674647"
+        }
+      ]
+    },
+    {
+      "id": "fl-r4",
+      "politico": "lula",
+      "categoria": "realizacao",
+      "titulo": "Desemprego no menor nível da série (2025)",
+      "descricao": "Taxa de 5,1% no trimestre encerrado em dezembro de 2025, a menor da PNAD Contínua. No mesmo período, o déficit primário caiu, mas a dívida bruta e os gastos com juros subiram.",
+      "fontes": [
+        {
+          "titulo": "CEPR — balanço do terceiro governo Lula",
+          "url": "https://cepr.net/pt/publications/o-brasil-no-terceiro-governo-lula-balanco-social-e-economico/"
+        }
+      ]
+    },
+    {
+      "id": "fl-r5",
+      "politico": "lula",
+      "categoria": "realizacao",
+      "titulo": "Isenção de IR até R$ 5 mil (2025)",
+      "descricao": "Lei 15.270/2025: isenção total até R$ 5 mil/mês e redução até R$ 7.350, com imposto mínimo de até 10% para rendas acima de R$ 600 mil/ano.",
+      "fontes": [
+        {
+          "titulo": "Hondatar — Lei 15.270/2025",
+          "url": "https://www.hondatar.com.br/publicada-a-lei-15-270-2025-sancao-do-pl-1087-2025-que-amplia-a-isencao-do-irpf-e-tributa-lucros-e-dividendos-a-partir-de-2026/"
+        }
+      ]
+    },
+    {
+      "id": "fl-r6",
+      "politico": "lula",
+      "categoria": "realizacao",
+      "titulo": "Reforma tributária do consumo (2023)",
+      "descricao": "EC 132/2023 cria IVA dual (CBS federal + IBS estadual/municipal), cesta básica com alíquota zero e cashback. Transição de 2027 a 2033.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra da EC 132",
+          "url": "https://www.congressoemfoco.com.br/temas/economia/reforma-tributaria-veja-a-integra-da-versao-final-a-emenda-constitucional-132/"
+        }
+      ]
+    },
+    {
+      "id": "fl-p1",
+      "politico": "lula",
+      "categoria": "polemica",
+      "titulo": "Mensalão (2005)",
+      "descricao": "Esquema de pagamentos a parlamentares da base aliada. O então ministro-chefe da Casa Civil, José Dirceu, caiu e foi cassado. No julgamento do STF (2012), 25 dos 37 réus foram condenados. Lula não foi réu.",
+      "status": "Julgado pelo STF em 2012; Lula não foi acusado.",
+      "fontes": [
+        {
+          "titulo": "O Povo — Mensalão, 20 anos",
+          "url": "https://mais.opovo.com.br/jornal/politica/2025/06/06/mensalao-20-anosonde-estao-os-personagens-de-um-dos-maiores-escandalos-do-brasil-ate-entao.html"
+        },
+        {
+          "titulo": "Wikipedia — Mensalão scandal",
+          "url": "https://en.wikipedia.org/wiki/Mensal%C3%A3o_scandal"
+        }
+      ]
+    },
+    {
+      "id": "fl-p2",
+      "politico": "lula",
+      "categoria": "polemica",
+      "titulo": "Lava Jato: condenação e anulação",
+      "descricao": "Condenado em Curitiba (caso do triplex) e preso por 580 dias entre 2018 e 2019. Em 2021, o STF anulou as condenações por incompetência da 13ª Vara de Curitiba e declarou o ex-juiz Sergio Moro parcial.",
+      "status": "Condenações anuladas pelo STF (2021); sem condenação vigente.",
+      "fontes": [
+        {
+          "titulo": "Migalhas — STF: Moro foi parcial ao condenar Lula",
+          "url": "https://www.migalhas.com.br/quentes/347494/stf-moro-foi-parcial-ao-condenar-lula"
+        },
+        {
+          "titulo": "Correio Braziliense — o que está em jogo no julgamento",
+          "url": "https://www.correiobraziliense.com.br/politica/2021/04/4918324-o-que-esta-em-jogo-em-novo-julgamento-do-stf-sobre-anulacao-das-condenacoes-de-lula.html"
+        }
+      ]
+    },
+    {
+      "id": "fl-p3",
+      "politico": "lula",
+      "categoria": "polemica",
+      "titulo": "Fraude dos descontos no INSS (revelada em 2025)",
+      "descricao": "Associações descontaram mensalidades não autorizadas de aposentados entre 2019 e 2024 (cerca de R$ 6,3 bilhões). Os descontos começaram a crescer em 2019 e aceleraram a partir de 2023. A PF e a CGU deflagraram a Operação Sem Desconto em abril de 2025; o presidente do INSS foi afastado e o governo prometeu ressarcir as vítimas.",
+      "status": "Em investigação; ressarcimentos em andamento.",
+      "fontes": [
+        {
+          "titulo": "Bahia Notícias — o que se sabe sobre a fraude",
+          "url": "https://www.bahianoticias.com.br/noticia/306717-fraude-do-inss-o-que-se-sabe-ate-agora-sobre-o-esquema-de-descontos-ilegais-na-folha-de-aposentados-e-pensionistas"
+        },
+        {
+          "titulo": "CNN Brasil — Lula diz que acabou com fraude no INSS",
+          "url": "https://www.cnnbrasil.com.br/politica/lula-defende-despesa-com-previdencia-e-diz-que-acabou-com-fraude-no-inss/"
+        }
+      ]
+    },
+    {
+      "id": "fl-p4",
+      "politico": "lula",
+      "categoria": "polemica",
+      "titulo": "Falas sobre Israel e Venezuela",
+      "descricao": "Comparou a ofensiva em Gaza ao Holocausto (2024), sendo declarado persona non grata por Israel. Chamou de \"narrativa\" as acusações de autoritarismo contra Maduro (2023). O Poder360 contou ao menos 157 declarações controversas desde 2023.",
+      "fontes": [
+        {
+          "titulo": "Gazeta do Povo — as 13 falas mais polêmicas",
+          "url": "https://www.gazetadopovo.com.br/republica/quais-sao-as-declaracoes-mais-polemicas-de-lula-no-terceiro-mandato/"
+        }
+      ]
+    },
+    {
+      "id": "fl-p5",
+      "politico": "lula",
+      "categoria": "polemica",
+      "titulo": "Aumento do IOF por decreto (2025)",
+      "descricao": "Decreto para elevar a arrecadação foi derrubado pelo Congresso (383 a 98 na Câmara) e depois restabelecido em grande parte pelo STF.",
+      "fontes": [
+        {
+          "titulo": "Nord Investimentos — Congresso revoga aumento do IOF",
+          "url": "https://www.nordinvestimentos.com.br/blog/amp/congresso-revoga-aumento-iof-2025/"
+        }
+      ]
+    },
+    {
+      "id": "fl-x1",
+      "politico": "lula",
+      "categoria": "proposta",
+      "titulo": "Plano de governo 2026 (13 eixos)",
+      "descricao": "Fim da escala 6x1 com jornada de 40h; Ministério da Segurança Pública; manutenção do arcabouço fiscal; educação em tempo integral; continuidade de Mais Médicos e Farmácia Popular; regulação de plataformas digitais e de trabalho por aplicativo. Críticos apontam que o plano não traz agenda clara de corte de gastos.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — íntegra do plano",
+          "url": "https://www.congressoemfoco.com.br/noticia/121121/pt-registra-novo-plano-de-governo-de-lula-no-tse-veja-a-integra"
+        },
+        {
+          "titulo": "Gazeta do Povo — plano de Lula mantém gastos e não prevê cortes",
+          "url": "https://www.gazetadopovo.com.br/eleicoes/2026/plano-de-governo-lula-economia/"
+        },
+        {
+          "titulo": "TSE — programa de governo (documento oficial)",
+          "url": "https://divulgacandcontas.tse.jus.br/divulga/rest/arquivo/doc/120016993257"
+        }
+      ]
+    },
+    {
+      "id": "fj-r1",
+      "politico": "jair",
+      "categoria": "realizacao",
+      "titulo": "Reforma da Previdência (2019)",
+      "descricao": "EC 103/2019: idade mínima de 65 (homens) e 62 (mulheres), novas regras de cálculo e alíquotas. Economia estimada em R$ 800 bilhões em 10 anos.",
+      "fontes": [
+        {
+          "titulo": "Senado Notícias — aprovação",
+          "url": "https://www12.senado.leg.br/noticias/materias/2019/10/22/aprovado-o-texto-base-da-reforma-da-previdencia-senado-vota-ultimos-destaques-nesta-quarta"
+        }
+      ]
+    },
+    {
+      "id": "fj-r2",
+      "politico": "jair",
+      "categoria": "realizacao",
+      "titulo": "Autonomia do Banco Central (2021)",
+      "descricao": "LC 179/2021: mandatos fixos e não coincidentes para a diretoria do BC. Confirmada pelo STF por 8 a 2.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — sanção",
+          "url": "https://congressoemfoco.com.br/economia/bolsonaro-sanciona-autonomia-do-banco-central-com-vetos-veja-integra-da-lei"
+        }
+      ]
+    },
+    {
+      "id": "fj-r3",
+      "politico": "jair",
+      "categoria": "realizacao",
+      "titulo": "Auxílio Emergencial e Auxílio Brasil",
+      "descricao": "Auxílio Emergencial na pandemia (R$ 295 bilhões em 2020). Auxílio Brasil elevado a R$ 600 em 2022, por PEC aprovada a três meses da eleição.",
+      "fontes": [
+        {
+          "titulo": "Agência Brasil — balanço dos mil dias",
+          "url": "https://agenciabrasil.ebc.com.br/geral/noticia/2021-09/governo-federal-faz-balanco-sobre-acoes-dos-mil-dias-de-gestao"
+        },
+        {
+          "titulo": "FGV Social — clipping sobre a PEC",
+          "url": "https://www.cps.fgv.br/cps/bd/clippings/zc1697.pdf"
+        }
+      ]
+    },
+    {
+      "id": "fj-r4",
+      "politico": "jair",
+      "categoria": "realizacao",
+      "titulo": "Marco do saneamento, Liberdade Econômica e Eletrobras",
+      "descricao": "Lei 14.026/2020 (metas de universalização até 2033); Lei 13.874/2019 (menos burocracia para atividades de baixo risco); privatização da Eletrobras (2022, cerca de R$ 33 bilhões).",
+      "fontes": [
+        {
+          "titulo": "Planalto — Lei 14.026/2020",
+          "url": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/lei/l14026.htm"
+        },
+        {
+          "titulo": "Planalto — Lei 13.874/2019",
+          "url": "https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2019/lei/l13874.htm"
+        },
+        {
+          "titulo": "Money Times — oferta da Eletrobras",
+          "url": "https://www.moneytimes.com.br/eletrobras-elet3-confirma-oferta-de-privatizacao-ao-preco-de-r-42-por-acao/"
+        }
+      ]
+    },
+    {
+      "id": "fj-r5",
+      "politico": "jair",
+      "categoria": "realizacao",
+      "titulo": "Empregos (segundo o governo e o PL)",
+      "descricao": "Balanço do governo cita 5,3 milhões de empregos formais gerados desde julho de 2020. Uma checagem do Aos Fatos sobre balanço anterior do governo encontrou 14 de 31 itens falsos ou imprecisos.",
+      "fontes": [
+        {
+          "titulo": "PL — resumo de realizações (documento partidário)",
+          "url": "https://static.poder360.com.br/2022/08/PL-RESUMO-DE-REALIZACOES-DO-GOVERNO-BOLSONARO-08-08-22.pdf"
+        },
+        {
+          "titulo": "Aos Fatos — de 31 ações listadas, 14 são falsas ou enganosas",
+          "url": "https://www.aosfatos.org/noticias/de-31-acoes-listadas-em-balanco-do-governo-bolsonaro-14-sao-falsas-ou-enganosas/"
+        }
+      ]
+    },
+    {
+      "id": "fj-p1",
+      "politico": "jair",
+      "categoria": "polemica",
+      "titulo": "Condenação por trama golpista (2025)",
+      "descricao": "A 1ª Turma do STF o condenou, por 4 a 1, a 27 anos e 3 meses por organização criminosa armada, tentativa de abolição violenta do Estado democrático de direito, golpe de Estado, dano qualificado e deterioração de patrimônio tombado. O ministro Luiz Fux votou pela absolvição. Bolsonaro nega os crimes.",
+      "status": "Condenação definitiva. Preso em novembro de 2025; em prisão domiciliar por decisão mantida em julho de 2026.",
+      "fontes": [
+        {
+          "titulo": "Itatiaia — STF condena Bolsonaro a 27 anos e 3 meses",
+          "url": "https://www.itatiaia.com.br/politica/stf-condena-bolsonaro-a-27-anos-e-3-meses-pela-trama-golpista/"
+        },
+        {
+          "titulo": "CNN Brasil — Bolsonaro completa um ano preso",
+          "url": "https://www.cnnbrasil.com.br/politica/jair-bolsonaro-completa-um-ano-preso-relembre-os-principais-acontecimentos/"
+        }
+      ]
+    },
+    {
+      "id": "fj-p2",
+      "politico": "jair",
+      "categoria": "polemica",
+      "titulo": "Inelegibilidade (TSE, 2023)",
+      "descricao": "Por 5 a 2, o TSE o declarou inelegível por 8 anos por abuso de poder político e uso indevido dos meios de comunicação na reunião com embaixadores em que atacou as urnas eletrônicas.",
+      "status": "Inelegível até 2030.",
+      "fontes": [
+        {
+          "titulo": "Migalhas — por 5 votos a 2",
+          "url": "https://www.migalhas.com.br/quentes/389164/por-5-votos-a-2-tse-torna-bolsonaro-inelegivel"
+        }
+      ]
+    },
+    {
+      "id": "fj-p3",
+      "politico": "jair",
+      "categoria": "polemica",
+      "titulo": "Pandemia e CPI da Covid (2021)",
+      "descricao": "Mais de 200 falas minimizando a pandemia ou promovendo remédios sem eficácia foram listadas pela CPI, que recomendou seu indiciamento e apontou atraso na compra de vacinas.",
+      "status": "Recomendação de indiciamento pela CPI (não é condenação).",
+      "fontes": [
+        {
+          "titulo": "Carta Capital — falas listadas pela CPI",
+          "url": "https://www.cartacapital.com.br/?p=202572"
+        },
+        {
+          "titulo": "Diário de Pernambuco — CPI encerra e culpa Bolsonaro",
+          "url": "https://www.diariodepernambuco.com.br/noticia/politica/2021/10/cpi-encerra-atividades-e-culpa-bolsonaro-por-tragedia-da-covid.html"
+        }
+      ]
+    },
+    {
+      "id": "fj-p4",
+      "politico": "jair",
+      "categoria": "polemica",
+      "titulo": "Joias sauditas e cartão de vacina (2024)",
+      "descricao": "Indiciado pela PF em março de 2024 por suposta fraude no próprio cartão de vacinação e em julho de 2024 por associação criminosa, lavagem de dinheiro e apropriação de bens públicos no caso das joias recebidas da Arábia Saudita. A defesa nega.",
+      "status": "Indiciamentos da PF; dependem de denúncia da PGR (indiciamento não é condenação).",
+      "fontes": [
+        {
+          "titulo": "CNN Brasil — PF indicia Bolsonaro no caso das joias",
+          "url": "https://www.cnnbrasil.com.br/politica/pf-indicia-bolsonaro-no-caso-das-joias/"
+        },
+        {
+          "titulo": "Congresso em Foco — indiciados por fraude em cartão de vacina",
+          "url": "https://www.congressoemfoco.com.br/noticia/8690/bolsonaro-e-outros-16-sao-indiciados-por-fraude-em-cartao-de-vacina"
+        }
+      ]
+    },
+    {
+      "id": "fj-p5",
+      "politico": "jair",
+      "categoria": "polemica",
+      "titulo": "Armas",
+      "descricao": "Decretos de flexibilização elevaram os registros de CACs em cerca de 474% (2018 a junho de 2022). O ministro Edson Fachin suspendeu trechos em 2022.",
+      "fontes": [
+        {
+          "titulo": "O Povo — registro de armas dispara quase 500%",
+          "url": "https://www.opovo.com.br/noticias/mundo/2022/06/10260014-registro-de-armas-pessoais-dispara-quase-500-sob-governo-bolsonaro.html"
+        }
+      ]
+    },
+    {
+      "id": "ff-r1",
+      "politico": "flavio",
+      "categoria": "realizacao",
+      "titulo": "Atuação no Senado (2019–2026)",
+      "descricao": "Em sete anos de mandato, dois projetos de sua autoria foram aprovados pelo Senado: PL 3.071/2019 (destinação de recursos de loterias) e PL 2.327/2021 (logística reversa de baterias). Ambos seguiram para a Câmara e ainda não viraram lei.",
+      "fontes": [
+        {
+          "titulo": "Terra — o que Flávio apresentou e aprovou em 7 anos",
+          "url": "https://www.terra.com.br/noticias/eleicoes/o-que-flavio-bolsonaro-apresentou-e-aprovou-em-7-anos-como-senador-confira,709a6d1735d0c39798f0791bbf270fb13mbzupcp.html"
+        }
+      ]
+    },
+    {
+      "id": "ff-p1",
+      "politico": "flavio",
+      "categoria": "polemica",
+      "titulo": "Caso das \"rachadinhas\" (Alerj)",
+      "descricao": "O Ministério Público do RJ o acusou de liderar esquema de devolução de salários de funcionários do gabinete na Assembleia Legislativa. O STJ anulou as quebras de sigilo que embasavam a investigação, e a 2ª Turma do STF reconheceu o foro e arquivou o caso por 3 a 1. Recursos do MP foram negados. Ele sempre negou as acusações.",
+      "status": "Arquivado; nunca houve julgamento de mérito.",
+      "fontes": [
+        {
+          "titulo": "Congresso em Foco — STF arquiva investigação",
+          "url": "https://www.congressoemfoco.com.br/artigo/13095/stf-arquiva-denuncia-contra-flavio-bolsonaro-foro-privilegiado-em-caso-rachadinhas"
+        },
+        {
+          "titulo": "ND+ — trajetória e polêmicas",
+          "url": "https://ndmais.com.br/politica/flavio-bolsonaro-trajetoria/"
+        },
+        {
+          "titulo": "Gazeta do Povo — mudança de postura em relação ao STF",
+          "url": "https://www.gazetadopovo.com.br/republica/mudanca-de-postura-em-relacao-ao-stf-marca-trajetoria-recente-de-flavio-bolsonaro/"
+        }
+      ]
+    },
+    {
+      "id": "ff-p2",
+      "politico": "flavio",
+      "categoria": "polemica",
+      "titulo": "Banco Master e o filme \"Dark Horse\" (2026)",
+      "descricao": "Daniel Vorcaro, dono do Banco Master (liquidado), teria se comprometido a aportar cerca de US$ 24 milhões num filme biográfico sobre Jair Bolsonaro; cerca de US$ 10,6 milhões foram pagos. Um áudio mostra Flávio cobrando o banqueiro pelo financiamento. Ele afirma que era \"dinheiro privado\" e que não tem nada a esconder. A PF investiga se parte do dinheiro custeou despesas de Eduardo Bolsonaro nos EUA. O Aos Fatos apontou dezenas de declarações enganosas dele sobre o caso.",
+      "status": "Sob investigação (PF); Flávio não é réu.",
+      "fontes": [
+        {
+          "titulo": "SBT News — Flávio diz não ter nada a esconder",
+          "url": "https://sbtnews.sbt.com.br/noticia/politica/flavio-bolsonaro-diz-nao-ter-nada-a-esconder-sobre-relacao-com-vorcaro-e-volta-a-pedir-cpmi-do-master"
+        },
+        {
+          "titulo": "Intellinews — fresh scandal over film deal",
+          "url": "https://www.intellinews.com/brazil-s-bolsonaro-dynasty-faces-fresh-scandal-over-film-deal-with-disgraced-banker-442928/"
+        },
+        {
+          "titulo": "Aos Fatos — declarações sobre Vorcaro",
+          "url": "https://www.aosfatos.org/noticias/flavio-mentiu-ao-menos-43-vezes-sobre-envolvimento-com-vorcaro/"
+        }
+      ]
+    },
+    {
+      "id": "ff-p3",
+      "politico": "flavio",
+      "categoria": "polemica",
+      "titulo": "Anistia como resposta ao tarifaço dos EUA (2025)",
+      "descricao": "Admitiu que a tarifa de 50% era injusta com o setor produtivo, mas vinculou a solução à aprovação de anistia aos envolvidos no 8 de janeiro e na trama golpista.",
+      "fontes": [
+        {
+          "titulo": "Diário de Pernambuco — taxação é injusta, admite Flávio",
+          "url": "https://www.diariodepernambuco.com.br/politica/2025/07/7794167-taxacao-de-trump-e-injusta-com-o-setor-produtivo-admite-flavio-bolsonaro.html"
+        }
+      ]
+    },
+    {
+      "id": "ff-x1",
+      "politico": "flavio",
+      "categoria": "proposta",
+      "titulo": "Plano de governo 2026 (9 eixos)",
+      "descricao": "Facções e milícias como terroristas; redução da maioridade penal; castração química para estupradores; corte de ao menos 10 ministérios; revisão da reforma tributária para reduzir o IVA; privatizações \"com critério\" (sem Petrobras, BB e Caixa); manutenção dos programas sociais; voucher-creche; adesão à OCDE; \"vida desde a concepção\" como valor inegociável. Analistas apontam que privatizações e reformas dependem do Congresso.",
+      "fontes": [
+        {
+          "titulo": "Estado de Minas — principais propostas",
+          "url": "https://www.em.com.br/politica/2026/08/7490602-flavio-bolsonaro-2026-conheca-as-principais-propostas-do-plano-de-governo.html"
+        },
+        {
+          "titulo": "Plano de Governo 2026 — Flávio Bolsonaro",
+          "url": "https://planodegoverno2026.com.br/candidatos/presidente/flavio-bolsonaro/"
+        },
+        {
+          "titulo": "A Investigação — plano defende vida desde a concepção",
+          "url": "https://www.ainvestigacao.com/p/plano-de-governo-de-flavio-e-unico-contra-aborto"
+        }
+      ]
+    }
+  ]
+}
