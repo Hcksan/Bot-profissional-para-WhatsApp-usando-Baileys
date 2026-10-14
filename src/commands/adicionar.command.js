@@ -1,13 +1,23 @@
+import { jidNormalizedUser } from "baileys";
 import commandManager from "./index.js";
 import logger from "../utils/logger.js";
+
+/**
+ * Encontra você (dono do número) na lista de participantes do grupo.
+ * No WhatsApp atual o participante pode vir com o número (@s.whatsapp.net) ou com o LID (@lid).
+ */
+function findMe(participants, sock) {
+  const myIds = new Set([sock.user?.id, sock.user?.lid].filter(Boolean).map((id) => jidNormalizedUser(id)));
+  return participants.find((p) => [p.id, p.phoneNumber, p.lid].filter(Boolean).some((id) => myIds.has(jidNormalizedUser(id))));
+}
+
+const isAdmin = (participant) => participant?.admin === "admin" || participant?.admin === "superadmin";
 
 /**
  * Comando para adicionar membros a grupos
  */
 async function adicionarHandler({ sock, msg, args }) {
   const chatId = msg.key.remoteJid;
-  const senderNumber = msg.key.participant?.replace(/[^0-9]/g, "") || 
-                       chatId.replace(/[^0-9]/g, "");
 
   // Subcomandos disponíveis
   const subcommand = args[0]?.toLowerCase();
@@ -15,12 +25,12 @@ async function adicionarHandler({ sock, msg, args }) {
   try {
     switch (subcommand) {
       case "listar":
-        await listarGruposAdmin(sock, chatId, senderNumber);
+        await listarGruposAdmin(sock, chatId);
         break;
 
       case "membro":
       case "membros":
-        await adicionarMembros(sock, chatId, msg, args, senderNumber);
+        await adicionarMembros(sock, chatId, msg, args);
         break;
 
       default:
@@ -38,7 +48,7 @@ async function adicionarHandler({ sock, msg, args }) {
 /**
  * Lista grupos onde o usuário é admin
  */
-async function listarGruposAdmin(sock, chatId, senderNumber) {
+async function listarGruposAdmin(sock, chatId) {
   await sock.sendMessage(chatId, {
     text: "🔍 Buscando grupos onde você é admin...",
   });
@@ -58,11 +68,9 @@ async function listarGruposAdmin(sock, chatId, senderNumber) {
 
   for (const group of groupList) {
     const participants = group.participants || [];
-    const sender = participants.find((p) => 
-      p.id.replace(/[^0-9]/g, "").includes(senderNumber)
-    );
+    const sender = findMe(participants, sock);
 
-    if (sender && (sender.admin === "admin" || sender.admin === "superadmin")) {
+    if (isAdmin(sender)) {
       adminGroups.push({
         id: group.id,
         subject: group.subject,
@@ -99,7 +107,7 @@ async function listarGruposAdmin(sock, chatId, senderNumber) {
 /**
  * Adiciona membros a um grupo
  */
-async function adicionarMembros(sock, chatId, msg, args, senderNumber) {
+async function adicionarMembros(sock, chatId, msg, args) {
   // Formato: !adicionar membros ID_DO_GRUPO@g.us 5511999999999,5511888888888
   
   if (args.length < 3) {
@@ -143,11 +151,9 @@ async function adicionarMembros(sock, chatId, msg, args, senderNumber) {
 
   // Verificar se o remetente é admin
   const participants = groupMetadata.participants;
-  const sender = participants.find((p) => 
-    p.id.replace(/[^0-9]/g, "").includes(senderNumber)
-  );
+  const sender = findMe(participants, sock);
 
-  if (!sender || (sender.admin !== "admin" && sender.admin !== "superadmin")) {
+  if (!isAdmin(sender)) {
     await sock.sendMessage(chatId, {
       text: `❌ Você não é administrador do grupo *${groupMetadata.subject}*!\n\n` +
             `Apenas administradores podem adicionar membros.`,
@@ -156,10 +162,9 @@ async function adicionarMembros(sock, chatId, msg, args, senderNumber) {
   }
 
   // Verificar se o bot é admin
-  const botJid = sock.user.id.split(":")[0] + "@s.whatsapp.net";
-  const botParticipant = participants.find((p) => p.id === botJid);
+  const botParticipant = sender;
 
-  if (!botParticipant || (botParticipant.admin !== "admin" && botParticipant.admin !== "superadmin")) {
+  if (!isAdmin(botParticipant)) {
     await sock.sendMessage(chatId, {
       text: `⚠️ O bot não é administrador do grupo *${groupMetadata.subject}*!\n\n` +
             `Para adicionar membros, o bot precisa ser admin do grupo.`,

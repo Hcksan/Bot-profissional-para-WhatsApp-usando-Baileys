@@ -11,6 +11,9 @@ auth_baileys/
 logs/
 *.log
 
+# Banco de dados do CRM (contatos e mensagens)
+data/
+
 # Arquivos temporários
 temp/
 *.tmp

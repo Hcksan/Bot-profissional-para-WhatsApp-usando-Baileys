@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>CRM Pessoal</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316a34a'/%3E%3Crect x='7' y='8' width='5' height='16' rx='1.5' fill='white'/%3E%3Crect x='14' y='8' width='5' height='11' rx='1.5' fill='white'/%3E%3Crect x='21' y='8' width='5' height='7' rx='1.5' fill='white'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="/css/app.css" />
+  </head>
+  <body>
+    <div id="login" class="login" hidden>
+      <form class="login-card" id="login-form">
+        <div class="brand brand-lg"><span class="brand-mark" aria-hidden="true"></span>CRM Pessoal</div>
+        <p class="muted">Digite a senha do painel. Ela aparece no terminal quando o programa inicia, ou é a que você definiu em <code>CRM_PASSWORD</code>.</p>
+        <label class="field">
+          <span>Senha</span>
+          <input type="password" name="password" autocomplete="current-password" required autofocus />
+        </label>
+        <p class="form-error" id="login-error" role="alert"></p>
+        <button class="btn btn-primary btn-block" type="submit">Entrar</button>
+      </form>
+    </div>
+
+    <div id="app" class="app" hidden>
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark" aria-hidden="true"></span><span class="brand-text">CRM Pessoal</span></div>
+        <nav class="tabs" id="tabs" aria-label="Seções">
+          <a href="#kanban" data-view="kanban">Kanban</a>
+          <a href="#contatos" data-view="contatos">Contatos</a>
+          <a href="#campanhas" data-view="campanhas">Campanhas</a>
+          <a href="#agendamentos" data-view="agendamentos">Agendamentos</a>
+          <a href="#whatsapp" data-view="whatsapp">WhatsApp</a>
+          <a href="#config" data-view="config">Configurações</a>
+        </nav>
+        <div class="topbar-right">
+          <a href="#whatsapp" class="status-pill" id="wa-pill" data-status="disconnected">
+            <span class="dot" aria-hidden="true"></span><span class="label">Desconectado</span>
+          </a>
+          <button class="btn btn-ghost btn-sm" id="logout-btn" type="button">Sair</button>
+        </div>
+      </header>
+      <main id="view" class="view" tabindex="-1"></main>
+    </div>
+
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>
