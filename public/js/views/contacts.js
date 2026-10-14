@@ -273,10 +273,23 @@ function openExport() {
         {
           class: "btn btn-primary",
           type: "button",
-          onClick: () => {
-            window.location.href = `/api/export${query({ ...filters, format: format.value })}`;
-            modal.close();
-          },
+          onClick: (event) =>
+            withBusy(event.currentTarget, async () => {
+              const response = await fetch(`/api/export${query({ ...filters, format: format.value })}`, { credentials: "same-origin" });
+              if (!response.ok) {
+                const data = await response.json().catch(() => ({}));
+                throw new Error(data.error || "Não foi possível exportar");
+              }
+              const disposition = response.headers.get("Content-Disposition") ?? "";
+              const filename = /filename="([^"]+)"/.exec(disposition)?.[1] ?? `contatos.${format.value}`;
+              const url = URL.createObjectURL(await response.blob());
+              const link = h("a", { href: url, download: filename, hidden: true });
+              document.body.append(link);
+              link.click();
+              link.remove();
+              setTimeout(() => URL.revokeObjectURL(url), 1000);
+              modal.close();
+            }),
         },
         "Baixar"
       ),
