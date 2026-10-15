@@ -102,6 +102,13 @@ const migrations = [
     expires_at INTEGER NOT NULL
   );
   `,
+  // Sessões de login com dados do dispositivo, para listar e encerrar pelo painel
+  `
+  ALTER TABLE web_sessions ADD COLUMN created_at INTEGER NOT NULL DEFAULT 0;
+  ALTER TABLE web_sessions ADD COLUMN last_seen_at INTEGER;
+  ALTER TABLE web_sessions ADD COLUMN user_agent TEXT;
+  ALTER TABLE web_sessions ADD COLUMN ip TEXT;
+  `,
 ];
 
 const defaultStages = [

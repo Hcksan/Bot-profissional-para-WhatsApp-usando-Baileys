@@ -5,26 +5,21 @@ import AppError, { badRequest } from "../utils/errors.js";
 import logger from "../utils/logger.js";
 import { renderTemplate } from "../utils/template.js";
 import { applyMapping, exportContacts, guessMapping, parseSpreadsheet } from "../crm/spreadsheet.js";
+import { blockCrossSite, describeDevice, securityHeaders } from "./security.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../public");
 
 /**
  * Cria o app Express com a API do CRM e o painel web
  */
-export function createApp({ store, crm, wa, runner, auth }) {
+export function createApp({ store, crm, wa, runner, auth, config = {}, onSessionsRevoked = () => {} }) {
   const app = express();
   app.disable("x-powered-by");
-  app.set("trust proxy", "loopback");
+  app.set("trust proxy", config.trustProxy ?? "loopback");
+  app.use(securityHeaders({ hsts: Boolean(config.cookieSecure) }));
+  app.use("/api", blockCrossSite({ publicUrl: config.publicUrl }));
+  app.use("/api/login", express.json({ limit: "4kb" }));
   app.use(express.json({ limit: "25mb" }));
-
-  app.use((req, res, next) => {
-    res.set({
-      "X-Content-Type-Options": "nosniff",
-      "X-Frame-Options": "DENY",
-      "Referrer-Policy": "same-origin",
-    });
-    next();
-  });
 
   // ───────────── Login ─────────────
   app.get("/api/session", (req, res) => res.json({ authenticated: auth.isAuthenticated(req) }));
@@ -171,6 +166,27 @@ export function createApp({ store, crm, wa, runner, auth }) {
   api.delete("/campaigns/:id", (req, res) => {
     store.deleteCampaign(id(req));
     res.status(204).end();
+  });
+
+  // ───────────── Sessões de login (aparelhos conectados ao painel) ─────────────
+  api.get("/sessions", (req, res) => {
+    res.json(
+      store.listWebSessions().map(({ token_hash: hash, ...session }) => ({
+        ...session,
+        device: describeDevice(session.user_agent),
+        current: hash === req.session.token_hash,
+      }))
+    );
+  });
+  api.delete("/sessions/:id", (req, res) => {
+    const hash = store.deleteWebSessionById(id(req));
+    onSessionsRevoked([hash]);
+    res.status(204).end();
+  });
+  api.post("/sessions/revoke-others", (req, res) => {
+    const hashes = store.deleteOtherWebSessions(req.session.token_hash);
+    onSessionsRevoked(hashes);
+    res.json({ closed: hashes.length });
   });
 
   // ───────────── Configurações ─────────────
