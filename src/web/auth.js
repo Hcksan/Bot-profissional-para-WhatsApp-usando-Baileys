@@ -238,12 +238,18 @@ export function createAuth({ store, password, production = false, cookieSecure =
     res.json({ ok: true });
   }
 
+  /**
+   * Espaço em que a sessão trabalha: o da própria conta ou, para administradores, o espaço em que entraram para ajudar
+   */
+  const actingWorkspace = (session, user) => (user.role === "admin" && session.acting_workspace_id ? session.acting_workspace_id : user.workspace_id);
+
   function requireAuth(req, res, next) {
     const session = sessionFrom(req.headers.cookie, req.ip);
     const user = session && store.getUser(session.user_id);
     if (!user) return res.status(401).json({ error: "Faça login novamente" });
     req.session = session;
     req.user = user;
+    req.workspaceId = actingWorkspace(session, user);
     return next();
   }
 
@@ -253,7 +259,15 @@ export function createAuth({ store, password, production = false, cookieSecure =
   function status(req) {
     const session = sessionFrom(req.headers.cookie);
     const user = session && store.getUser(session.user_id);
-    if (user) return { authenticated: true, user: publicUser(user) };
+    if (user) {
+      const id = actingWorkspace(session, user);
+      const workspace = store.getWorkspace(id);
+      return {
+        authenticated: true,
+        user: publicUser(user),
+        workspace: workspace ? { id: workspace.id, name: workspace.name, own: id === user.workspace_id } : null,
+      };
+    }
     return { authenticated: false, setupRequired: store.countUsers() === 0 };
   }
 
@@ -263,7 +277,7 @@ export function createAuth({ store, password, production = false, cookieSecure =
     const user = session && store.getUser(session.user_id);
     if (!user) return next(new Error("unauthorized"));
     socket.data.sessionHash = session.token_hash;
-    socket.data.workspaceId = user.workspace_id;
+    socket.data.workspaceId = actingWorkspace(session, user);
     return next();
   }
 

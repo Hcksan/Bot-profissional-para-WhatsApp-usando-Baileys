@@ -26,7 +26,7 @@ function render() {
             await hooks.reload();
             toast("Configurações salvas");
             render();
-            root?.append(accountCard(), await sessionsCard());
+            root?.append(accountCard(), await sessionsCard(), await accessCard());
           });
         },
       },
@@ -159,11 +159,38 @@ async function sessionsCard() {
   return card;
 }
 
+/**
+ * Quem entrou neste espaço para ajudar (administradores), para todo mundo do espaço ver
+ */
+async function accessCard() {
+  const log = await get("/workspace/access-log");
+  return h(
+    "section",
+    { class: "card stack", style: { maxWidth: "820px" } },
+    cardHead("Acessos de suporte", "eye"),
+    h("p", { class: "muted small" }, "Administradores do CRM podem entrar neste espaço para ajudar. Cada entrada aparece aqui."),
+    log.length
+      ? h(
+          "div",
+          { class: "list" },
+          log.map((entry) =>
+            h(
+              "div",
+              { class: "list-item", style: { cursor: "default" } },
+              person(entry.user_name, entry.user_email, { seed: entry.user_email, size: "sm" }),
+              h("span", { class: "meta", title: formatDateTime(entry.created_at) }, formatDateTime(entry.created_at))
+            )
+          )
+        )
+      : h("p", { class: "muted" }, "Nenhum administrador entrou neste espaço.")
+  );
+}
+
 export default {
   async mount(container) {
     root = container;
     render();
-    root.append(accountCard(), await sessionsCard());
+    root.append(accountCard(), await sessionsCard(), await accessCard());
   },
   destroy() {
     root = null;

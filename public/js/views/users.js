@@ -136,6 +136,24 @@ function actionsFor(user) {
   }
   if (user.is_me) return list;
 
+  // Espaço de outra pessoa: o administrador pode entrar para ajudar
+  if (user.workspace_id && user.workspace_id !== myWorkspace) {
+    const enter = iconButton("eye", `Entrar no espaço de ${user.name} para ajudar`);
+    enter.addEventListener("click", async () => {
+      const ok = await confirmDialog(
+        `Você vai ver e poder mexer nos contatos, campanhas, agendamentos e no WhatsApp de ${user.name}. A entrada fica registrada e aparece para ${user.name.split(" ")[0]} em Configurações.`,
+        { title: "Entrar no espaço para ajudar", confirmText: "Entrar" }
+      );
+      if (!ok) return;
+      withBusy(enter, async () => {
+        await post("/workspace/switch", { workspace_id: user.workspace_id });
+        location.hash = "#inicio";
+        location.reload();
+      });
+    });
+    list.push(enter);
+  }
+
   const promote = iconButton("shield-check", user.role === "admin" ? "Tornar membro" : "Tornar administrador");
   promote.addEventListener("click", () => run(promote, () => patch(`/users/${user.id}`, { role: user.role === "admin" ? "member" : "admin" })));
   list.push(promote);

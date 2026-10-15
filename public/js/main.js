@@ -279,9 +279,32 @@ window.addEventListener("hashchange", () => {
   if (!$("#app").hidden) route();
 });
 
+/**
+ * Faixa de aviso quando um administrador está no espaço de outra conta
+ */
+function showWorkspace(workspace) {
+  state.workspace = workspace;
+  const helping = Boolean(workspace && !workspace.own);
+  $("#support-banner").hidden = !helping;
+  $("#support-name").textContent = workspace?.name ?? "";
+}
+
+$("#support-banner").prepend(icon("users-round"));
+$("#support-exit").addEventListener("click", async (event) => {
+  event.currentTarget.disabled = true;
+  try {
+    await post("/workspace/switch", { workspace_id: null });
+  } finally {
+    // Recarrega para trocar dados, tempo real e WhatsApp de uma vez
+    location.hash = "#inicio";
+    location.reload();
+  }
+});
+
 async function startApp(user) {
   state.user = user;
   showUser(user);
+  showWorkspace((await get("/session")).workspace);
   await loadBootstrap();
   $("#login").hidden = true;
   $("#app").hidden = false;

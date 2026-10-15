@@ -156,6 +156,20 @@ const migrations = [
   );
   ALTER TABLE users ADD COLUMN workspace_id INTEGER REFERENCES workspaces(id);
   `,
+  // Suporte: o administrador pode entrar no espaço de outra conta (por sessão) e cada entrada fica registrada
+  `
+  ALTER TABLE web_sessions ADD COLUMN acting_workspace_id INTEGER;
+
+  CREATE TABLE workspace_access_log (
+    id           INTEGER PRIMARY KEY,
+    workspace_id INTEGER NOT NULL,
+    user_id      INTEGER,
+    user_name    TEXT    NOT NULL,
+    user_email   TEXT    NOT NULL,
+    created_at   INTEGER NOT NULL
+  );
+  CREATE INDEX workspace_access_log_ws ON workspace_access_log(workspace_id, created_at);
+  `,
 ];
 
 const defaultStages = [

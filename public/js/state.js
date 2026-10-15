@@ -4,6 +4,8 @@
 export const state = {
   // Conta logada: { id, name, email }
   user: null,
+  // Espaço em uso: { id, name, own } (own = false quando um administrador entrou para ajudar)
+  workspace: null,
   whatsapp: null,
   stages: [],
   tags: [],

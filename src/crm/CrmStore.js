@@ -856,6 +856,36 @@ export class CrmStore {
     return this.db.prepare("UPDATE users SET workspace_id = ? WHERE workspace_id IS NULL").run(Number(workspaceId)).changes;
   }
 
+  /**
+   * Espaços com as pessoas de cada um (para o administrador escolher onde entrar)
+   */
+  listWorkspacesWithMembers() {
+    const members = this.db.prepare("SELECT id, name, email, workspace_id FROM users ORDER BY name COLLATE NOCASE").all();
+    return this.listWorkspaces().map((workspace) => ({
+      ...workspace,
+      members: members.filter((user) => user.workspace_id === workspace.id).map(({ id, name, email }) => ({ id, name, email })),
+    }));
+  }
+
+  /**
+   * Espaço em que a sessão está trabalhando (null = o da própria conta)
+   */
+  setSessionWorkspace(tokenHash, workspaceId) {
+    this.db.prepare("UPDATE web_sessions SET acting_workspace_id = ? WHERE token_hash = ?").run(workspaceId ? Number(workspaceId) : null, tokenHash);
+  }
+
+  logWorkspaceAccess(workspaceId, user) {
+    this.db
+      .prepare("INSERT INTO workspace_access_log (workspace_id, user_id, user_name, user_email, created_at) VALUES (?, ?, ?, ?, ?)")
+      .run(Number(workspaceId), user.id, user.name, user.email, this.now());
+  }
+
+  listWorkspaceAccess(workspaceId, limit = 20) {
+    return this.db
+      .prepare("SELECT user_name, user_email, created_at FROM workspace_access_log WHERE workspace_id = ? ORDER BY created_at DESC, id DESC LIMIT ?")
+      .all(Number(workspaceId), limit);
+  }
+
   countWorkspaceUsers(workspaceId) {
     return this.db.prepare("SELECT COUNT(*) AS total FROM users WHERE workspace_id = ?").get(Number(workspaceId)).total;
   }

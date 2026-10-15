@@ -184,7 +184,7 @@ test("login: e-mail sem diferença de maiúsculas, mensagem igual para e-mail ou
 
     const cookie = ok.headers.get("set-cookie").split(";")[0];
     const session = await (await app.request("/api/session", { cookie })).json();
-    assert.deepEqual(session, { authenticated: true, user: { id: 1, name: "Dono", email: EMAIL, role: "admin" } });
+    assert.deepEqual(session, { authenticated: true, user: { id: 1, name: "Dono", email: EMAIL, role: "admin" }, workspace: null });
     assert.deepEqual(await (await app.request("/api/session")).json(), { authenticated: false, setupRequired: false });
   } finally {
     app.close();

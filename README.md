@@ -124,6 +124,10 @@ Para dar acesso a outra pessoa: **Usuários → Convidar pessoa** (nome, e-mail,
 - **Minha equipe**: a pessoa entra no seu espaço e vê os mesmos contatos e o mesmo WhatsApp que você.
 
 Remover a última conta de um espaço desconecta o WhatsApp dela e guarda o banco em `data/removidos/`.
+
+**Suporte:** um administrador pode entrar no espaço de outra conta para ajudar (**Usuários → ícone de olho**). Uma faixa
+laranja mostra em qual espaço você está, com o botão **Voltar ao meu espaço**. Cada entrada fica registrada e aparece para
+as pessoas daquele espaço em **Configurações → Acessos de suporte**.
  O CRM gera um **código de 8
 caracteres, válido por 7 dias**, e uma mensagem pronta para copiar e enviar. A pessoa abre o painel, clica em
 **Primeiro acesso com código**, confirma o nome e cria a própria senha.

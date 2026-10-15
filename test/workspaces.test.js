@@ -168,3 +168,71 @@ test("espaços continuam depois de reiniciar o servidor", async () => {
   assert.deepEqual(workspaces.get(1).store.listContacts(), []);
   fs.rmSync(app.dir, { recursive: true, force: true });
 });
+
+test("administrador entra no espaço de outra conta para ajudar, com registro visível para ela", async () => {
+  const app = await startServer();
+  try {
+    const { request } = app;
+    const admin = await app.login(ADMIN);
+    await request("/api/contacts", { method: "POST", cookie: admin, body: { phone: "11987654321", name: "Cliente do dono" } });
+    const { cookie: bia } = await app.invite(admin, { name: "Bia", email: "bia@exemplo.com" });
+    await request("/api/contacts", { method: "POST", cookie: bia, body: { phone: "21999998888", name: "Cliente da Bia" } });
+    const names = async (cookie) => (await request("/api/contacts", { cookie })).data.map((contact) => contact.name);
+
+    // Lista de espaços com as pessoas de cada um
+    const spaces = (await request("/api/workspaces", { cookie: admin })).data;
+    assert.deepEqual(spaces.map((space) => [space.id, space.members.map((member) => member.name), space.own, space.current]), [
+      [1, ["Dono"], true, true],
+      [2, ["Bia"], false, false],
+    ]);
+
+    // Entrar no espaço da Bia: o administrador passa a ver e mexer nos dados dela
+    const entered = await request("/api/workspace/switch", { method: "POST", cookie: admin, body: { workspace_id: 2 } });
+    assert.deepEqual(entered.data.workspace, { id: 2, name: "Bia", own: false });
+    assert.deepEqual(await names(admin), ["Cliente da Bia"]);
+    await request("/api/contacts", { method: "POST", cookie: admin, body: { phone: "21977776666", name: "Criado pelo suporte" } });
+    assert.deepEqual((await names(bia)).sort(), ["Cliente da Bia", "Criado pelo suporte"]);
+    const session = (await request("/api/session", { cookie: admin })).data;
+    assert.deepEqual(session.workspace, { id: 2, name: "Bia", own: false });
+    assert.equal(session.user.email, ADMIN.email, "continua sendo a conta do administrador");
+
+    // A Bia vê quem entrou no espaço dela
+    const log = (await request("/api/workspace/access-log", { cookie: bia })).data;
+    assert.equal(log.length, 1);
+    assert.equal(log[0].user_email, ADMIN.email);
+
+    // Membros não entram em outros espaços
+    assert.equal((await request("/api/workspace/switch", { method: "POST", cookie: bia, body: { workspace_id: 1 } })).status, 403);
+    assert.equal((await request("/api/workspaces", { cookie: bia })).status, 403);
+    assert.equal((await request("/api/workspace/switch", { method: "POST", cookie: admin, body: { workspace_id: 99 } })).status, 404);
+
+    // Voltar ao próprio espaço
+    const back = await request("/api/workspace/switch", { method: "POST", cookie: admin, body: { workspace_id: null } });
+    assert.equal(back.data.workspace.own, true);
+    assert.deepEqual(await names(admin), ["Cliente do dono"]);
+    assert.equal((await request("/api/workspace/access-log", { cookie: admin })).data.length, 0, "voltar ao próprio espaço não gera registro");
+  } finally {
+    app.close();
+  }
+});
+
+test("quem deixa de ser administrador volta ao próprio espaço na hora", async () => {
+  const app = await startServer();
+  try {
+    const { request } = app;
+    const admin = await app.login(ADMIN);
+    const { cookie: bia, user } = await app.invite(admin, { name: "Bia", email: "bia@exemplo.com" });
+    await request(`/api/users/${user.id}`, { method: "PATCH", cookie: admin, body: { role: "admin" } });
+    const biaAdmin = await app.login({ email: "bia@exemplo.com", password: "senha-nova-123" });
+    await request("/api/contacts", { method: "POST", cookie: admin, body: { phone: "11987654321", name: "Cliente do dono" } });
+
+    await request("/api/workspace/switch", { method: "POST", cookie: biaAdmin, body: { workspace_id: 1 } });
+    assert.deepEqual((await request("/api/contacts", { cookie: biaAdmin })).data.map((contact) => contact.name), ["Cliente do dono"]);
+
+    await request(`/api/users/${user.id}`, { method: "PATCH", cookie: admin, body: { role: "member" } });
+    assert.deepEqual((await request("/api/contacts", { cookie: biaAdmin })).data, []);
+    assert.equal((await request("/api/session", { cookie: bia })).data.workspace.own, true);
+  } finally {
+    app.close();
+  }
+});

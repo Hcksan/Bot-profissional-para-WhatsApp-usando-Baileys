@@ -34,7 +34,8 @@ function assetVersion(dir) {
  */
 export function createApp({ store, crm, wa, runner, workspaces = null, auth, config = {}, onSessionsRevoked = () => {} }) {
   // Sem gerenciador de espaços (testes e instalações antigas): um espaço só, com os serviços recebidos
-  const spaces = workspaces ?? { mainStore: store, forUser: () => ({ id: 1, store, crm, wa, runner }) };
+  const single = { id: 1, store, crm, wa, runner };
+  const spaces = workspaces ?? { mainStore: store, forUser: () => single, get: () => single };
   const accountsStore = spaces.mainStore;
 
   const app = express();
@@ -57,7 +58,8 @@ export function createApp({ store, crm, wa, runner, workspaces = null, auth, con
   api.use(auth.requireAuth);
   // Cada conta só enxerga o próprio espaço: contatos, campanhas, agendamentos, configurações e WhatsApp
   api.use((req, res, next) => {
-    req.ws = spaces.forUser(req.user);
+    // Administrador ajudando outra conta trabalha no espaço em que entrou (se ele ainda existir)
+    req.ws = spaces.get(req.workspaceId) ?? spaces.forUser(req.user);
     if (!req.ws) return next(new AppError(503, "O espaço desta conta não está disponível. Fale com o administrador."));
     return next();
   });
@@ -250,6 +252,34 @@ export function createApp({ store, crm, wa, runner, workspaces = null, auth, con
     res.status(204).end();
   });
   api.use("/users", admin);
+
+  // ───────────── Suporte: administrador entra no espaço de outra conta ─────────────
+  api.get("/workspaces", auth.accounts.requireAdmin, (req, res) => {
+    res.json(
+      accountsStore.listWorkspacesWithMembers().map((workspace) => ({
+        id: workspace.id,
+        name: workspace.name,
+        members: workspace.members,
+        whatsapp: spaces.get(workspace.id)?.wa.getState().status ?? "disconnected",
+        own: workspace.id === req.user.workspace_id,
+        current: workspace.id === req.ws.id,
+      }))
+    );
+  });
+  api.post("/workspace/switch", auth.accounts.requireAdmin, (req, res) => {
+    const target = req.body?.workspace_id ? Number(req.body.workspace_id) : req.user.workspace_id;
+    if (!accountsStore.getWorkspace(target)?.db_file || !spaces.get(target)) throw new AppError(404, "Espaço não encontrado");
+    const own = target === req.user.workspace_id;
+    accountsStore.setSessionWorkspace(req.session.token_hash, own ? null : target);
+    if (!own) {
+      // Fica registrado e aparece para as pessoas daquele espaço em Configurações
+      accountsStore.logWorkspaceAccess(target, req.user);
+      logger.info(`🛟 ${req.user.email} entrou no espaço ${target} para ajudar`);
+    }
+    const workspace = accountsStore.getWorkspace(target);
+    res.json({ workspace: { id: workspace.id, name: workspace.name, own } });
+  });
+  api.get("/workspace/access-log", (req, res) => res.json(accountsStore.listWorkspaceAccess(req.ws.id)));
 
   // ───────────── Configurações ─────────────
   api.get("/settings", (req, res) => res.json(req.ws.store.getSettings()));

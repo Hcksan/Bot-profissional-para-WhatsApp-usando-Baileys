@@ -322,6 +322,18 @@ input[type="color"] { padding: 3px; min-width: 64px; cursor: pointer; }
   .mobilebar .wa-mini[data-status="qr"], .mobilebar .wa-mini[data-status="connecting"] { background: var(--warning-soft); color: var(--warning); }
 }
 
+/* ───────── Suporte: administrador no espaço de outra conta ───────── */
+.support-banner {
+  position: sticky; top: 0; z-index: 25; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 10px 32px; background: linear-gradient(90deg, #b45309, #d97706); color: #fff; font-size: 13.5px;
+  box-shadow: 0 6px 16px -8px rgb(180 83 9 / 60%);
+}
+.support-banner .icon { width: 18px; height: 18px; }
+.support-banner .support-text { flex: 1; min-width: 220px; }
+.support-banner .btn { background: #fff; color: #92400e; border-color: transparent; }
+.support-banner .btn:hover { background: #fffbeb; }
+@media (max-width: 1023px) { .support-banner { top: 56px; padding: 10px 16px; } }
+
 /* ───────── Conteúdo ───────── */
 .view { flex: 1; padding: 28px 32px 48px; width: 100%; max-width: 1360px; margin: 0 auto; outline: none; min-width: 0; animation: view-in 0.18s ease-out; }
 .view-kanban { max-width: none; display: flex; flex-direction: column; }
