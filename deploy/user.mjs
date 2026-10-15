@@ -21,7 +21,9 @@ if (command === "list") {
   const users = store.listUsers();
   if (!users.length) console.log("Nenhuma conta criada ainda. Abra o painel e use \"Primeiro acesso\".");
   for (const user of users) {
-    console.log(`#${user.id}  ${user.name} <${user.email}>  último login: ${date(user.last_login_at)}`);
+    const role = user.role === "admin" ? "administrador" : "membro";
+    const status = { active: "ativa", pending: "aguardando primeiro acesso", blocked: "bloqueada" }[user.status];
+    console.log(`#${user.id}  ${user.name} <${user.email}>  ${role}, ${status}  último login: ${date(user.last_login_at)}`);
   }
 } else if (command === "reset-password" && emailArg) {
   const user = store.getUserWithPassword(normalizeEmail(emailArg));
@@ -32,6 +34,7 @@ if (command === "list") {
   // 16 caracteres com letras e números (atende às regras de senha)
   const password = `${crypto.randomBytes(12).toString("base64url").replace(/[-_]/g, "x").slice(0, 14)}a1`;
   store.setUserPassword(user.id, await hashPassword(password));
+  if (user.status === "pending") store.updateUser(user.id, { status: "active" });
   const closed = store.deleteOtherWebSessions(user.id, null).length;
   console.log(`Senha nova de ${user.email}: ${password}`);
   console.log(`(${closed} sessão(ões) encerrada(s). Entre com ela e troque em Configurações → Minha conta.)`);

@@ -124,6 +124,25 @@ const migrations = [
   DELETE FROM web_sessions;
   ALTER TABLE web_sessions ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE CASCADE;
   `,
+  // Várias contas: papel (administrador/membro), situação e códigos de primeiro acesso (como no MyLife).
+  // Quem já existia vira administrador.
+  `
+  ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'member' CHECK (role IN ('admin', 'member'));
+  ALTER TABLE users ADD COLUMN status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'pending', 'blocked'));
+  ALTER TABLE users ADD COLUMN created_by INTEGER;
+  UPDATE users SET role = 'admin';
+
+  CREATE TABLE activation_codes (
+    id         INTEGER PRIMARY KEY,
+    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    code_hash  TEXT    NOT NULL UNIQUE,
+    expires_at INTEGER NOT NULL,
+    used_at    INTEGER,
+    attempts   INTEGER NOT NULL DEFAULT 0,
+    created_at INTEGER NOT NULL
+  );
+  CREATE INDEX activation_codes_user ON activation_codes(user_id);
+  `,
 ];
 
 const defaultStages = [

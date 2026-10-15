@@ -1,22 +1,24 @@
-import { h, field, toast, withBusy, confirmDialog, formatDateTime, timeAgo } from "../dom.js";
+import { h, icon, pageHead, person, field, toast, withBusy, confirmDialog, formatDateTime, timeAgo } from "../dom.js";
 import { del, get, patch, post } from "../api.js";
 import { hooks, state } from "../state.js";
 
 let root = null;
 
+const cardHead = (title, iconName, ...extra) => h("div", { class: "card-head", style: { marginBottom: 0 } }, h("span", { class: "icon-bubble" }, icon(iconName)), h("h2", {}, title), ...extra);
+
 function render() {
   const settings = state.settings;
   const dailyLimit = h("input", { type: "number", min: "1", max: "1000", step: "1", value: String(settings.daily_limit), required: true });
   const keywords = h("input", { value: (settings.opt_out_keywords ?? []).join(", ") });
-  const save = h("button", { class: "btn btn-primary", type: "submit" }, "Salvar");
+  const save = h("button", { class: "btn btn-primary", type: "submit" }, icon("check"), "Salvar");
 
   root.replaceChildren(
-    h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "Configurações"))),
+    pageHead("Configurações", "Envios, sua conta e os aparelhos conectados ao painel"),
     h(
       "form",
       {
         class: "card stack",
-        style: { maxWidth: "720px" },
+        style: { maxWidth: "820px" },
         onSubmit: (event) => {
           event.preventDefault();
           withBusy(save, async () => {
@@ -28,15 +30,15 @@ function render() {
           });
         },
       },
-      h("h2", {}, "Envios"),
+      cardHead("Envios", "send"),
       field("Limite diário de mensagens de campanha", dailyLimit, "Somando todas as campanhas. Agendamentos e mensagens avulsas não contam. Comece baixo (30–50) e aumente aos poucos."),
       field("Palavras para sair da lista", keywords, "Se o contato responder exatamente uma destas palavras, ele é marcado como \"não quer receber\" e sai das campanhas."),
       h("div", { class: "row" }, save)
     ),
     h(
       "section",
-      { class: "card stack", style: { maxWidth: "720px" } },
-      h("h2", {}, "Boas práticas para não ter o número restringido"),
+      { class: "card stack", style: { maxWidth: "820px" } },
+      cardHead("Boas práticas para não ter o número restringido", "shield-check"),
       h(
         "ul",
         { class: "steps" },
@@ -59,14 +61,14 @@ function accountCard() {
   const next = h("input", { type: "password", autocomplete: "new-password", required: true, minlength: "8", maxlength: "128" });
   const confirm = h("input", { type: "password", autocomplete: "new-password", required: true, minlength: "8", maxlength: "128" });
   const error = h("p", { class: "form-error", role: "alert" });
-  const save = h("button", { class: "btn btn-primary", type: "submit" }, "Trocar senha");
+  const save = h("button", { class: "btn btn-primary", type: "submit" }, icon("key-round"), "Trocar senha");
   const { name, email } = state.user ?? {};
 
   return h(
     "form",
     {
       class: "card stack",
-      style: { maxWidth: "720px" },
+      style: { maxWidth: "820px" },
       onSubmit: (event) => {
         event.preventDefault();
         error.textContent = "";
@@ -86,8 +88,8 @@ function accountCard() {
         });
       },
     },
-    h("h2", {}, "Minha conta"),
-    h("p", { class: "muted small", style: { margin: 0 } }, `${name ?? ""} · ${email ?? ""}`),
+    cardHead("Minha conta", "user-round"),
+    person(name ?? "", `${email ?? ""} · ${state.user?.role === "admin" ? "Administrador" : "Membro"}`, { seed: email, size: "lg" }),
     h("div", { class: "grid-3" }, field("Senha atual", current), field("Nova senha", next), field("Repita a nova senha", confirm)),
     h("p", { class: "muted small", style: { margin: 0 } }, "Mínimo de 8 caracteres, com letras e números. Ao trocar, os outros aparelhos saem do painel."),
     error,
@@ -99,11 +101,11 @@ function accountCard() {
  * Aparelhos com login no painel (cada navegador tem a sua sessão)
  */
 async function sessionsCard() {
-  const card = h("section", { class: "card stack", id: "sessions-card", style: { maxWidth: "720px" } });
+  const card = h("section", { class: "card stack", id: "sessions-card", style: { maxWidth: "820px" } });
   const sessions = await get("/sessions");
   const others = sessions.filter((session) => !session.current).length;
 
-  const revokeOthers = h("button", { class: "btn btn-danger btn-sm", type: "button", disabled: others === 0 }, "Sair de todos os outros aparelhos");
+  const revokeOthers = h("button", { class: "btn btn-danger btn-sm", type: "button", disabled: others === 0 }, icon("log-out"), "Sair dos outros aparelhos");
   revokeOthers.addEventListener("click", async () => {
     if (!(await confirmDialog(`Encerrar ${others} sessão(ões) em outros aparelhos? Eles vão precisar da senha para entrar de novo.`, { danger: true, confirmText: "Encerrar" }))) return;
     await withBusy(revokeOthers, async () => {
@@ -129,7 +131,16 @@ async function sessionsCard() {
     return h(
       "tr",
       {},
-      h("td", {}, h("div", {}, session.device, " ", session.current ? h("span", { class: "badge badge-success" }, "este aparelho") : null), h("div", { class: "muted small" }, session.ip || "IP desconhecido")),
+      h(
+        "td",
+        {},
+        h(
+          "div",
+          { class: "person" },
+          h("span", { class: `icon-bubble${session.current ? " green" : ""}` }, icon("smartphone")),
+          h("span", { class: "person-text" }, h("strong", {}, session.device, " ", session.current ? h("span", { class: "badge badge-success" }, "este aparelho") : null), h("small", {}, session.ip || "IP desconhecido"))
+        )
+      ),
       h("td", { class: "nowrap" }, formatDateTime(session.created_at)),
       h("td", { class: "nowrap" }, session.current ? "agora" : timeAgo(session.last_seen_at)),
       h("td", { class: "actions" }, end)
@@ -137,7 +148,7 @@ async function sessionsCard() {
   });
 
   card.append(
-    h("div", { class: "row" }, h("h2", { class: "grow" }, "Aparelhos conectados ao painel"), revokeOthers),
+    cardHead("Aparelhos conectados ao painel", "smartphone", revokeOthers),
     h("p", { class: "muted small", style: { margin: 0 } }, "Você pode ficar logado em vários aparelhos ao mesmo tempo (PC, celular...). Se não reconhecer algum, encerre e troque a senha em “Minha conta”."),
     h(
       "div",

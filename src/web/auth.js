@@ -3,6 +3,7 @@ import logger from "../utils/logger.js";
 import { badRequest } from "../utils/errors.js";
 import { describeDevice, isSameOrigin } from "./security.js";
 import { emailProblem, fakeVerify, hashPassword, normalizeEmail, passwordProblem, verifyPassword } from "./password.js";
+import { createAccounts } from "./accounts.js";
 
 const sha256 = (value) => crypto.createHash("sha256").update(String(value)).digest();
 const MIN_PRODUCTION_PASSWORD = 12;
@@ -86,6 +87,7 @@ export function createAuth({ store, password, production = false, cookieSecure =
   const cookieName = cookieSecure ? "__Host-crm_session" : "crm_session";
   const cookieOptions = { httpOnly: true, sameSite: "lax", secure: cookieSecure, path: "/" };
   const limiter = createLoginLimiter({ now });
+  const accounts = createAccounts({ store, now });
   const tokenHash = (token) => sha256(token).toString("hex");
   const text = (value, max) => (typeof value === "string" && value.length <= max ? value : "");
   // Atraso fixo depois de um erro, para desacelerar tentativas automáticas
@@ -99,7 +101,7 @@ export function createAuth({ store, password, production = false, cookieSecure =
     return session ? { ...session, token_hash: hash } : null;
   };
 
-  const publicUser = ({ id, name, email }) => ({ id, name, email });
+  const publicUser = ({ id, name, email, role }) => ({ id, name, email, role });
 
   function startSession(req, res, user) {
     const token = crypto.randomBytes(32).toString("base64url");
@@ -135,6 +137,48 @@ export function createAuth({ store, password, production = false, cookieSecure =
     }
 
     limiter.succeed(req.ip);
+    if (user.status !== "active") return res.status(403).json({ error: "Conta bloqueada. Fale com o administrador do CRM." });
+    return startSession(req, res, user);
+  }
+
+  /**
+   * Primeiro acesso com o código do administrador (também serve para redefinir a senha), etapa 1:
+   * confere e-mail + código e devolve o nome para a pessoa confirmar
+   */
+  async function verifyActivation(req, res) {
+    if (tooManyAttempts(req, res)) return;
+    try {
+      const { user } = accounts.checkActivation(text(req.body?.email, 254), text(req.body?.code, 40));
+      return res.json({ name: user.name, email: user.email });
+    } catch (error) {
+      limiter.fail(req.ip);
+      await slowDown();
+      throw error;
+    }
+  }
+
+  /**
+   * Etapa 2: a pessoa confirma o nome, cria a senha e já entra
+   */
+  async function completeActivation(req, res) {
+    if (tooManyAttempts(req, res)) return;
+    let user;
+    try {
+      user = await accounts.completeActivation({
+        email: text(req.body?.email, 254),
+        code: text(req.body?.code, 40),
+        name: text(req.body?.name, 120),
+        password: req.body?.password,
+      });
+    } catch (error) {
+      if (/Código|tentativas/.test(error.message)) {
+        limiter.fail(req.ip);
+        await slowDown();
+      }
+      throw error;
+    }
+    limiter.succeed(req.ip);
+    logger.success(`👤 Primeiro acesso concluído: ${user.email}`);
     return startSession(req, res, user);
   }
 
@@ -162,7 +206,7 @@ export function createAuth({ store, password, production = false, cookieSecure =
     const passwordHash = await hashPassword(newPassword);
     // Confere de novo depois do hash: outra requisição pode ter criado a conta nesse meio-tempo
     if (store.countUsers() > 0) return res.status(409).json({ error: "A conta já foi criada. Entre com seu e-mail e senha." });
-    const user = store.createUser({ name, email, passwordHash });
+    const user = store.createUser({ name, email, passwordHash, role: "admin" });
     limiter.succeed(req.ip);
     logger.success(`👤 Conta criada: ${user.email}`);
     return startSession(req, res, user);
@@ -220,7 +264,7 @@ export function createAuth({ store, password, production = false, cookieSecure =
     return next();
   }
 
-  return { login, setup, changePassword, logout, requireAuth, status, socketAuth, cookieName };
+  return { login, setup, verifyActivation, completeActivation, changePassword, logout, requireAuth, status, socketAuth, cookieName, accounts };
 }
 
 export default createAuth;

@@ -1,4 +1,4 @@
-import { h, withBusy, confirmDialog, formatDateTime, toast } from "../dom.js";
+import { h, icon, button, pageHead, callout, withBusy, confirmDialog, formatDateTime, toast } from "../dom.js";
 import { post } from "../api.js";
 import { hooks, state } from "../state.js";
 
@@ -11,10 +11,10 @@ const toMs = (value) => {
 };
 
 function connectionCard(wa) {
-  const restart = h("button", { class: "btn", type: "button" }, "Reconectar");
+  const restart = button("Reconectar", { icon: "refresh-cw" });
   restart.addEventListener("click", () => withBusy(restart, () => post("/whatsapp/restart")));
 
-  const logout = h("button", { class: "btn btn-danger", type: "button" }, "Desconectar aparelho");
+  const logout = button("Desconectar aparelho", { icon: "log-out", variant: "danger" });
   logout.addEventListener("click", async () => {
     const ok = await confirmDialog("O CRM sai da lista de \"Aparelhos conectados\" do seu WhatsApp e será preciso ler o QR Code de novo.", {
       title: "Desconectar aparelho",
@@ -26,12 +26,22 @@ function connectionCard(wa) {
 
   const bodies = {
     open: [
-      h("p", { class: "row", style: { margin: 0 } }, h("span", { class: "badge badge-success" }, "Conectado")),
+      h(
+        "div",
+        { class: "wa-hero" },
+        h("span", { class: "icon-bubble green" }, icon("circle-check")),
+        h("div", {}, h("h2", {}, "WhatsApp conectado"), h("p", { class: "muted" }, wa.me?.name || "Tudo funcionando"))
+      ),
       h("dl", { class: "kv" }, h("dt", {}, "Número"), h("dd", {}, wa.me?.phone ? `+${wa.me.phone}` : "—"), h("dt", {}, "Nome"), h("dd", {}, wa.me?.name || "—")),
       h("p", { class: "muted small", style: { margin: 0 } }, "Você continua usando o WhatsApp normalmente no celular. O CRM aparece como um aparelho conectado (Windows)."),
     ],
     qr: [
-      h("p", { style: { margin: 0 } }, "Escaneie com o WhatsApp do celular:"),
+      h(
+        "div",
+        { class: "wa-hero" },
+        h("span", { class: "icon-bubble amber" }, icon("qr-code")),
+        h("div", {}, h("h2", {}, "Leia o QR Code"), h("p", { class: "muted" }, "Use o WhatsApp do celular que vai ficar ligado ao CRM"))
+      ),
       h("div", { class: "qr-box" }, wa.qr ? h("img", { src: wa.qr, alt: "QR Code para conectar o WhatsApp" }) : "Gerando..."),
       h(
         "ol",
@@ -41,17 +51,18 @@ function connectionCard(wa) {
         h("li", {}, "Toque em Conectar um aparelho e aponte para este QR Code")
       ),
     ],
-    connecting: [h("p", { style: { margin: 0 } }, "Conectando ao WhatsApp...")],
+    connecting: [
+      h("div", { class: "wa-hero" }, h("span", { class: "icon-bubble amber" }, icon("loader-circle")), h("div", {}, h("h2", {}, "Conectando..."), h("p", { class: "muted" }, "Isso leva só alguns segundos"))),
+    ],
     disconnected: [
-      h("p", { style: { margin: 0 } }, "WhatsApp desconectado."),
-      wa.lastError ? h("p", { class: "callout", style: { margin: 0 } }, wa.lastError) : h("p", { class: "muted", style: { margin: 0 } }, "Tentando reconectar automaticamente..."),
+      h("div", { class: "wa-hero" }, h("span", { class: "icon-bubble red" }, icon("smartphone")), h("div", {}, h("h2", {}, "WhatsApp desconectado"), h("p", { class: "muted" }, "Tentando reconectar automaticamente..."))),
+      wa.lastError ? callout(wa.lastError) : null,
     ],
   };
 
   return h(
     "section",
     { class: "card stack" },
-    h("h2", {}, "Conexão"),
     ...(bodies[wa.status] ?? bodies.disconnected),
     h("div", { class: "row" }, restart, wa.status === "open" ? logout : null)
   );
@@ -60,7 +71,7 @@ function connectionCard(wa) {
 function limitsCard(wa) {
   const cap = wa.limits?.cap;
   const lock = wa.limits?.timelock;
-  const refresh = h("button", { class: "btn btn-sm", type: "button", disabled: wa.status !== "open" }, "Atualizar");
+  const refresh = button("Atualizar", { icon: "refresh-cw", size: "sm", disabled: wa.status !== "open" });
   refresh.addEventListener("click", () =>
     withBusy(refresh, async () => {
       const limits = await post("/whatsapp/limits");
@@ -77,7 +88,7 @@ function limitsCard(wa) {
   return h(
     "section",
     { class: "card stack" },
-    h("div", { class: "row" }, h("h2", { class: "grow" }, "Limites"), refresh),
+    h("div", { class: "card-head", style: { marginBottom: 0 } }, h("span", { class: "icon-bubble" }, icon("send")), h("h2", {}, "Limites de envio"), refresh),
     h(
       "div",
       { class: "meter" },
@@ -94,11 +105,7 @@ function limitsCard(wa) {
         )
       : h("p", { class: "muted small", style: { margin: 0 } }, "O WhatsApp não informou cota de novas conversas para este número (normalmente significa que não há limite ativo)."),
     lock?.isActive
-      ? h(
-          "p",
-          { class: "callout", style: { margin: 0 } },
-          `⛔ O WhatsApp aplicou um bloqueio temporário para iniciar conversas${lock.timeEnforcementEnds ? ` até ${formatDateTime(new Date(lock.timeEnforcementEnds).getTime())}` : ""}. As campanhas ficam pausadas.`
-        )
+      ? callout(`O WhatsApp aplicou um bloqueio temporário para iniciar conversas${lock.timeEnforcementEnds ? ` até ${formatDateTime(new Date(lock.timeEnforcementEnds).getTime())}` : ""}. As campanhas ficam pausadas.`)
       : h("p", { class: "muted small", style: { margin: 0 } }, "Nenhum bloqueio temporário de envio informado pelo WhatsApp.")
   );
 }
@@ -107,7 +114,7 @@ function render() {
   if (!root) return;
   const wa = state.whatsapp ?? { status: "disconnected" };
   root.replaceChildren(
-    h("div", { class: "page-head" }, h("div", {}, h("h1", {}, "WhatsApp"), h("p", { class: "muted" }, "Conexão do seu número com o CRM"))),
+    pageHead("WhatsApp", "Conexão do seu número com o CRM"),
     h("div", { class: "wa-layout" }, connectionCard(wa), limitsCard(wa))
   );
 }

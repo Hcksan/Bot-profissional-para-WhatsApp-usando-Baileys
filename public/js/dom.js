@@ -2,6 +2,9 @@
  * Utilitários de interface (sem dependências)
  * Todo texto vindo de dados é inserido com textContent, nunca como HTML.
  */
+import { icon } from "./icons.js";
+
+export { icon };
 
 /**
  * Cria um elemento: h("button", { class: "btn", onClick }, "Salvar")
@@ -36,7 +39,12 @@ export const $ = (selector, root = document) => root.querySelector(selector);
 // ───────── Avisos ─────────
 
 export function toast(message, type = "info") {
-  const el = h("div", { class: `toast ${type === "error" ? "error" : ""}`, role: type === "error" ? "alert" : "status" }, message);
+  const el = h(
+    "div",
+    { class: `toast ${type === "error" ? "error" : ""}`, role: type === "error" ? "alert" : "status" },
+    icon(type === "error" ? "triangle-alert" : "circle-check"),
+    h("span", {}, message)
+  );
   $("#toasts").append(el);
   setTimeout(() => el.remove(), type === "error" ? 6000 : 3500);
 }
@@ -55,7 +63,7 @@ export function openModal({ title, body, actions = [], wide = false, onClose }) 
     h(
       "div",
       { class: "modal-inner" },
-      h("div", { class: "modal-head" }, h("h2", {}, title), h("button", { class: "icon-btn", type: "button", "aria-label": "Fechar", onClick: close }, "✕")),
+      h("div", { class: "modal-head" }, h("h2", {}, title), h("button", { class: "icon-btn", type: "button", "aria-label": "Fechar", onClick: close }, icon("x"))),
       h("div", { class: "modal-body" }, body),
       actions.length ? h("div", { class: "modal-foot" }, actions) : null
     )
@@ -134,6 +142,80 @@ export function field(label, control, hint) {
 
 export function stageOptions(stages, { empty = null } = {}) {
   return [empty !== null ? h("option", { value: "" }, empty) : null, ...stages.map((stage) => h("option", { value: String(stage.id) }, stage.name))];
+}
+
+// ───────── Blocos visuais ─────────
+
+/**
+ * Cabeçalho de página: título, descrição e botões à direita
+ */
+export function pageHead(title, description, ...actions) {
+  return h(
+    "div",
+    { class: "page-head" },
+    h("div", {}, h("h1", {}, title), description ? h("p", {}, description) : null),
+    actions.length ? h("div", { class: "actions" }, actions) : null
+  );
+}
+
+/**
+ * Botão com ícone: button("Contato", { icon: "plus", variant: "primary", onClick })
+ */
+export function button(label, { icon: name, variant = "", size = "", onClick, type = "button", title, ...rest } = {}) {
+  const cls = ["btn", variant && `btn-${variant}`, size && `btn-${size}`].filter(Boolean).join(" ");
+  return h("button", { class: cls, type, title, onClick, ...rest }, name ? icon(name) : null, label);
+}
+
+export function iconButton(name, label, { onClick, danger = false, ...rest } = {}) {
+  return h("button", { class: `icon-btn${danger ? " danger" : ""}`, type: "button", title: label, "aria-label": label, onClick, ...rest }, icon(name));
+}
+
+/**
+ * Estado vazio com ícone, título, texto e ação
+ */
+export function emptyState({ icon: name = "inbox", title, text, action, compact = false }) {
+  return h(
+    "div",
+    { class: `empty${compact ? " compact" : ""}` },
+    compact ? null : h("span", { class: "icon-bubble" }, icon(name)),
+    h(compact ? "strong" : "h2", {}, title),
+    text ? h("p", {}, text) : null,
+    action ?? null
+  );
+}
+
+/**
+ * Avatar com as iniciais e uma cor fixa por pessoa
+ */
+export function avatar(name, seed = name, size = "") {
+  const words = String(name || "").trim().split(/\s+/).filter(Boolean);
+  const initials = words.length ? (words[0][0] + (words.length > 1 ? words.at(-1)[0] : "")).toUpperCase() : "#";
+  let hash = 0;
+  for (const char of String(seed ?? "")) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  const el = h("span", { class: `avatar${size ? ` ${size}` : ""}`, "aria-hidden": "true" }, initials);
+  el.style.setProperty("--hue", String(hash % 360));
+  return el;
+}
+
+/**
+ * Pessoa: avatar + nome + linha secundária
+ */
+export function person(name, secondary, { seed, size = "" } = {}) {
+  return h(
+    "span",
+    { class: "person" },
+    avatar(name, seed ?? name, size),
+    h("span", { class: "person-text" }, h("strong", {}, name), secondary ? h("small", {}, secondary) : null)
+  );
+}
+
+export function stagePill(stage) {
+  if (!stage) return h("span", { class: "stage-pill" }, h("span", { class: "dot", style: { background: "var(--muted)" } }), "Sem etapa");
+  return h("span", { class: "stage-pill" }, h("span", { class: "dot", style: { background: stage.color } }), stage.name);
+}
+
+export function callout(text, { type = "", icon: name = type === "info" ? "info" : "triangle-alert" } = {}) {
+  return h("div", { class: `callout${type ? ` ${type}` : ""}` }, icon(name), h("div", {}, text));
 }
 
 // ───────── Formatação ─────────

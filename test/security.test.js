@@ -12,8 +12,8 @@ const EMAIL = "dono@exemplo.com.br";
 const PASSWORD = "uma-senha-bem-forte-1";
 const SETUP_CODE = "codigo-do-primeiro-acesso";
 
-async function createUser(store, { name = "Dono", email = EMAIL, password = PASSWORD } = {}) {
-  return store.createUser({ name, email, passwordHash: await hashPassword(password) });
+async function createUser(store, { name = "Dono", email = EMAIL, password = PASSWORD, role = "admin" } = {}) {
+  return store.createUser({ name, email, passwordHash: await hashPassword(password), role });
 }
 
 async function startServer({ ctx = setup(), withUser = true, cookieSecure = false, publicUrl = "", revoked = [] } = {}) {
@@ -179,12 +179,12 @@ test("login: e-mail sem diferença de maiúsculas, mensagem igual para e-mail ou
     const ok = await app.request("/api/login", { method: "POST", body: { email: `  ${EMAIL.toUpperCase()} `, password: PASSWORD } });
     assert.equal(ok.status, 200);
     const body = await ok.json();
-    assert.deepEqual(body.user, { id: 1, name: "Dono", email: EMAIL });
+    assert.deepEqual(body.user, { id: 1, name: "Dono", email: EMAIL, role: "admin" });
     assert.ok(!("password_hash" in body.user));
 
     const cookie = ok.headers.get("set-cookie").split(";")[0];
     const session = await (await app.request("/api/session", { cookie })).json();
-    assert.deepEqual(session, { authenticated: true, user: { id: 1, name: "Dono", email: EMAIL } });
+    assert.deepEqual(session, { authenticated: true, user: { id: 1, name: "Dono", email: EMAIL, role: "admin" } });
     assert.deepEqual(await (await app.request("/api/session")).json(), { authenticated: false, setupRequired: false });
   } finally {
     app.close();
@@ -211,6 +211,7 @@ test("primeiro acesso: cria a conta com o código e só uma vez", async () => {
     const cookie = created.headers.get("set-cookie").split(";")[0];
     assert.equal((await app.request("/api/contacts", { cookie })).status, 200);
     assert.equal(app.ctx.store.getUser(1).email, "gabriel@exemplo.com");
+    assert.equal(app.ctx.store.getUser(1).role, "admin", "a primeira conta é administradora");
     assert.match(app.ctx.store.getUserWithPassword("gabriel@exemplo.com").password_hash, /^\$argon2id\$/);
 
     // Depois de criada, o código não cria outra conta nem serve como senha
@@ -250,7 +251,7 @@ test("trocar a senha encerra as sessões dos outros aparelhos", async () => {
 test("cada conta só vê e encerra as próprias sessões", async () => {
   const ctx = setup();
   await createUser(ctx.store);
-  await createUser(ctx.store, { name: "Outra", email: "outra@exemplo.com", password: "outra-senha-123" });
+  await createUser(ctx.store, { name: "Outra", email: "outra@exemplo.com", password: "outra-senha-123", role: "member" });
   const app = await startServer({ ctx });
   try {
     const mine = await app.login();
@@ -264,6 +265,144 @@ test("cada conta só vê e encerra as próprias sessões", async () => {
     await app.request("/api/sessions/revoke-others", { method: "POST", cookie: mine, body: {} });
     assert.equal((await app.request("/api/contacts", { cookie: theirs })).status, 200);
     assert.deepEqual(await (await app.request("/api/account", { cookie: theirs })).json().then(({ name, email }) => ({ name, email })), { name: "Outra", email: "outra@exemplo.com" });
+  } finally {
+    app.close();
+  }
+});
+
+test("administrador convida uma conta e a pessoa entra com o código", async () => {
+  const revoked = [];
+  const app = await startServer({ revoked });
+  try {
+    const admin = await app.login();
+    const json = async (response) => ({ status: response.status, body: await response.json().catch(() => null) });
+
+    // Convite: só nome e e-mail; volta o código uma única vez
+    const invalid = await json(await app.request("/api/users", { method: "POST", cookie: admin, body: { name: "Ana", email: "x" } }));
+    assert.equal(invalid.status, 400);
+    const created = await json(await app.request("/api/users", { method: "POST", cookie: admin, body: { name: "Ana Souza", email: "Ana@Exemplo.com" } }));
+    assert.equal(created.status, 201);
+    assert.match(created.body.code, /^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/);
+    assert.equal(created.body.user.status, "pending");
+    assert.equal(created.body.user.role, "member");
+    const duplicated = await app.request("/api/users", { method: "POST", cookie: admin, body: { name: "Ana", email: "ana@exemplo.com" } });
+    assert.equal(duplicated.status, 409);
+
+    const list = await (await app.request("/api/users", { cookie: admin })).json();
+    assert.equal(list.length, 2);
+    const ana = list.find((user) => user.email === "ana@exemplo.com");
+    assert.ok(ana.activation_expires_at > Date.now());
+    assert.ok(!("password_hash" in ana));
+    assert.equal(list.find((user) => user.is_me).email, EMAIL);
+
+    // Sem senha ainda, não entra pelo login normal
+    assert.equal((await app.request("/api/login", { method: "POST", body: { email: "ana@exemplo.com", password: "" } })).status, 401);
+
+    // Primeiro acesso: código errado → genérico; código certo (com minúsculas e sem hífen) → mostra o nome
+    const wrong = await json(await app.request("/api/activation/verify", { method: "POST", body: { email: "ana@exemplo.com", code: "AAAA-AAAA" } }));
+    assert.equal(wrong.status, 400);
+    assert.match(wrong.body.error, /inválido ou expirado/);
+    const code = created.body.code.replace("-", "").toLowerCase();
+    const verified = await json(await app.request("/api/activation/verify", { method: "POST", body: { email: "ANA@exemplo.com", code } }));
+    assert.deepEqual(verified.body, { name: "Ana Souza", email: "ana@exemplo.com" });
+
+    const weak = await app.request("/api/activation/complete", { method: "POST", body: { email: "ana@exemplo.com", code, name: "Ana", password: "fraca" } });
+    assert.equal(weak.status, 400);
+    const done = await app.request("/api/activation/complete", { method: "POST", body: { email: "ana@exemplo.com", code, name: "Ana S.", password: "senha-da-ana-1" } });
+    assert.equal(done.status, 200);
+    const anaCookie = done.headers.get("set-cookie").split(";")[0];
+    assert.deepEqual((await (await app.request("/api/session", { cookie: anaCookie })).json()).user, { id: ana.id, name: "Ana S.", email: "ana@exemplo.com", role: "member" });
+    assert.equal((await app.request("/api/contacts", { cookie: anaCookie })).status, 200);
+
+    // O código não serve duas vezes
+    assert.equal((await app.request("/api/activation/verify", { method: "POST", body: { email: "ana@exemplo.com", code } })).status, 400);
+
+    // Membro não gerencia contas
+    assert.equal((await app.request("/api/users", { cookie: anaCookie })).status, 403);
+    assert.equal((await app.request("/api/users", { method: "POST", cookie: anaCookie, body: { name: "Zé", email: "ze@exemplo.com" } })).status, 403);
+
+    // Esqueceu a senha: o administrador gera um código novo e ela redefine
+    const reset = await (await app.request(`/api/users/${ana.id}/activation-code`, { method: "POST", cookie: admin, body: {} })).json();
+    const redone = await app.request("/api/activation/complete", { method: "POST", body: { email: "ana@exemplo.com", code: reset.code, name: "Ana S.", password: "senha-nova-da-ana-2" } });
+    assert.equal(redone.status, 200);
+    assert.equal((await app.request("/api/contacts", { cookie: anaCookie })).status, 401, "o primeiro acesso encerra as sessões antigas");
+
+    // Bloqueio derruba a sessão e impede o login
+    const anaAgain = await app.login(undefined, { email: "ana@exemplo.com", password: "senha-nova-da-ana-2" });
+    const blocked = await app.request(`/api/users/${ana.id}`, { method: "PATCH", cookie: admin, body: { status: "blocked" } });
+    assert.equal((await blocked.json()).status, "blocked");
+    assert.equal((await app.request("/api/contacts", { cookie: anaAgain })).status, 401);
+    assert.ok(revoked.length >= 1);
+    const denied = await app.request("/api/login", { method: "POST", body: { email: "ana@exemplo.com", password: "senha-nova-da-ana-2" } });
+    assert.equal(denied.status, 403);
+    assert.equal((await app.request(`/api/users/${ana.id}/activation-code`, { method: "POST", cookie: admin, body: {} })).status, 400);
+
+    // Desbloquear e promover
+    await app.request(`/api/users/${ana.id}`, { method: "PATCH", cookie: admin, body: { status: "active", role: "admin" } });
+    const promoted = await app.login(undefined, { email: "ana@exemplo.com", password: "senha-nova-da-ana-2" });
+    assert.equal((await app.request("/api/users", { cookie: promoted })).status, 200);
+
+    // Remover
+    assert.equal((await app.request(`/api/users/${ana.id}`, { method: "DELETE", cookie: admin })).status, 204);
+    assert.equal((await app.request("/api/contacts", { cookie: promoted })).status, 401);
+  } finally {
+    app.close();
+  }
+});
+
+test("contas: proteções do administrador", async () => {
+  const app = await startServer();
+  try {
+    const admin = await app.login();
+    const me = app.ctx.store.getUserWithPassword(EMAIL).id;
+    const patchMe = (body) => app.request(`/api/users/${me}`, { method: "PATCH", cookie: admin, body });
+
+    assert.match((await (await patchMe({ status: "blocked" })).json()).error, /própria conta/);
+    assert.match((await (await patchMe({ role: "member" })).json()).error, /administrador/);
+    assert.equal((await app.request(`/api/users/${me}`, { method: "DELETE", cookie: admin })).status, 400);
+    assert.equal((await app.request("/api/users/999", { method: "PATCH", cookie: admin, body: { status: "blocked" } })).status, 404);
+
+    // Pendente desbloqueado volta a aguardar o primeiro acesso
+    const { user } = await (await app.request("/api/users", { method: "POST", cookie: admin, body: { name: "Bia", email: "bia@exemplo.com", role: "admin" } })).json();
+    await app.request(`/api/users/${user.id}`, { method: "PATCH", cookie: admin, body: { status: "blocked" } });
+    const unblocked = await (await app.request(`/api/users/${user.id}`, { method: "PATCH", cookie: admin, body: { status: "active" } })).json();
+    assert.equal(unblocked.status, "pending");
+  } finally {
+    app.close();
+  }
+});
+
+test("código de primeiro acesso: 5 tentativas erradas invalidam", async () => {
+  const app = await startServer();
+  try {
+    const admin = await app.login();
+    const { code } = await (await app.request("/api/users", { method: "POST", cookie: admin, body: { name: "Caio", email: "caio@exemplo.com" } })).json();
+    for (let i = 0; i < 4; i++) await app.request("/api/activation/verify", { method: "POST", body: { email: "caio@exemplo.com", code: `ZZZZ-ZZZ${i + 2}` } });
+    const fifth = await (await app.request("/api/activation/verify", { method: "POST", body: { email: "caio@exemplo.com", code: "ZZZZ-ZZZZ" } })).json();
+    assert.match(fifth.error, /Muitas tentativas/);
+    assert.ok(code, "o convite devolve o código");
+  } finally {
+    app.close();
+  }
+});
+
+test("painel inicial: números do dia e quem espera resposta", async () => {
+  const app = await startServer();
+  try {
+    const cookie = await app.login();
+    const { store } = app.ctx;
+    const a = store.createContact({ phone: "11987654321", name: "Ana", stage_id: 1 });
+    store.createContact({ phone: "11987654322", name: "Bruno", stage_id: 1 });
+    store.logMessage({ contact_id: a.id, direction: "in", source: "phone", text: "Oi, tem horário?" });
+    store.db.prepare("UPDATE contacts SET last_inbound_at = ? WHERE id = ?").run(app.ctx.now(), a.id);
+
+    const data = await (await app.request("/api/dashboard", { cookie })).json();
+    assert.equal(data.contacts.total, 2);
+    assert.equal(data.contacts.awaiting, 1);
+    assert.equal(data.awaiting[0].name, "Ana");
+    assert.deepEqual(data.contacts.by_stage, [{ stage_id: 1, total: 2 }]);
+    assert.equal(data.messages_today.received, 1);
+    assert.ok("whatsapp" in data && "settings" in data);
   } finally {
     app.close();
   }

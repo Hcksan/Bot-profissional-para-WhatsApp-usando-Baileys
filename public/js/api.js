@@ -5,7 +5,7 @@
 let onUnauthorized = () => {};
 
 // Nestas rotas o 401 é "senha/código incorreto", não "sessão expirada"
-const AUTH_PATHS = new Set(["/login", "/setup"]);
+const AUTH_PATHS = new Set(["/login", "/setup", "/activation/verify", "/activation/complete"]);
 
 export function setUnauthorizedHandler(handler) {
   onUnauthorized = handler;

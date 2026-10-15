@@ -1,4 +1,4 @@
-import { h, openModal, field, toast, withBusy, confirmDialog, formatPhone, timeAgo, tagList } from "../dom.js";
+import { h, icon, button, iconButton, pageHead, avatar, openModal, field, toast, withBusy, confirmDialog, formatPhone, timeAgo, tagList } from "../dom.js";
 import { del, get, patch, post, query } from "../api.js";
 import { hooks, state } from "../state.js";
 import { openContact, openNewContact } from "./contactModal.js";
@@ -15,12 +15,13 @@ async function load() {
 function cardFor(contact) {
   const lastActivity = Math.max(contact.last_inbound_at ?? 0, contact.last_outbound_at ?? 0);
   const open = () => openContact(contact.id, { onSaved: load });
+  const awaiting = contact.last_inbound_at && contact.last_inbound_at >= (contact.last_outbound_at ?? 0);
   const card = h(
     "div",
     {
       role: "button",
       tabindex: "0",
-      class: "k-card",
+      class: `k-card${awaiting ? " awaiting" : ""}`,
       draggable: "true",
       dataset: { id: contact.id },
       onClick: open,
@@ -43,13 +44,17 @@ function cardFor(contact) {
         root.querySelectorAll(".drop-target").forEach((el) => el.classList.remove("drop-target"));
       },
     },
-    h("span", { class: "k-name" }, contact.name || formatPhone(contact.phone)),
+    h(
+      "div",
+      { class: "person" },
+      avatar(contact.name || "#", contact.phone, "sm"),
+      h("span", { class: "person-text" }, h("span", { class: "k-name" }, contact.name || formatPhone(contact.phone)), contact.name ? h("small", {}, formatPhone(contact.phone)) : null)
+    ),
     h(
       "span",
       { class: "k-meta" },
-      contact.name ? h("span", {}, formatPhone(contact.phone)) : null,
-      lastActivity ? h("span", { title: "Última mensagem" }, `💬 ${timeAgo(lastActivity)}`) : null,
-      contact.last_inbound_at && contact.last_inbound_at >= (contact.last_outbound_at ?? 0) ? h("span", { class: "badge badge-info" }, "respondeu") : null,
+      lastActivity ? h("span", { class: "row", style: { gap: "4px" }, title: "Última mensagem" }, icon("message-circle"), timeAgo(lastActivity)) : null,
+      awaiting ? h("span", { class: "badge badge-info" }, "respondeu") : null,
       contact.opted_out ? h("span", { class: "badge badge-danger" }, "não quer receber") : null
     ),
     tagList(contact.tags)
@@ -70,12 +75,17 @@ function dropIndex(body, clientY) {
 }
 
 function columnFor(stage, contacts) {
-  const body = h("div", { class: "column-body", dataset: { stage: stage?.id ?? "" } }, contacts.map(cardFor));
+  const body = h(
+    "div",
+    { class: "column-body", dataset: { stage: stage?.id ?? "" } },
+    contacts.length ? contacts.map(cardFor) : h("div", { class: "column-empty" }, "Arraste contatos para cá")
+  );
 
   body.addEventListener("dragover", (event) => {
     if (!dragging) return;
     event.preventDefault();
     body.classList.add("drop-target");
+    body.querySelector(".column-empty")?.remove();
     const index = dropIndex(body, event.clientY);
     const cards = [...body.querySelectorAll(".k-card:not(.dragging)")];
     const marker = body.querySelector(".drop-placeholder") ?? h("div", { class: "drop-placeholder" });
@@ -105,15 +115,16 @@ function columnFor(stage, contacts) {
     ? h(
         "div",
         { class: "column-head" },
-        h("span", { class: "stage-dot", style: { background: stage.color } }),
         h("h2", { title: stage.name }, stage.name),
         h("span", { class: "column-count" }, String(contacts.length)),
-        h("button", { class: "icon-btn", type: "button", title: "Adicionar contato nesta etapa", "aria-label": `Adicionar contato em ${stage.name}`, onClick: () => openNewContact({ stageId: stage.id, onSaved: load }) }, "+"),
-        h("button", { class: "icon-btn", type: "button", title: "Editar etapa", "aria-label": `Editar etapa ${stage.name}`, onClick: () => editStage(stage, contacts.length) }, "⋯")
+        iconButton("plus", `Adicionar contato em ${stage.name}`, { onClick: () => openNewContact({ stageId: stage.id, onSaved: load }) }),
+        iconButton("ellipsis", `Editar etapa ${stage.name}`, { onClick: () => editStage(stage, contacts.length) })
       )
-    : h("div", { class: "column-head" }, h("span", { class: "stage-dot", style: { background: "var(--muted)" } }), h("h2", {}, "Sem etapa"), h("span", { class: "column-count" }, String(contacts.length)));
+    : h("div", { class: "column-head" }, h("h2", {}, "Sem etapa"), h("span", { class: "column-count" }, String(contacts.length)));
 
-  return h("section", { class: "column", "aria-label": stage?.name ?? "Sem etapa" }, head, body);
+  const column = h("section", { class: "column", "aria-label": stage?.name ?? "Sem etapa" }, head, body);
+  column.style.setProperty("--stage", stage?.color ?? "var(--muted)");
+  return column;
 }
 
 function render(contacts) {
@@ -124,6 +135,7 @@ function render(contacts) {
   }
 
   const search = h("input", { type: "search", placeholder: "Buscar nome, telefone ou observação", value: filters.q, "aria-label": "Buscar" });
+  const searchBox = h("div", { class: "search-input" }, icon("search"), search);
   let searchTimer;
   search.addEventListener("input", () => {
     clearTimeout(searchTimer);
@@ -149,19 +161,17 @@ function render(contacts) {
     { class: "board" },
     noStage.length ? columnFor(null, noStage) : null,
     state.stages.map((stage) => columnFor(stage, byStage.get(stage.id))),
-    h("button", { class: "add-column", type: "button", onClick: () => editStage(null) }, "+ Nova etapa")
+    h("button", { class: "add-column", type: "button", onClick: () => editStage(null) }, icon("plus"), "Nova etapa")
   );
 
   const scroll = root.querySelector(".board")?.scrollLeft ?? 0;
   root.replaceChildren(
-    h(
-      "div",
-      { class: "page-head" },
-      h("div", {}, h("h1", {}, "Kanban"), h("p", { class: "muted" }, `${contacts.length} contato(s). Arraste os cards para mudar de etapa.`)),
-      h("span", { class: "spacer" }),
-      h("button", { class: "btn btn-primary", type: "button", onClick: () => openNewContact({ stageId: state.stages[0]?.id, onSaved: load }) }, "+ Contato")
+    pageHead(
+      "Kanban",
+      `${contacts.length} contato(s). Arraste os cards para mudar de etapa.`,
+      button("Contato", { icon: "user-plus", variant: "primary", onClick: () => openNewContact({ stageId: state.stages[0]?.id, onSaved: load }) })
     ),
-    h("div", { class: "toolbar" }, search, tagSelect),
+    h("div", { class: "toolbar" }, searchBox, tagSelect),
     board
   );
   board.scrollLeft = scroll;
@@ -206,8 +216,8 @@ function editStage(stage, total = 0) {
         ? h(
             "div",
             { class: "row" },
-            h("button", { class: "btn btn-sm", type: "button", disabled: position <= 0, onClick: () => move(-1) }, "← Mover para a esquerda"),
-            h("button", { class: "btn btn-sm", type: "button", disabled: position >= state.stages.length - 1, onClick: () => move(1) }, "Mover para a direita →")
+            button("Mover para a esquerda", { icon: "chevron-left", size: "sm", disabled: position <= 0, onClick: () => move(-1) }),
+            button("Mover para a direita", { icon: "chevron-right", size: "sm", disabled: position >= state.stages.length - 1, onClick: () => move(1) })
           )
         : null
     ),

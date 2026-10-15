@@ -18,13 +18,15 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   app.set("trust proxy", config.trustProxy ?? "loopback");
   app.use(securityHeaders({ hsts: Boolean(config.cookieSecure) }));
   app.use("/api", blockCrossSite({ publicUrl: config.publicUrl }));
-  app.use(["/api/login", "/api/setup"], express.json({ limit: "4kb" }));
+  app.use(["/api/login", "/api/setup", "/api/activation"], express.json({ limit: "4kb" }));
   app.use(express.json({ limit: "25mb" }));
 
   // ───────────── Login ─────────────
   app.get("/api/session", (req, res) => res.json(auth.status(req)));
   app.post("/api/login", auth.login);
   app.post("/api/setup", auth.setup);
+  app.post("/api/activation/verify", auth.verifyActivation);
+  app.post("/api/activation/complete", auth.completeActivation);
   app.post("/api/logout", auth.logout);
 
   const api = express.Router();
@@ -55,6 +57,10 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
       runtime: runner.runtime(),
       sent_today: store.campaignSentToday(),
     });
+  });
+
+  api.get("/dashboard", (req, res) => {
+    res.json({ ...store.dashboard(), whatsapp: wa.getState(), settings: store.getSettings(), runtime: runner.runtime() });
   });
 
   // ───────────── WhatsApp ─────────────
@@ -197,6 +203,23 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
     onSessionsRevoked(hashes);
     res.json({ ok: true, closed: hashes.length });
   });
+
+  // ───────────── Contas (só administradores) ─────────────
+  const admin = express.Router();
+  admin.use(auth.accounts.requireAdmin);
+  admin.get("/", (req, res) => res.json(store.listUsers().map((user) => ({ ...user, is_me: user.id === req.user.id }))));
+  admin.post("/", (req, res) => res.status(201).json(auth.accounts.createUser(req.user, req.body ?? {})));
+  admin.post("/:id/activation-code", (req, res) => res.json(auth.accounts.newCode(id(req))));
+  admin.patch("/:id", (req, res) => {
+    const { user, revoked } = auth.accounts.updateUser(req.user, id(req), req.body ?? {});
+    onSessionsRevoked(revoked);
+    res.json(user);
+  });
+  admin.delete("/:id", (req, res) => {
+    onSessionsRevoked(auth.accounts.deleteUser(req.user, id(req)));
+    res.status(204).end();
+  });
+  api.use("/users", admin);
 
   // ───────────── Configurações ─────────────
   api.get("/settings", (req, res) => res.json(store.getSettings()));

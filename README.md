@@ -114,10 +114,19 @@ sudo bash /opt/crm/deploy/update.sh     # atualizar para a versão mais nova do 
 ### Contas do painel
 
 O login é por **e-mail e senha** (Argon2id), no mesmo modelo do MyLife. A primeira conta é criada pelo próprio painel em
-**Primeiro acesso**, confirmada pelo código `CRM_PASSWORD`; depois que ela existe, o código não serve mais para entrar.
-A senha se troca em **Configurações → Minha conta** (os outros aparelhos saem do painel).
+**Primeiro acesso**, confirmada pelo código `CRM_PASSWORD`, e vira **administradora**. Depois disso o código não serve mais.
 
-Esqueceu a senha? Na VM:
+Para dar acesso a outra pessoa: **Usuários → Convidar pessoa** (nome, e-mail e permissão). O CRM gera um **código de 8
+caracteres, válido por 7 dias**, e uma mensagem pronta para copiar e enviar. A pessoa abre o painel, clica em
+**Primeiro acesso com código**, confirma o nome e cria a própria senha.
+
+| Permissão | O que pode fazer |
+|---|---|
+| Membro | Usa o CRM inteiro: Kanban, contatos, campanhas, agendamentos e WhatsApp |
+| Administrador | Tudo do membro e também convida, bloqueia, remove e muda a permissão das contas |
+
+Esqueceu a senha? Um administrador gera um código novo (ícone de chave em **Usuários**) e a pessoa usa o mesmo
+"Primeiro acesso com código" para criar outra senha. Sem nenhum administrador com acesso, na VM:
 
 ```bash
 cd /opt/crm

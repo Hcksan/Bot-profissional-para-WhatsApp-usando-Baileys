@@ -407,6 +407,58 @@ export class CrmStore {
     return total;
   }
 
+  // ───────────────────────── Visão geral (tela Início) ─────────────────────────
+
+  /**
+   * Números da tela inicial: funil por etapa, quem está esperando resposta, mensagens de hoje,
+   * próximos agendamentos e campanhas em aberto
+   */
+  dashboard() {
+    const today = startOfDay(this.now());
+    const week = this.now() - 7 * 24 * 60 * 60 * 1000;
+    const totals = this.db
+      .prepare(
+        `SELECT COUNT(*) AS total,
+           COALESCE(SUM(opted_out), 0) AS opted_out,
+           COALESCE(SUM(created_at >= ?), 0) AS new_week,
+           COALESCE(SUM(last_inbound_at IS NOT NULL AND last_inbound_at > COALESCE(last_outbound_at, 0)), 0) AS awaiting
+         FROM contacts`
+      )
+      .get(week);
+    const byStage = this.db.prepare("SELECT stage_id, COUNT(*) AS total FROM contacts GROUP BY stage_id").all();
+    const awaiting = this.db
+      .prepare(
+        `SELECT * FROM contacts
+         WHERE last_inbound_at IS NOT NULL AND last_inbound_at > COALESCE(last_outbound_at, 0)
+         ORDER BY last_inbound_at DESC LIMIT 6`
+      )
+      .all()
+      .map(hydrateContact);
+    const messages = this.db
+      .prepare(
+        `SELECT COALESCE(SUM(direction = 'in'), 0) AS received, COALESCE(SUM(direction = 'out'), 0) AS sent
+         FROM messages WHERE created_at >= ?`
+      )
+      .get(today);
+    const schedules = this.db
+      .prepare(
+        `SELECT s.id, s.text, s.send_at, s.recurrence, c.id AS contact_id, c.name AS contact_name, c.phone AS contact_phone
+         FROM schedules s JOIN contacts c ON c.id = s.contact_id
+         WHERE s.status = 'pending' ORDER BY s.send_at LIMIT 5`
+      )
+      .all();
+    const pendingSchedules = this.db.prepare("SELECT COUNT(*) AS total FROM schedules WHERE status = 'pending'").get().total;
+
+    return {
+      contacts: { ...totals, by_stage: byStage },
+      awaiting,
+      messages_today: messages,
+      campaign_sent_today: this.campaignSentToday(),
+      schedules: { pending: pendingSchedules, next: schedules },
+      campaigns: this.listCampaigns().filter((campaign) => ["running", "paused", "draft"].includes(campaign.status)).slice(0, 4),
+    };
+  }
+
   // ───────────────────────── Agendamentos ─────────────────────────
 
   listSchedules({ status } = {}) {
@@ -678,11 +730,21 @@ export class CrmStore {
     return this.db.prepare("SELECT COUNT(*) AS total FROM users").get().total;
   }
 
-  createUser({ name, email, passwordHash }) {
+  countActiveAdmins() {
+    return this.db.prepare("SELECT COUNT(*) AS total FROM users WHERE role = 'admin' AND status = 'active'").get().total;
+  }
+
+  /**
+   * Cria uma conta. Sem senha (passwordHash vazio), ela fica "pending" até o primeiro acesso com código.
+   */
+  createUser({ name, email, passwordHash = "", role = "member", status = "active", createdBy = null }) {
     try {
       const { lastInsertRowid } = this.db
-        .prepare("INSERT INTO users (name, email, password_hash, created_at, password_changed_at) VALUES (?, ?, ?, ?, ?)")
-        .run(clean(name, 120), clean(email, 254).toLowerCase(), passwordHash, this.now(), this.now());
+        .prepare(
+          `INSERT INTO users (name, email, password_hash, role, status, created_by, created_at, password_changed_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+        )
+        .run(clean(name, 120), clean(email, 254).toLowerCase(), passwordHash, role, status, createdBy, this.now(), passwordHash ? this.now() : null);
       return this.getUser(lastInsertRowid);
     } catch (error) {
       if (String(error.message).includes("UNIQUE")) throw conflict("Já existe uma conta com este e-mail");
@@ -694,7 +756,17 @@ export class CrmStore {
    * Conta pelo id, sem o hash da senha
    */
   getUser(id) {
-    return this.db.prepare("SELECT id, name, email, created_at, password_changed_at, last_login_at FROM users WHERE id = ?").get(Number(id)) ?? null;
+    return (
+      this.db
+        .prepare("SELECT id, name, email, role, status, created_at, password_changed_at, last_login_at FROM users WHERE id = ?")
+        .get(Number(id)) ?? null
+    );
+  }
+
+  requireUser(id) {
+    const user = this.getUser(id);
+    if (!user) throw notFound("Conta não encontrada");
+    return user;
   }
 
   /**
@@ -708,8 +780,28 @@ export class CrmStore {
     return this.db.prepare("SELECT password_hash FROM users WHERE id = ?").get(Number(id))?.password_hash ?? null;
   }
 
+  /**
+   * Contas com a validade do código de primeiro acesso em aberto (se houver)
+   */
   listUsers() {
-    return this.db.prepare("SELECT id, name, email, created_at, password_changed_at, last_login_at FROM users ORDER BY id").all();
+    return this.db
+      .prepare(
+        `SELECT u.id, u.name, u.email, u.role, u.status, u.created_at, u.password_changed_at, u.last_login_at,
+                (SELECT MAX(a.expires_at) FROM activation_codes a
+                  WHERE a.user_id = u.id AND a.used_at IS NULL AND a.expires_at > ?) AS activation_expires_at
+         FROM users u ORDER BY u.role = 'admin' DESC, u.name COLLATE NOCASE`
+      )
+      .all(this.now());
+  }
+
+  updateUser(id, { role, status } = {}) {
+    if (role) this.db.prepare("UPDATE users SET role = ? WHERE id = ?").run(role, Number(id));
+    if (status) this.db.prepare("UPDATE users SET status = ? WHERE id = ?").run(status, Number(id));
+    return this.requireUser(id);
+  }
+
+  deleteUser(id) {
+    this.db.prepare("DELETE FROM users WHERE id = ?").run(Number(id));
   }
 
   setUserPassword(id, passwordHash) {
@@ -718,6 +810,53 @@ export class CrmStore {
 
   touchUserLogin(id) {
     this.db.prepare("UPDATE users SET last_login_at = ? WHERE id = ?").run(this.now(), Number(id));
+  }
+
+  // ───────────────────────── Códigos de primeiro acesso ─────────────────────────
+
+  /**
+   * Guarda um código novo (só o hash) e invalida os anteriores da conta
+   */
+  saveActivationCode(userId, codeHash, expiresAt) {
+    transaction(this.db, () => {
+      this.db.prepare("UPDATE activation_codes SET used_at = ? WHERE user_id = ? AND used_at IS NULL").run(this.now(), Number(userId));
+      this.db
+        .prepare("INSERT INTO activation_codes (user_id, code_hash, expires_at, created_at) VALUES (?, ?, ?, ?)")
+        .run(Number(userId), codeHash, expiresAt, this.now());
+    });
+  }
+
+  activeActivationCode(userId) {
+    return (
+      this.db
+        .prepare("SELECT * FROM activation_codes WHERE user_id = ? AND used_at IS NULL AND expires_at > ? ORDER BY id DESC LIMIT 1")
+        .get(Number(userId), this.now()) ?? null
+    );
+  }
+
+  /**
+   * Conta uma tentativa errada; com "max" tentativas o código deixa de valer. Devolve o total de tentativas.
+   */
+  failActivationCode(id, max) {
+    const { attempts } = this.db.prepare("UPDATE activation_codes SET attempts = attempts + 1 WHERE id = ? RETURNING attempts").get(Number(id));
+    if (attempts >= max) this.db.prepare("UPDATE activation_codes SET used_at = ? WHERE id = ?").run(this.now(), Number(id));
+    return attempts;
+  }
+
+  /**
+   * Primeiro acesso concluído: usa o código, define nome e senha, ativa a conta e encerra sessões antigas.
+   * Devolve false se o código já tinha sido usado (duas abas ao mesmo tempo).
+   */
+  completeActivation(codeId, userId, { name, passwordHash }) {
+    return transaction(this.db, () => {
+      const used = this.db.prepare("UPDATE activation_codes SET used_at = ? WHERE id = ? AND used_at IS NULL").run(this.now(), Number(codeId));
+      if (!used.changes) return false;
+      this.db
+        .prepare("UPDATE users SET name = ?, password_hash = ?, password_changed_at = ?, status = 'active' WHERE id = ?")
+        .run(clean(name, 120), passwordHash, this.now(), Number(userId));
+      this.db.prepare("DELETE FROM web_sessions WHERE user_id = ?").run(Number(userId));
+      return true;
+    });
   }
 
   // ───────────────────────── Sessões do painel ─────────────────────────
@@ -731,11 +870,11 @@ export class CrmStore {
   }
 
   /**
-   * Sessão válida (não expirada e de uma conta existente) ou null. Atualiza o "último acesso" no máximo uma vez por minuto.
+   * Sessão válida (não expirada e de uma conta ativa) ou null. Atualiza o "último acesso" no máximo uma vez por minuto.
    */
   getWebSession(tokenHash, { ip } = {}) {
     const row = this.db
-      .prepare("SELECT s.rowid AS id, s.* FROM web_sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ?")
+      .prepare("SELECT s.rowid AS id, s.* FROM web_sessions s JOIN users u ON u.id = s.user_id AND u.status = 'active' WHERE s.token_hash = ?")
       .get(tokenHash);
     if (!row || row.expires_at <= this.now()) return null;
     if (!row.last_seen_at || this.now() - row.last_seen_at > 60000) {
@@ -753,6 +892,13 @@ export class CrmStore {
          FROM web_sessions WHERE expires_at > ? AND user_id = ? ORDER BY last_seen_at DESC`
       )
       .all(this.now(), Number(userId));
+  }
+
+  /**
+   * Encerra todas as sessões da conta. Devolve os hashes encerrados.
+   */
+  deleteUserWebSessions(userId) {
+    return this.deleteOtherWebSessions(userId, null);
   }
 
   deleteWebSession(tokenHash) {

@@ -1,6 +1,6 @@
-import { h, openModal, field, stageOptions, toast, withBusy, confirmDialog, formatPhone, formatDateTime, toLocalInput } from "../dom.js";
+import { h, icon, person, stagePill, openModal, field, stageOptions, toast, withBusy, confirmDialog, formatPhone, formatDateTime, toLocalInput } from "../dom.js";
 import { del, get, patch, post } from "../api.js";
-import { state } from "../state.js";
+import { state, stageById } from "../state.js";
 
 const SOURCE_LABEL = {
   manual: "pelo CRM",
@@ -107,7 +107,7 @@ export async function openContact(id, { onSaved } = {}) {
 
   const connected = state.whatsapp?.status === "open";
   const sendText = h("textarea", { rows: 2, placeholder: connected ? "Escreva uma mensagem..." : "Conecte o WhatsApp para enviar", disabled: !connected });
-  const sendBtn = h("button", { class: "btn btn-primary", type: "button", disabled: !connected }, "Enviar agora");
+  const sendBtn = h("button", { class: "btn btn-primary", type: "button", disabled: !connected }, icon("send"), "Enviar agora");
   sendBtn.addEventListener("click", () =>
     withBusy(sendBtn, async () => {
       if (!sendText.value.trim()) return;
@@ -121,7 +121,7 @@ export async function openContact(id, { onSaved } = {}) {
   );
 
   const save = h("button", { class: "btn btn-primary", type: "submit", form: "contact-form" }, "Salvar");
-  const remove = h("button", { class: "btn btn-danger left", type: "button" }, "Excluir");
+  const remove = h("button", { class: "btn btn-danger left", type: "button" }, icon("trash-2"), "Excluir");
   remove.addEventListener("click", async () => {
     if (!(await confirmDialog(`Excluir ${contact.name || formatPhone(contact.phone)}? O histórico também será apagado.`, { danger: true, confirmText: "Excluir" }))) return;
     await withBusy(remove, async () => {
@@ -164,6 +164,14 @@ export async function openContact(id, { onSaved } = {}) {
     title: contact.name || formatPhone(contact.phone),
     wide: true,
     body: [
+      h(
+        "div",
+        { class: "row" },
+        person(contact.name || formatPhone(contact.phone), contact.name ? formatPhone(contact.phone) : null, { seed: contact.phone, size: "lg" }),
+        h("span", { class: "spacer" }),
+        stagePill(stageById(contact.stage_id)),
+        contact.opted_out ? h("span", { class: "badge badge-danger" }, "não quer receber") : null
+      ),
       form,
       h(
         "fieldset",
@@ -182,10 +190,11 @@ export async function openContact(id, { onSaved } = {}) {
               type: "button",
               onClick: () => openScheduleModal({ contact, onSaved: () => toast("Mensagem agendada") }),
             },
+            icon("calendar-clock"),
             "Agendar mensagem"
           ),
           h("span", { class: "spacer" }),
-          h("a", { class: "btn btn-ghost", href: `https://wa.me/${contact.phone}`, target: "_blank", rel: "noopener" }, "Abrir no WhatsApp ↗")
+          h("a", { class: "btn btn-ghost", href: `https://wa.me/${contact.phone}`, target: "_blank", rel: "noopener" }, icon("message-circle"), "Abrir no WhatsApp")
         )
       ),
     ],

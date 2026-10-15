@@ -1,4 +1,4 @@
-import { h, openModal, field, stageOptions, toast, withBusy, confirmDialog, formatPhone, formatDateTime, formatDuration } from "../dom.js";
+import { h, icon, button, pageHead, emptyState, callout, person, openModal, field, stageOptions, toast, withBusy, confirmDialog, formatPhone, formatDateTime, formatDuration } from "../dom.js";
 import { del, get, patch, post, query } from "../api.js";
 import { state } from "../state.js";
 
@@ -44,19 +44,19 @@ function campaignCard(campaign) {
   const status = STATUS[campaign.status];
   const isCurrent = runtime.campaign_id === campaign.id && campaign.status === "running";
 
-  const action = (label, path, { cls = "btn btn-sm", confirmText } = {}) => {
-    const button = h("button", { class: cls, type: "button" }, label);
-    button.addEventListener("click", async () => {
+  const action = (label, path, { cls = "btn btn-sm", confirmText, iconName } = {}) => {
+    const btn = h("button", { class: cls, type: "button" }, iconName ? icon(iconName) : null, label);
+    btn.addEventListener("click", async () => {
       if (confirmText && !(await confirmDialog(confirmText, { danger: true, confirmText: label }))) return;
-      await withBusy(button, async () => {
+      await withBusy(btn, async () => {
         await post(`/campaigns/${campaign.id}/${path}`);
         await load();
       });
     });
-    return button;
+    return btn;
   };
 
-  const remove = h("button", { class: "btn btn-sm btn-ghost", type: "button" }, "Excluir");
+  const remove = h("button", { class: "btn btn-sm btn-ghost", type: "button" }, icon("trash-2"), "Excluir");
   remove.addEventListener("click", async () => {
     if (!(await confirmDialog(`Excluir a campanha "${campaign.name}"? O histórico de envios dela será apagado.`, { danger: true, confirmText: "Excluir" }))) return;
     await withBusy(remove, async () => {
@@ -68,22 +68,40 @@ function campaignCard(campaign) {
   return h(
     "article",
     { class: "card campaign-card" },
-    h("div", { class: "row" }, h("h2", { class: "grow" }, campaign.name), h("span", { class: `badge ${status.badge}` }, status.label)),
-    progressBar(campaign),
+    h(
+      "div",
+      { class: "row" },
+      h("span", { class: `icon-bubble${campaign.status === "running" ? " green" : ""}` }, icon("megaphone")),
+      h("div", { class: "grow" }, h("h2", { class: "ellipsis" }, campaign.name), h("div", { class: "msg-preview" }, campaign.message)),
+      h("span", { class: `badge ${status.badge}` }, status.label)
+    ),
+    h(
+      "div",
+      { class: "stack-sm" },
+      h(
+        "div",
+        { class: "row" },
+        h("span", { class: "big-number" }, String(campaign.sent)),
+        h("span", { class: "muted" }, `de ${campaign.total} enviadas`),
+        h("span", { class: "spacer" }),
+        h("span", { class: "muted small" }, campaign.total ? `${Math.round((campaign.sent / campaign.total) * 100)}%` : "")
+      ),
+      progressBar(campaign)
+    ),
     h(
       "div",
       { class: "stats" },
-      h("span", {}, h("b", {}, String(campaign.sent)), ` de ${campaign.total} enviadas`),
-      campaign.failed ? h("span", {}, h("b", {}, String(campaign.failed)), " falharam") : null,
-      campaign.skipped ? h("span", {}, h("b", {}, String(campaign.skipped)), " ignoradas") : null,
-      h("span", {}, `${campaign.min_delay_s}–${campaign.max_delay_s}s entre envios`),
-      h("span", {}, `${campaign.window_start}–${campaign.window_end}`)
+      campaign.failed ? h("span", { style: { color: "var(--danger)" } }, icon("circle-x"), h("b", {}, String(campaign.failed)), " falharam") : null,
+      campaign.skipped ? h("span", {}, icon("info"), h("b", {}, String(campaign.skipped)), " ignoradas") : null,
+      h("span", {}, icon("hourglass"), `${campaign.min_delay_s}–${campaign.max_delay_s}s entre envios`),
+      h("span", {}, icon("clock"), `${campaign.window_start}–${campaign.window_end}`)
     ),
     campaign.status_note && !["done", "draft"].includes(campaign.status)
       ? h(
           "div",
           { class: "note" },
-          campaign.status_note,
+          icon(campaign.status === "running" ? "loader-circle" : "info"),
+          h("span", { class: "grow" }, campaign.status_note),
           isCurrent && runtime.next_send_at && campaign.status_note.startsWith("Próximo envio")
             ? h("span", { class: "countdown", dataset: { at: runtime.next_send_at } })
             : null
@@ -92,11 +110,11 @@ function campaignCard(campaign) {
     h(
       "div",
       { class: "row" },
-      campaign.status === "draft" ? action("Iniciar envio", "start", { cls: "btn btn-sm btn-primary" }) : null,
-      campaign.status === "running" ? action("Pausar", "pause") : null,
-      campaign.status === "paused" ? action("Retomar", "start", { cls: "btn btn-sm btn-primary" }) : null,
-      ["draft", "paused"].includes(campaign.status) ? h("button", { class: "btn btn-sm", type: "button", onClick: () => openCampaignForm(campaign) }, "Editar") : null,
-      h("button", { class: "btn btn-sm", type: "button", onClick: () => openDetails(campaign.id) }, "Ver envios"),
+      campaign.status === "draft" ? action("Iniciar envio", "start", { cls: "btn btn-sm btn-primary", iconName: "play" }) : null,
+      campaign.status === "running" ? action("Pausar", "pause", { iconName: "pause" }) : null,
+      campaign.status === "paused" ? action("Retomar", "start", { cls: "btn btn-sm btn-primary", iconName: "play" }) : null,
+      ["draft", "paused"].includes(campaign.status) ? button("Editar", { icon: "pencil", size: "sm", onClick: () => openCampaignForm(campaign) }) : null,
+      button("Ver envios", { icon: "eye", size: "sm", onClick: () => openDetails(campaign.id) }),
       h("span", { class: "spacer" }),
       ["running", "paused", "draft"].includes(campaign.status) ? action("Cancelar", "cancel", { cls: "btn btn-sm btn-ghost", confirmText: "Cancelar a campanha? Os contatos que ainda não receberam ficam de fora." }) : null,
       campaign.status !== "running" ? remove : null
@@ -107,22 +125,19 @@ function campaignCard(campaign) {
 function render() {
   const { daily_limit: limit } = state.settings;
   root.replaceChildren(
-    h(
-      "div",
-      { class: "page-head" },
-      h("div", {}, h("h1", {}, "Campanhas"), h("p", { class: "muted" }, `Envio de uma mensagem para vários contatos, um de cada vez. Hoje: ${state.sent_today ?? 0} de ${limit} mensagens do limite diário.`)),
-      h("span", { class: "spacer" }),
-      h("button", { class: "btn btn-primary", type: "button", onClick: () => openCampaignForm() }, "+ Nova campanha")
+    pageHead(
+      "Campanhas",
+      `Uma mensagem para vários contatos, enviada um de cada vez. Hoje: ${state.sent_today ?? 0} de ${limit} do limite diário.`,
+      button("Nova campanha", { icon: "plus", variant: "primary", onClick: () => openCampaignForm() })
     ),
     campaigns.length
       ? h("div", { class: "cards-grid" }, campaigns.map(campaignCard))
-      : h(
-          "div",
-          { class: "empty" },
-          h("h2", {}, "Nenhuma campanha ainda"),
-          h("p", {}, "Escolha os contatos, escreva a mensagem e o CRM envia um por um, com intervalos aleatórios."),
-          h("button", { class: "btn btn-primary", type: "button", onClick: () => openCampaignForm() }, "Criar campanha")
-        )
+      : emptyState({
+          icon: "megaphone",
+          title: "Nenhuma campanha ainda",
+          text: "Escolha os contatos, escreva a mensagem e o CRM envia um por um, com intervalos aleatórios para parecer natural.",
+          action: button("Criar campanha", { icon: "plus", variant: "primary", onClick: () => openCampaignForm() }),
+        })
   );
   tickCountdown();
 }
@@ -293,11 +308,7 @@ function openCampaignForm(campaign = null) {
       h("div", { class: "grid-2" }, field("Depois de enviar, mover para", afterSend), field("Quando a pessoa responder, mover para", onReply))
     ),
     estimate,
-    h(
-      "p",
-      { class: "callout", style: { margin: 0 } },
-      "Envie só para quem conhece você. O que mais leva a bloqueio é gente denunciando ou bloqueando seu número. Quem responder \"sair\" ou \"parar\" sai automaticamente das campanhas."
-    ),
+    callout("Envie só para quem conhece você. O que mais leva a bloqueio é gente denunciando ou bloqueando seu número. Quem responder \"sair\" ou \"parar\" sai automaticamente das campanhas."),
     error
   );
 
@@ -338,7 +349,7 @@ async function openDetails(id) {
               h(
                 "tr",
                 {},
-                h("td", {}, h("div", {}, item.contact_name || "Sem nome"), h("div", { class: "muted small" }, formatPhone(item.contact_phone))),
+                h("td", {}, person(item.contact_name || "Sem nome", formatPhone(item.contact_phone), { seed: item.contact_phone, size: "sm" })),
                 h("td", {}, h("span", { class: `badge ${ITEM_STATUS[item.status].badge}` }, ITEM_STATUS[item.status].label)),
                 h("td", { class: "nowrap" }, formatDateTime(item.sent_at) || "—"),
                 h("td", { class: "small" }, item.error ?? item.rendered ?? "")

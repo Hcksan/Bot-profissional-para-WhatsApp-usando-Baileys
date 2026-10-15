@@ -1,4 +1,4 @@
-import { h, withBusy, confirmDialog, formatPhone, formatDateTime } from "../dom.js";
+import { h, icon, button, pageHead, emptyState, person, withBusy, confirmDialog, formatPhone, formatDateTime } from "../dom.js";
 import { del, get, post } from "../api.js";
 import { openScheduleModal } from "./contactModal.js";
 
@@ -21,9 +21,9 @@ async function load() {
 function render(schedules) {
   const rows = schedules.map((schedule) => {
     const late = schedule.status === "pending" && schedule.send_at < Date.now();
-    const cancel = h("button", { class: "btn btn-sm", type: "button" }, "Cancelar");
+    const cancel = button("Cancelar", { icon: "x", size: "sm" });
     cancel.addEventListener("click", () => withBusy(cancel, async () => (await post(`/schedules/${schedule.id}/cancel`), load())));
-    const remove = h("button", { class: "btn btn-sm btn-ghost", type: "button" }, "Excluir");
+    const remove = button("Excluir", { icon: "trash-2", size: "sm", variant: "ghost" });
     remove.addEventListener("click", async () => {
       if (!(await confirmDialog("Excluir este agendamento?", { danger: true, confirmText: "Excluir" }))) return;
       await withBusy(remove, async () => (await del(`/schedules/${schedule.id}`), load()));
@@ -32,9 +32,9 @@ function render(schedules) {
     return h(
       "tr",
       {},
-      h("td", {}, h("div", {}, schedule.contact_name || "Sem nome"), h("div", { class: "muted small" }, formatPhone(schedule.contact_phone))),
+      h("td", {}, person(schedule.contact_name || "Sem nome", formatPhone(schedule.contact_phone), { seed: schedule.contact_phone })),
       h("td", { style: { maxWidth: "380px" } }, h("div", { class: "small", style: { whiteSpace: "pre-wrap" } }, schedule.text)),
-      h("td", { class: "nowrap" }, formatDateTime(schedule.send_at), late ? h("div", { class: "small", style: { color: "var(--warning)" } }, "aguardando conexão") : null),
+      h("td", { class: "nowrap" }, h("span", { class: "row", style: { gap: "6px" } }, icon("clock", { size: 15 }), formatDateTime(schedule.send_at)), late ? h("div", { class: "small", style: { color: "var(--warning)" } }, "aguardando conexão") : null),
       h("td", { class: "nowrap" }, RECURRENCE[schedule.recurrence], schedule.sent_count ? h("div", { class: "muted small" }, `${schedule.sent_count}× enviada`) : null),
       h(
         "td",
@@ -47,12 +47,10 @@ function render(schedules) {
   });
 
   root.replaceChildren(
-    h(
-      "div",
-      { class: "page-head" },
-      h("div", {}, h("h1", {}, "Agendamentos"), h("p", { class: "muted" }, "Mensagens programadas para um contato, uma vez ou repetindo.")),
-      h("span", { class: "spacer" }),
-      h("button", { class: "btn btn-primary", type: "button", onClick: () => openScheduleModal({ onSaved: load }) }, "+ Agendar mensagem")
+    pageHead(
+      "Agendamentos",
+      "Mensagens programadas para um contato, uma vez ou repetindo.",
+      button("Agendar mensagem", { icon: "plus", variant: "primary", onClick: () => openScheduleModal({ onSaved: load }) })
     ),
     schedules.length
       ? h(
@@ -65,13 +63,12 @@ function render(schedules) {
             h("tbody", {}, rows)
           )
         )
-      : h(
-          "div",
-          { class: "empty" },
-          h("h2", {}, "Nenhuma mensagem agendada"),
-          h("p", {}, "Agende lembretes, cobranças ou felicitações para enviar automaticamente."),
-          h("button", { class: "btn btn-primary", type: "button", onClick: () => openScheduleModal({ onSaved: load }) }, "Agendar mensagem")
-        )
+      : emptyState({
+          icon: "calendar-clock",
+          title: "Nenhuma mensagem agendada",
+          text: "Agende lembretes, cobranças ou felicitações para enviar automaticamente, uma vez ou repetindo.",
+          action: button("Agendar mensagem", { icon: "plus", variant: "primary", onClick: () => openScheduleModal({ onSaved: load }) }),
+        })
   );
 }
 

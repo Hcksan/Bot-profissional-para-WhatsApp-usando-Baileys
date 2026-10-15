@@ -1,4 +1,4 @@
-import { h, openModal, field, stageOptions, toast, withBusy, formatPhone, timeAgo, tagList, readFileBase64 } from "../dom.js";
+import { h, icon, button, pageHead, emptyState, person, stagePill, openModal, field, stageOptions, toast, withBusy, formatPhone, timeAgo, tagList, readFileBase64 } from "../dom.js";
 import { get, post, query } from "../api.js";
 import { hooks, state, stageById } from "../state.js";
 import { openContact, openNewContact } from "./contactModal.js";
@@ -17,6 +17,7 @@ function render() {
   const allSelected = visibleIds.length > 0 && visibleIds.every((id) => state.selection.has(id));
 
   const search = h("input", { type: "search", placeholder: "Buscar nome, telefone ou observação", value: filters.q, "aria-label": "Buscar" });
+  const searchBox = h("div", { class: "search-input" }, icon("search"), search);
   let timer;
   search.addEventListener("input", () => {
     clearTimeout(timer);
@@ -57,7 +58,7 @@ function render() {
   const rows = contacts.map((contact) =>
     h(
       "tr",
-      {},
+      { class: state.selection.has(contact.id) ? "selected" : "" },
       h(
         "td",
         {},
@@ -75,11 +76,14 @@ function render() {
       h(
         "td",
         {},
-        h("button", { class: "link", type: "button", onClick: () => openContact(contact.id, { onSaved: load }) }, contact.name || "Sem nome"),
-        contact.opted_out ? h("div", {}, h("span", { class: "badge badge-danger" }, "não quer receber")) : null
+        h(
+          "button",
+          { class: "link", type: "button", onClick: () => openContact(contact.id, { onSaved: load }) },
+          person(contact.name || "Sem nome", contact.opted_out ? "não quer receber mensagens" : null, { seed: contact.phone })
+        )
       ),
       h("td", { class: "nowrap" }, formatPhone(contact.phone)),
-      h("td", {}, stageById(contact.stage_id)?.name ?? h("span", { class: "muted" }, "—")),
+      h("td", {}, stagePill(stageById(contact.stage_id))),
       h("td", {}, tagList(contact.tags)),
       h("td", { class: "nowrap muted" }, timeAgo(Math.max(contact.last_inbound_at ?? 0, contact.last_outbound_at ?? 0)) || "—")
     )
@@ -87,16 +91,14 @@ function render() {
 
   const selected = state.selection.size;
   root.replaceChildren(
-    h(
-      "div",
-      { class: "page-head" },
-      h("div", {}, h("h1", {}, "Contatos"), h("p", { class: "muted" }, `${contacts.length} contato(s) nesta lista`)),
-      h("span", { class: "spacer" }),
-      h("button", { class: "btn", type: "button", onClick: openImport }, "Importar planilha"),
-      h("button", { class: "btn", type: "button", onClick: openExport }, "Exportar"),
-      h("button", { class: "btn btn-primary", type: "button", onClick: () => openNewContact({ onSaved: load }) }, "+ Contato")
+    pageHead(
+      "Contatos",
+      `${contacts.length} contato(s) nesta lista`,
+      button("Importar", { icon: "upload", onClick: openImport }),
+      button("Exportar", { icon: "download", onClick: openExport }),
+      button("Contato", { icon: "user-plus", variant: "primary", onClick: () => openNewContact({ onSaved: load }) })
     ),
-    h("div", { class: "toolbar" }, search, stageFilter, tagFilter),
+    h("div", { class: "toolbar" }, searchBox, stageFilter, tagFilter),
     contacts.length
       ? h(
           "div",
@@ -108,21 +110,22 @@ function render() {
             h("tbody", {}, rows)
           )
         )
-      : h(
-          "div",
-          { class: "empty" },
-          h("h2", {}, filters.q || filters.stage_id || filters.tag ? "Nenhum contato encontrado" : "Nenhum contato ainda"),
-          h("p", {}, "Cadastre um contato ou importe uma planilha (.xlsx ou .csv)."),
-          h("button", { class: "btn btn-primary", type: "button", onClick: openImport }, "Importar planilha")
-        ),
+      : filters.q || filters.stage_id || filters.tag
+        ? emptyState({ icon: "search", title: "Nenhum contato encontrado", text: "Tente outra busca ou limpe os filtros." })
+        : emptyState({
+            icon: "contact-round",
+            title: "Nenhum contato ainda",
+            text: "Cadastre um contato ou importe uma planilha (.xlsx ou .csv) com nome e telefone.",
+            action: h("div", { class: "row" }, button("Importar planilha", { icon: "file-spreadsheet", variant: "primary", onClick: openImport }), button("Cadastrar contato", { icon: "user-plus", onClick: () => openNewContact({ onSaved: load }) })),
+          }),
     selected
       ? h(
           "div",
           { class: "selection-bar", role: "region", "aria-label": "Contatos selecionados" },
           h("strong", {}, `${selected} selecionado(s)`),
           h("span", { class: "spacer" }),
-          h("button", { class: "btn btn-sm", type: "button", onClick: () => (state.selection.clear(), render()) }, "Limpar seleção"),
-          h("a", { class: "btn btn-sm", href: "#campanhas", onClick: () => sessionStorage.setItem("crm:new-campaign", "selection") }, "Criar campanha com selecionados")
+          button("Limpar seleção", { icon: "x", size: "sm", onClick: () => (state.selection.clear(), render()) }),
+          h("a", { class: "btn btn-sm btn-primary", href: "#campanhas", onClick: () => sessionStorage.setItem("crm:new-campaign", "selection") }, icon("megaphone"), "Criar campanha com selecionados")
         )
       : null
   );
