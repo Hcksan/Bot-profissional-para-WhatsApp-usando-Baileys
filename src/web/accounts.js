@@ -11,7 +11,7 @@ const ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 export const ACTIVATION_TTL_DAYS = 7;
 const MAX_ATTEMPTS = 5;
 const ROLES = ["admin", "member"];
-const INVALID = "Código inválido ou expirado. Confira o e-mail e o código ou peça um novo ao administrador.";
+const INVALID = "Código inválido ou expirado. Confira se o e-mail está escrito igual ao do convite e use o código mais recente (gerar outro invalida o anterior).";
 
 export const normalizeCode = (code) => String(code ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 

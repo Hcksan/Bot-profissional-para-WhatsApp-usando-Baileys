@@ -35,7 +35,7 @@ function showCode(user, { code, expires_at: expiresAt }, { isNew }) {
     `Olá, ${user.name.split(" ")[0]}! ${isNew ? "Criei seu acesso ao CRM." : "Aqui está um novo código de acesso ao CRM."}\n\n` +
     `1. Abra ${url}\n` +
     `2. Clique em "Primeiro acesso com código"\n` +
-    `3. Use o e-mail ${user.email} e o código ${code}\n\n` +
+    `3. Use o e-mail ${user.email} (exatamente assim) e o código ${code}\n\n` +
     `O código vale até ${formatDateTime(expiresAt)}. Depois é só criar sua senha.`;
 
   const copy = (text, label) =>
@@ -56,6 +56,7 @@ function showCode(user, { code, expires_at: expiresAt }, { isNew }) {
     title: isNew ? "Convite criado" : "Novo código gerado",
     body: [
       h("p", {}, "Envie o código para ", h("strong", {}, user.name), ". Ele aparece só agora: se perder, gere outro."),
+      isNew ? null : callout("Qualquer código enviado antes para esta pessoa deixou de funcionar. Mande só este.", { icon: "triangle-alert" }),
       h("div", { class: "code-box" }, h("code", {}, code), copy(code, "Copiar código")),
       h("div", { class: "row" }, h("strong", { class: "grow" }, "Mensagem pronta"), copy(message, "Copiar mensagem")),
       h("div", { class: "invite-text" }, message),
@@ -126,7 +127,12 @@ function actionsFor(user) {
   if (user.status !== "blocked") {
     const code = iconButton("key-round", user.status === "pending" ? "Gerar novo código de primeiro acesso" : "Gerar código para redefinir a senha");
     code.addEventListener("click", async () => {
-      if (user.status === "active" && !(await confirmDialog(`Gerar um código para ${user.name} criar uma senha nova? A senha atual continua valendo até o código ser usado.`, { confirmText: "Gerar código" }))) return;
+      const pendingCode = user.activation_expires_at ? ` O código enviado antes (válido até ${formatDateTime(user.activation_expires_at)}) deixa de funcionar.` : "";
+      const question =
+        user.status === "active"
+          ? `Gerar um código para ${user.name} criar uma senha nova? A senha atual continua valendo até o código ser usado.${pendingCode}`
+          : pendingCode && `Gerar um código novo para ${user.name}?${pendingCode}`;
+      if (question && !(await confirmDialog(question, { title: "Gerar código", confirmText: "Gerar código" }))) return;
       withBusy(code, async () => {
         showCode(user, await post(`/users/${user.id}/activation-code`), { isNew: false });
         load();
