@@ -2,29 +2,28 @@ import http from "http";
 import os from "os";
 import path from "path";
 import { Server as SocketServer } from "socket.io";
-import WhatsAppService from "./services/WhatsAppService.js";
 import appConfig from "./config/app.config.js";
 import { openDatabase } from "./db/database.js";
 import { CrmStore } from "./crm/CrmStore.js";
-import { CrmService } from "./crm/CrmService.js";
-import { Scheduler } from "./crm/Scheduler.js";
-import { CampaignRunner } from "./crm/CampaignRunner.js";
+import { WorkspaceManager } from "./workspaces/WorkspaceManager.js";
 import { createAuth } from "./web/auth.js";
 import { createApp } from "./web/app.js";
 import logger from "./utils/logger.js";
 import "./commands/loader.js"; // Carregar todos os comandos
 
 /**
- * Servidor principal: WhatsApp + CRM + painel web
+ * Servidor principal: painel web + um espaço (CRM e WhatsApp) por conta
  */
 class BotServer {
   constructor() {
     this.db = openDatabase(path.join(appConfig.dataDir, "crm.db"));
     this.store = new CrmStore(this.db);
-    this.whatsappService = new WhatsAppService({ commandsEnabled: appConfig.commandsEnabled });
-    this.crm = new CrmService({ store: this.store, wa: this.whatsappService });
-    this.scheduler = new Scheduler({ store: this.store, crm: this.crm, wa: this.whatsappService });
-    this.runner = new CampaignRunner({ store: this.store, crm: this.crm, wa: this.whatsappService });
+    this.workspaces = new WorkspaceManager({
+      mainDb: this.db,
+      mainStore: this.store,
+      dataDir: appConfig.dataDir,
+      commandsEnabled: appConfig.commandsEnabled,
+    });
   }
 
   /**
@@ -41,12 +40,10 @@ class BotServer {
         cookieSecure: appConfig.cookieSecure,
         sessionDays: appConfig.sessionDays,
         publicUrl: appConfig.publicUrl,
+        workspaces: this.workspaces,
       });
       const app = createApp({
-        store: this.store,
-        crm: this.crm,
-        wa: this.whatsappService,
-        runner: this.runner,
+        workspaces: this.workspaces,
         auth,
         config: appConfig,
         // Sessão encerrada pelo painel: derruba também a conexão em tempo real daquele aparelho
@@ -62,7 +59,11 @@ class BotServer {
       this.io = new SocketServer(this.httpServer, { serveClient: true, maxHttpBufferSize: 1e5 });
       this.io.use(auth.socketAuth);
       this.io.on("connection", (socket) => {
-        socket.emit("whatsapp", this.whatsappService.getState());
+        // Cada aba só recebe os eventos do próprio espaço
+        const workspace = this.workspaces.get(socket.data.workspaceId);
+        if (!workspace) return socket.disconnect(true);
+        socket.join(`ws:${workspace.id}`);
+        socket.emit("whatsapp", workspace.wa.getState());
       });
 
       this.wireEvents();
@@ -73,9 +74,7 @@ class BotServer {
       });
       this.printAddresses();
 
-      this.scheduler.start();
-      this.runner.start();
-      await this.whatsappService.connect();
+      await this.workspaces.start();
 
       logger.success("✅ Servidor iniciado com sucesso!");
       this.setupGracefulShutdown();
@@ -93,30 +92,10 @@ class BotServer {
    * Liga os eventos do WhatsApp/CRM ao painel em tempo real
    */
   wireEvents() {
-    const wa = this.whatsappService;
-
-    wa.on("status", (state) => this.io.emit("whatsapp", state));
-    wa.on("incoming", (message) => this.safely(() => this.crm.handleIncoming(message)));
-    wa.on("outgoing", (message) => this.safely(() => this.crm.handleOutgoing(message)));
-    wa.on("status", ({ status }) => {
-      // Assim que conectar, dispara o que ficou pendente
-      if (status === "open") setTimeout(() => this.scheduler.tick().catch(() => {}), 5000);
-    });
-
-    this.crm.on("changed", (change) => this.io.emit("changed", change));
-    this.scheduler.on("changed", () => this.io.emit("changed", { type: "schedules" }));
-    this.runner.on("progress", (campaign) => {
-      this.io.emit("campaign", campaign);
-      this.io.emit("changed", { type: "contacts" });
-    });
-  }
-
-  safely(fn) {
-    try {
-      fn();
-    } catch (error) {
-      logger.error("Erro ao processar evento:", { message: error.message });
-    }
+    const room = (id) => this.io.to(`ws:${id}`);
+    this.workspaces.on("whatsapp", (id, state) => room(id).emit("whatsapp", state));
+    this.workspaces.on("changed", (id, change) => room(id).emit("changed", change));
+    this.workspaces.on("campaign", (id, campaign) => room(id).emit("campaign", campaign));
   }
 
   printAddresses() {
@@ -141,10 +120,8 @@ class BotServer {
       logger.info(`📡 Sinal ${signal} recebido. Encerrando...`);
 
       try {
-        this.scheduler.stop();
-        this.runner.stop();
-        // Encerra sem desconectar o aparelho: na próxima vez não precisa ler o QR Code de novo
-        await this.whatsappService.disconnect();
+        // Encerra sem desconectar os aparelhos: na próxima vez não precisa ler o QR Code de novo
+        await this.workspaces.stop();
         this.io?.close();
         this.db.close();
         logger.success("👋 Servidor encerrado com sucesso!");

@@ -143,6 +143,19 @@ const migrations = [
   );
   CREATE INDEX activation_codes_user ON activation_codes(user_id);
   `,
+  // Espaços: cada conta tem os próprios contatos, campanhas e WhatsApp (um banco e uma sessão por espaço).
+  // O banco principal guarda as contas e a lista de espaços; o espaço 1 é criado pelo código (usa este mesmo banco).
+  `
+  CREATE TABLE workspaces (
+    id          INTEGER PRIMARY KEY,
+    name        TEXT    NOT NULL,
+    db_file     TEXT    NOT NULL,
+    session_dir TEXT    NOT NULL,
+    archived_at INTEGER,
+    created_at  INTEGER NOT NULL
+  );
+  ALTER TABLE users ADD COLUMN workspace_id INTEGER REFERENCES workspaces(id);
+  `,
 ];
 
 const defaultStages = [

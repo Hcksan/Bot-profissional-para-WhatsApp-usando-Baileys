@@ -43,8 +43,18 @@ function extractText(message) {
  *  - "limits"   (limits)                              limites de novas conversas informados pelo WhatsApp
  */
 class WhatsAppService extends EventEmitter {
-  constructor({ commandsEnabled = true } = {}) {
+  /**
+   * @param {object} options
+   * @param {string} [options.sessionPath] - Pasta da sessão (cada espaço do CRM tem a sua)
+   * @param {string} [options.label] - Nome que aparece nos logs (ex.: "espaço 2")
+   * @param {boolean} [options.printQr] - Mostra o QR Code também no terminal
+   */
+  constructor({ commandsEnabled = true, sessionPath = whatsappConfig.auth.sessionPath, label = "", printQr = true } = {}) {
     super();
+    this.sessionPath = sessionPath;
+    this.printQr = printQr;
+    const prefix = label ? `[${label}] ` : "";
+    this.logger = Object.fromEntries(["info", "warn", "error", "success"].map((level) => [level, (message, meta) => logger[level](`${prefix}${message}`, meta)]));
     this.sock = null;
     this.status = "disconnected"; // disconnected | connecting | qr | open
     this.qr = null;
@@ -64,15 +74,21 @@ class WhatsAppService extends EventEmitter {
    * Garante que o diretório de sessão existe
    */
   ensureSessionDirectory() {
-    const sessionPath = whatsappConfig.auth.sessionPath;
-    if (!fs.existsSync(sessionPath)) {
-      fs.mkdirSync(sessionPath, { recursive: true });
-      logger.info("📁 Diretório de sessão criado:", { path: sessionPath });
+    if (!fs.existsSync(this.sessionPath)) {
+      fs.mkdirSync(this.sessionPath, { recursive: true });
+      this.logger.info("📁 Diretório de sessão criado:", { path: this.sessionPath });
     }
   }
 
+  /**
+   * True se este número já foi conectado alguma vez (há credenciais salvas)
+   */
+  hasSession() {
+    return fs.existsSync(path.join(this.sessionPath, "creds.json"));
+  }
+
   getState() {
-    return { status: this.status, qr: this.qr, me: this.me, limits: this.limits, lastError: this.lastError };
+    return { status: this.status, qr: this.qr, me: this.me, limits: this.limits, lastError: this.lastError, hasSession: this.hasSession() };
   }
 
   setStatus(status, extra = {}) {
@@ -97,13 +113,12 @@ class WhatsAppService extends EventEmitter {
     this.setStatus("connecting");
 
     try {
-      const sessionPath = whatsappConfig.auth.sessionPath;
-      const hasSession = fs.existsSync(path.join(sessionPath, "creds.json"));
-      logger.info(hasSession ? "🔐 Sessão encontrada! Tentando reconectar..." : "🚀 Primeira conexão - QR Code será gerado");
+      const hasSession = this.hasSession();
+      this.logger.info(hasSession ? "🔐 Sessão encontrada! Tentando reconectar..." : "🚀 Primeira conexão - QR Code será gerado");
 
-      const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
+      const { state, saveCreds } = await useMultiFileAuthState(this.sessionPath);
       const { version, isLatest } = await fetchLatestBaileysVersion();
-      logger.info(`📱 Usando WA v${version.join(".")}, isLatest: ${isLatest}`);
+      this.logger.info(`📱 Usando WA v${version.join(".")}, isLatest: ${isLatest}`);
 
       this.sock = makeWASocket({
         version,
@@ -117,7 +132,7 @@ class WhatsAppService extends EventEmitter {
 
       this.setupEventListeners(this.sock, saveCreds);
     } catch (error) {
-      logger.error("❌ Erro ao iniciar conexão:", { message: error.message });
+      this.logger.error("❌ Erro ao iniciar conexão:", { message: error.message });
       this.setStatus("disconnected");
       this.scheduleReconnect(whatsappConfig.reconnect.delayOnError);
     }
@@ -128,7 +143,7 @@ class WhatsAppService extends EventEmitter {
     this.retryCount++;
     // Espera cada vez mais entre tentativas, até o máximo configurado
     const wait = Math.min(delayMs * Math.max(1, this.retryCount), whatsappConfig.reconnect.maxDelay);
-    logger.info(`🔄 Nova tentativa de conexão em ${Math.round(wait / 1000)}s (tentativa ${this.retryCount})`);
+    this.logger.info(`🔄 Nova tentativa de conexão em ${Math.round(wait / 1000)}s (tentativa ${this.retryCount})`);
     clearTimeout(this.reconnectTimer);
     this.reconnectTimer = setTimeout(() => this.connect(), wait);
   }
@@ -150,7 +165,7 @@ class WhatsAppService extends EventEmitter {
         try {
           await this.handleMessage(msg);
         } catch (error) {
-          logger.error("Erro ao processar mensagem:", { message: error.message });
+          this.logger.error("Erro ao processar mensagem:", { message: error.message });
         }
       }
     });
@@ -174,8 +189,8 @@ class WhatsAppService extends EventEmitter {
     }
 
     if (qr) {
-      logger.info("📱 QR Code gerado! Escaneie pelo painel web ou pelo terminal:");
-      qrcodeTerminal.generate(qr, { small: true });
+      this.logger.info(this.printQr ? "📱 QR Code gerado! Escaneie pelo painel web ou pelo terminal:" : "📱 QR Code gerado (escaneie pelo painel web)");
+      if (this.printQr) qrcodeTerminal.generate(qr, { small: true });
       this.setStatus("qr", { qr: await QRCode.toDataURL(qr, { margin: 1, width: 320 }) });
     }
 
@@ -183,7 +198,7 @@ class WhatsAppService extends EventEmitter {
       this.retryCount = 0;
       const id = this.sock.user?.id ? jidNormalizedUser(this.sock.user.id) : null;
       this.setStatus("open", { me: { id, phone: phoneFromJid(id), name: this.sock.user?.name ?? "" } });
-      logger.success("✅ Conexão estabelecida com sucesso!");
+      this.logger.success("✅ Conexão estabelecida com sucesso!");
       this.refreshLimits().catch(() => {});
       return;
     }
@@ -192,7 +207,7 @@ class WhatsAppService extends EventEmitter {
 
     const statusCode = lastDisconnect?.error instanceof Boom ? lastDisconnect.error.output.statusCode : null;
     const errorMessage = lastDisconnect?.error?.message || "erro desconhecido";
-    logger.warn("⚠️ Conexão fechada:", { message: errorMessage, statusCode });
+    this.logger.warn("⚠️ Conexão fechada:", { message: errorMessage, statusCode });
 
     this.sock = null;
     this.setStatus("disconnected");
@@ -200,7 +215,7 @@ class WhatsAppService extends EventEmitter {
 
     // Aparelho desconectado pelo celular: apaga a sessão e gera um novo QR Code
     if (statusCode === DisconnectReason.loggedOut) {
-      logger.warn("🚪 Sessão encerrada pelo celular. Um novo QR Code será gerado.");
+      this.logger.warn("🚪 Sessão encerrada pelo celular. Um novo QR Code será gerado.");
       this.clearSession();
       this.retryCount = 0;
       this.scheduleReconnect(1000);
@@ -208,8 +223,15 @@ class WhatsAppService extends EventEmitter {
     }
 
     if (statusCode === DisconnectReason.forbidden) {
-      logger.error("⛔ O WhatsApp recusou a conexão (403). O número pode estar restrito ou banido.");
+      this.logger.error("⛔ O WhatsApp recusou a conexão (403). O número pode estar restrito ou banido.");
       this.setStatus("disconnected", { lastError: "O WhatsApp recusou a conexão (403). Verifique o número no celular." });
+      return;
+    }
+
+    // Ninguém leu o QR Code a tempo: para de gerar códigos novos até a pessoa pedir de novo no painel
+    if (statusCode === DisconnectReason.timedOut && !this.hasSession()) {
+      this.stopped = true;
+      this.setStatus("disconnected", { lastError: "O QR Code expirou. Clique em \"Gerar QR Code\" para tentar de novo." });
       return;
     }
 
@@ -221,7 +243,7 @@ class WhatsAppService extends EventEmitter {
 
     if (statusCode === DisconnectReason.connectionReplaced) {
       // Outro processo abriu a mesma sessão. Não brigar por ela.
-      logger.error("⚠️ Esta sessão foi aberta em outro lugar. Reinicie pelo painel quando quiser reconectar.");
+      this.logger.error("⚠️ Esta sessão foi aberta em outro lugar. Reinicie pelo painel quando quiser reconectar.");
       this.setStatus("disconnected", { lastError: "Esta sessão foi aberta em outro lugar. Clique em Reconectar." });
       return;
     }
@@ -288,7 +310,7 @@ class WhatsAppService extends EventEmitter {
       if (!parsed) return;
 
       const chatId = msg.key.remoteJid;
-      logger.info(`Comando recebido: ${parsed.command}`, { chat: chatId, args: parsed.args });
+      this.logger.info(`Comando recebido: ${parsed.command}`, { chat: chatId, args: parsed.args });
 
       await commandManager.execute(parsed.command, {
         sock: this.sock,
@@ -298,9 +320,9 @@ class WhatsAppService extends EventEmitter {
         senderName: msg.pushName || "Você",
       });
 
-      logger.success(`Comando executado: ${parsed.command}`);
+      this.logger.success(`Comando executado: ${parsed.command}`);
     } catch (error) {
-      logger.error("Erro ao executar comando:", { message: error.message });
+      this.logger.error("Erro ao executar comando:", { message: error.message });
       await this.sock?.sendMessage(msg.key.remoteJid, { text: `❌ ${error.message}` });
     }
   }
@@ -330,7 +352,7 @@ class WhatsAppService extends EventEmitter {
         await sleep(typingMs);
         await this.sock.sendPresenceUpdate("paused", jid);
       } catch (error) {
-        logger.warn("Não foi possível mostrar 'digitando...'", { message: error.message });
+        this.logger.warn("Não foi possível mostrar 'digitando...'", { message: error.message });
       }
       this.assertConnected();
     }
@@ -354,7 +376,7 @@ class WhatsAppService extends EventEmitter {
       await this.sock.sendMessage(jid, { text: text.trim(), ...options });
       return true;
     } catch (error) {
-      logger.error("❌ Erro ao enviar mensagem:", { message: error.message });
+      this.logger.error("❌ Erro ao enviar mensagem:", { message: error.message });
       return false;
     }
   }
@@ -391,7 +413,7 @@ class WhatsAppService extends EventEmitter {
   }
 
   clearSession() {
-    fs.rmSync(whatsappConfig.auth.sessionPath, { recursive: true, force: true });
+    fs.rmSync(this.sessionPath, { recursive: true, force: true });
     this.ensureSessionDirectory();
   }
 
@@ -413,6 +435,15 @@ class WhatsAppService extends EventEmitter {
    * Desconecta o aparelho do WhatsApp (remove dos "Aparelhos conectados") e gera um novo QR Code
    */
   async logout() {
+    await this.unlink();
+    this.retryCount = 0;
+    await this.connect();
+  }
+
+  /**
+   * Desconecta o aparelho e apaga a sessão, sem gerar QR Code novo (espaço removido)
+   */
+  async unlink() {
     this.stopped = true;
     clearTimeout(this.reconnectTimer);
     const sock = this.sock;
@@ -420,13 +451,11 @@ class WhatsAppService extends EventEmitter {
     try {
       await sock?.logout();
     } catch (error) {
-      logger.warn("Erro ao desconectar aparelho:", { message: error.message });
+      this.logger.warn("Erro ao desconectar aparelho:", { message: error.message });
     }
     this.clearSession();
     this.me = null;
     this.setStatus("disconnected");
-    this.retryCount = 0;
-    await this.connect();
   }
 
   /**

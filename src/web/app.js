@@ -32,7 +32,11 @@ function assetVersion(dir) {
 /**
  * Cria o app Express com a API do CRM e o painel web
  */
-export function createApp({ store, crm, wa, runner, auth, config = {}, onSessionsRevoked = () => {} }) {
+export function createApp({ store, crm, wa, runner, workspaces = null, auth, config = {}, onSessionsRevoked = () => {} }) {
+  // Sem gerenciador de espaços (testes e instalações antigas): um espaço só, com os serviços recebidos
+  const spaces = workspaces ?? { mainStore: store, forUser: () => ({ id: 1, store, crm, wa, runner }) };
+  const accountsStore = spaces.mainStore;
+
   const app = express();
   app.disable("x-powered-by");
   app.set("trust proxy", config.trustProxy ?? "loopback");
@@ -51,6 +55,12 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
 
   const api = express.Router();
   api.use(auth.requireAuth);
+  // Cada conta só enxerga o próprio espaço: contatos, campanhas, agendamentos, configurações e WhatsApp
+  api.use((req, res, next) => {
+    req.ws = spaces.forUser(req.user);
+    if (!req.ws) return next(new AppError(503, "O espaço desta conta não está disponível. Fale com o administrador."));
+    return next();
+  });
 
   const id = (req) => {
     const value = Number(req.params.id);
@@ -61,7 +71,7 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   /**
    * Seleção de contatos usada por campanhas: lista explícita ou filtro (etapa/tag)
    */
-  const selectContactIds = ({ contact_ids, stage_id, tag }) => {
+  const selectContactIds = (store, { contact_ids, stage_id, tag }) => {
     if (Array.isArray(contact_ids) && contact_ids.length > 0) return contact_ids;
     if (!stage_id && !tag) throw badRequest("Escolha os contatos, uma etapa ou uma tag");
     return store.listContacts({ stage_id, tag, include_opted_out: false }).map((contact) => contact.id);
@@ -70,67 +80,67 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   // ───────────── Visão geral ─────────────
   api.get("/bootstrap", (req, res) => {
     res.json({
-      whatsapp: wa.getState(),
-      stages: store.listStages(),
-      tags: store.listTags(),
-      settings: store.getSettings(),
-      runtime: runner.runtime(),
-      sent_today: store.campaignSentToday(),
+      whatsapp: req.ws.wa.getState(),
+      stages: req.ws.store.listStages(),
+      tags: req.ws.store.listTags(),
+      settings: req.ws.store.getSettings(),
+      runtime: req.ws.runner.runtime(),
+      sent_today: req.ws.store.campaignSentToday(),
     });
   });
 
   api.get("/dashboard", (req, res) => {
-    res.json({ ...store.dashboard(), whatsapp: wa.getState(), settings: store.getSettings(), runtime: runner.runtime() });
+    res.json({ ...req.ws.store.dashboard(), whatsapp: req.ws.wa.getState(), settings: req.ws.store.getSettings(), runtime: req.ws.runner.runtime() });
   });
 
   // ───────────── WhatsApp ─────────────
-  api.get("/whatsapp", (req, res) => res.json(wa.getState()));
+  api.get("/whatsapp", (req, res) => res.json(req.ws.wa.getState()));
   api.post("/whatsapp/restart", async (req, res) => {
-    await wa.restart();
-    res.json(wa.getState());
+    await req.ws.wa.restart();
+    res.json(req.ws.wa.getState());
   });
   api.post("/whatsapp/logout", async (req, res) => {
-    await wa.logout();
-    res.json(wa.getState());
+    await req.ws.wa.logout();
+    res.json(req.ws.wa.getState());
   });
   api.post("/whatsapp/limits", async (req, res) => {
-    if (!wa.isConnected()) throw new AppError(409, "Conecte o WhatsApp primeiro");
-    res.json(await wa.refreshLimits());
+    if (!req.ws.wa.isConnected()) throw new AppError(409, "Conecte o WhatsApp primeiro");
+    res.json(await req.ws.wa.refreshLimits());
   });
 
   // ───────────── Etapas ─────────────
-  api.get("/stages", (req, res) => res.json(store.listStages()));
-  api.post("/stages", (req, res) => res.status(201).json(store.createStage(req.body)));
+  api.get("/stages", (req, res) => res.json(req.ws.store.listStages()));
+  api.post("/stages", (req, res) => res.status(201).json(req.ws.store.createStage(req.body)));
   api.post("/stages/reorder", (req, res) => {
     if (!Array.isArray(req.body?.ids)) throw badRequest("Lista de etapas inválida");
-    res.json(store.reorderStages(req.body.ids));
+    res.json(req.ws.store.reorderStages(req.body.ids));
   });
-  api.patch("/stages/:id", (req, res) => res.json(store.updateStage(id(req), req.body)));
+  api.patch("/stages/:id", (req, res) => res.json(req.ws.store.updateStage(id(req), req.body)));
   api.delete("/stages/:id", (req, res) => {
-    store.deleteStage(id(req));
+    req.ws.store.deleteStage(id(req));
     res.status(204).end();
   });
 
   // ───────────── Contatos ─────────────
-  api.get("/contacts", (req, res) => res.json(store.listContacts(req.query)));
-  api.get("/tags", (req, res) => res.json(store.listTags()));
-  api.post("/contacts", (req, res) => res.status(201).json(store.createContact(req.body ?? {})));
+  api.get("/contacts", (req, res) => res.json(req.ws.store.listContacts(req.query)));
+  api.get("/tags", (req, res) => res.json(req.ws.store.listTags()));
+  api.post("/contacts", (req, res) => res.status(201).json(req.ws.store.createContact(req.body ?? {})));
   api.get("/contacts/:id", (req, res) => {
-    const contact = store.requireContact(id(req));
-    res.json({ ...contact, messages: store.listMessages(contact.id) });
+    const contact = req.ws.store.requireContact(id(req));
+    res.json({ ...contact, messages: req.ws.store.listMessages(contact.id) });
   });
-  api.patch("/contacts/:id", (req, res) => res.json(store.updateContact(id(req), req.body ?? {})));
+  api.patch("/contacts/:id", (req, res) => res.json(req.ws.store.updateContact(id(req), req.body ?? {})));
   api.delete("/contacts/:id", (req, res) => {
-    store.deleteContact(id(req));
+    req.ws.store.deleteContact(id(req));
     res.status(204).end();
   });
   api.post("/contacts/:id/move", (req, res) => {
     const { stage_id: stageId = null, index } = req.body ?? {};
-    res.json(store.moveContact(id(req), stageId, Number.isInteger(index) ? index : undefined));
+    res.json(req.ws.store.moveContact(id(req), stageId, Number.isInteger(index) ? index : undefined));
   });
   api.post("/contacts/:id/send", async (req, res) => {
-    if (!wa.isConnected()) throw new AppError(409, "WhatsApp não está conectado");
-    res.json(await crm.sendToContact(id(req), req.body?.text, { source: "manual" }));
+    if (!req.ws.wa.isConnected()) throw new AppError(409, "WhatsApp não está conectado");
+    res.json(await req.ws.crm.sendToContact(id(req), req.body?.text, { source: "manual" }));
   });
 
   // ───────────── Importar / exportar ─────────────
@@ -141,18 +151,18 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   api.post("/import/commit", (req, res) => {
     const { data, mapping, stage_id, tags, update_existing } = req.body ?? {};
     const { rows } = parseSpreadsheet(data);
-    const result = store.importContacts(applyMapping(rows, mapping), {
+    const result = req.ws.store.importContacts(applyMapping(rows, mapping), {
       stage_id: stage_id || null,
       tags: tags ?? [],
       update_existing: update_existing !== false,
     });
-    crm.emit("changed", { type: "contacts" });
+    req.ws.crm.emit("changed", { type: "contacts" });
     res.json(result);
   });
   api.get("/export", (req, res) => {
     const format = req.query.format === "csv" ? "csv" : "xlsx";
-    const contacts = store.listContacts({ stage_id: req.query.stage_id, tag: req.query.tag, q: req.query.q });
-    const file = exportContacts(contacts, store.listStages(), format);
+    const contacts = req.ws.store.listContacts({ stage_id: req.query.stage_id, tag: req.query.tag, q: req.query.q });
+    const file = exportContacts(contacts, req.ws.store.listStages(), format);
     const stamp = new Date().toISOString().slice(0, 10);
     res.set({
       "Content-Type":
@@ -163,42 +173,42 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   });
 
   // ───────────── Agendamentos ─────────────
-  api.get("/schedules", (req, res) => res.json(store.listSchedules(req.query)));
-  api.post("/schedules", (req, res) => res.status(201).json(store.createSchedule(req.body ?? {})));
-  api.post("/schedules/:id/cancel", (req, res) => res.json(store.cancelSchedule(id(req))));
+  api.get("/schedules", (req, res) => res.json(req.ws.store.listSchedules(req.query)));
+  api.post("/schedules", (req, res) => res.status(201).json(req.ws.store.createSchedule(req.body ?? {})));
+  api.post("/schedules/:id/cancel", (req, res) => res.json(req.ws.store.cancelSchedule(id(req))));
   api.delete("/schedules/:id", (req, res) => {
-    store.deleteSchedule(id(req));
+    req.ws.store.deleteSchedule(id(req));
     res.status(204).end();
   });
 
   // ───────────── Campanhas ─────────────
-  api.get("/campaigns", (req, res) => res.json({ campaigns: store.listCampaigns(), runtime: runner.runtime() }));
+  api.get("/campaigns", (req, res) => res.json({ campaigns: req.ws.store.listCampaigns(), runtime: req.ws.runner.runtime() }));
   api.post("/campaigns/preview", (req, res) => {
     const message = String(req.body?.message ?? "");
-    const contact = req.body?.contact_id ? store.requireContact(req.body.contact_id) : { name: "Maria Silva", phone: "5511987654321" };
+    const contact = req.body?.contact_id ? req.ws.store.requireContact(req.body.contact_id) : { name: "Maria Silva", phone: "5511987654321" };
     res.json({ samples: [1, 2, 3].map(() => renderTemplate(message, contact)) });
   });
   api.post("/campaigns", (req, res) => {
     const body = req.body ?? {};
-    res.status(201).json(store.createCampaign(body, selectContactIds(body)));
+    res.status(201).json(req.ws.store.createCampaign(body, selectContactIds(req.ws.store, body)));
   });
   api.get("/campaigns/:id", (req, res) => {
-    const campaign = store.getCampaign(id(req));
-    res.json({ ...campaign, items: store.listCampaignItems(campaign.id), runtime: runner.runtime() });
+    const campaign = req.ws.store.getCampaign(id(req));
+    res.json({ ...campaign, items: req.ws.store.listCampaignItems(campaign.id), runtime: req.ws.runner.runtime() });
   });
-  api.patch("/campaigns/:id", (req, res) => res.json(store.updateCampaign(id(req), req.body ?? {})));
-  api.post("/campaigns/:id/start", (req, res) => res.json(runner.startCampaign(id(req))));
-  api.post("/campaigns/:id/pause", (req, res) => res.json(runner.pauseCampaign(id(req))));
-  api.post("/campaigns/:id/cancel", (req, res) => res.json(runner.cancelCampaign(id(req))));
+  api.patch("/campaigns/:id", (req, res) => res.json(req.ws.store.updateCampaign(id(req), req.body ?? {})));
+  api.post("/campaigns/:id/start", (req, res) => res.json(req.ws.runner.startCampaign(id(req))));
+  api.post("/campaigns/:id/pause", (req, res) => res.json(req.ws.runner.pauseCampaign(id(req))));
+  api.post("/campaigns/:id/cancel", (req, res) => res.json(req.ws.runner.cancelCampaign(id(req))));
   api.delete("/campaigns/:id", (req, res) => {
-    store.deleteCampaign(id(req));
+    req.ws.store.deleteCampaign(id(req));
     res.status(204).end();
   });
 
   // ───────────── Sessões de login (aparelhos conectados ao painel) ─────────────
   api.get("/sessions", (req, res) => {
     res.json(
-      store.listWebSessions(req.user.id).map(({ token_hash: hash, ...session }) => ({
+      accountsStore.listWebSessions(req.user.id).map(({ token_hash: hash, ...session }) => ({
         ...session,
         device: describeDevice(session.user_agent),
         current: hash === req.session.token_hash,
@@ -206,12 +216,12 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
     );
   });
   api.delete("/sessions/:id", (req, res) => {
-    const hash = store.deleteWebSessionById(id(req), req.user.id);
+    const hash = accountsStore.deleteWebSessionById(id(req), req.user.id);
     onSessionsRevoked([hash]);
     res.status(204).end();
   });
   api.post("/sessions/revoke-others", (req, res) => {
-    const hashes = store.deleteOtherWebSessions(req.user.id, req.session.token_hash);
+    const hashes = accountsStore.deleteOtherWebSessions(req.user.id, req.session.token_hash);
     onSessionsRevoked(hashes);
     res.json({ closed: hashes.length });
   });
@@ -227,7 +237,7 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   // ───────────── Contas (só administradores) ─────────────
   const admin = express.Router();
   admin.use(auth.accounts.requireAdmin);
-  admin.get("/", (req, res) => res.json(store.listUsers().map((user) => ({ ...user, is_me: user.id === req.user.id }))));
+  admin.get("/", (req, res) => res.json(accountsStore.listUsers().map((user) => ({ ...user, is_me: user.id === req.user.id }))));
   admin.post("/", (req, res) => res.status(201).json(auth.accounts.createUser(req.user, req.body ?? {})));
   admin.post("/:id/activation-code", (req, res) => res.json(auth.accounts.newCode(id(req))));
   admin.patch("/:id", (req, res) => {
@@ -235,15 +245,15 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
     onSessionsRevoked(revoked);
     res.json(user);
   });
-  admin.delete("/:id", (req, res) => {
-    onSessionsRevoked(auth.accounts.deleteUser(req.user, id(req)));
+  admin.delete("/:id", async (req, res) => {
+    onSessionsRevoked(await auth.accounts.deleteUser(req.user, id(req)));
     res.status(204).end();
   });
   api.use("/users", admin);
 
   // ───────────── Configurações ─────────────
-  api.get("/settings", (req, res) => res.json(store.getSettings()));
-  api.patch("/settings", (req, res) => res.json(store.updateSettings(req.body ?? {})));
+  api.get("/settings", (req, res) => res.json(req.ws.store.getSettings()));
+  api.patch("/settings", (req, res) => res.json(req.ws.store.updateSettings(req.body ?? {})));
 
   app.use("/api", api);
   app.use("/api", (req, res) => res.status(404).json({ error: "Rota não encontrada" }));

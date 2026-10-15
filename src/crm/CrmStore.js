@@ -737,14 +737,14 @@ export class CrmStore {
   /**
    * Cria uma conta. Sem senha (passwordHash vazio), ela fica "pending" até o primeiro acesso com código.
    */
-  createUser({ name, email, passwordHash = "", role = "member", status = "active", createdBy = null }) {
+  createUser({ name, email, passwordHash = "", role = "member", status = "active", createdBy = null, workspaceId = null }) {
     try {
       const { lastInsertRowid } = this.db
         .prepare(
-          `INSERT INTO users (name, email, password_hash, role, status, created_by, created_at, password_changed_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+          `INSERT INTO users (name, email, password_hash, role, status, created_by, workspace_id, created_at, password_changed_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
         )
-        .run(clean(name, 120), clean(email, 254).toLowerCase(), passwordHash, role, status, createdBy, this.now(), passwordHash ? this.now() : null);
+        .run(clean(name, 120), clean(email, 254).toLowerCase(), passwordHash, role, status, createdBy, workspaceId, this.now(), passwordHash ? this.now() : null);
       return this.getUser(lastInsertRowid);
     } catch (error) {
       if (String(error.message).includes("UNIQUE")) throw conflict("Já existe uma conta com este e-mail");
@@ -758,7 +758,7 @@ export class CrmStore {
   getUser(id) {
     return (
       this.db
-        .prepare("SELECT id, name, email, role, status, created_at, password_changed_at, last_login_at FROM users WHERE id = ?")
+        .prepare("SELECT id, name, email, role, status, workspace_id, created_at, password_changed_at, last_login_at FROM users WHERE id = ?")
         .get(Number(id)) ?? null
     );
   }
@@ -787,9 +787,12 @@ export class CrmStore {
     return this.db
       .prepare(
         `SELECT u.id, u.name, u.email, u.role, u.status, u.created_at, u.password_changed_at, u.last_login_at,
+                u.workspace_id, w.name AS workspace_name,
+                (SELECT COUNT(*) FROM users x WHERE x.workspace_id = u.workspace_id) AS workspace_members,
                 (SELECT MAX(a.expires_at) FROM activation_codes a
                   WHERE a.user_id = u.id AND a.used_at IS NULL AND a.expires_at > ?) AS activation_expires_at
-         FROM users u ORDER BY u.role = 'admin' DESC, u.name COLLATE NOCASE`
+         FROM users u LEFT JOIN workspaces w ON w.id = u.workspace_id
+         ORDER BY u.role = 'admin' DESC, u.name COLLATE NOCASE`
       )
       .all(this.now());
   }
@@ -810,6 +813,51 @@ export class CrmStore {
 
   touchUserLogin(id) {
     this.db.prepare("UPDATE users SET last_login_at = ? WHERE id = ?").run(this.now(), Number(id));
+  }
+
+  // ───────────────────────── Espaços (banco principal) ─────────────────────────
+
+  listWorkspaces() {
+    return this.db.prepare("SELECT * FROM workspaces WHERE archived_at IS NULL ORDER BY id").all();
+  }
+
+  getWorkspace(id) {
+    return this.db.prepare("SELECT * FROM workspaces WHERE id = ?").get(Number(id)) ?? null;
+  }
+
+  /**
+   * Cria o registro do espaço. Sem arquivos informados, usa workspaces/ws-<id>.db e a sessão ws-<id>.
+   */
+  createWorkspace({ name, id = null, dbFile = null, sessionDir = null }) {
+    return transaction(this.db, () => {
+      const { lastInsertRowid } = this.db
+        .prepare("INSERT INTO workspaces (id, name, db_file, session_dir, created_at) VALUES (?, ?, '', '', ?)")
+        .run(id, clean(name, 120) || "Espaço", this.now());
+      const wsId = Number(lastInsertRowid);
+      this.db
+        .prepare("UPDATE workspaces SET db_file = ?, session_dir = ? WHERE id = ?")
+        .run(dbFile ?? `workspaces/ws-${wsId}.db`, sessionDir ?? `ws-${wsId}`, wsId);
+      return this.getWorkspace(wsId);
+    });
+  }
+
+  archiveWorkspace(id) {
+    this.db.prepare("UPDATE workspaces SET archived_at = ? WHERE id = ?").run(this.now(), Number(id));
+  }
+
+  setUserWorkspace(userId, workspaceId) {
+    this.db.prepare("UPDATE users SET workspace_id = ? WHERE id = ?").run(Number(workspaceId), Number(userId));
+  }
+
+  /**
+   * Contas sem espaço (criadas antes dos espaços existirem) vão para o espaço informado
+   */
+  assignUsersWithoutWorkspace(workspaceId) {
+    return this.db.prepare("UPDATE users SET workspace_id = ? WHERE workspace_id IS NULL").run(Number(workspaceId)).changes;
+  }
+
+  countWorkspaceUsers(workspaceId) {
+    return this.db.prepare("SELECT COUNT(*) AS total FROM users WHERE workspace_id = ?").get(Number(workspaceId)).total;
   }
 
   // ───────────────────────── Códigos de primeiro acesso ─────────────────────────

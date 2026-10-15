@@ -17,7 +17,11 @@ export const normalizeCode = (code) => String(code ?? "").toUpperCase().replace(
 
 const forbidden = (message) => new AppError(403, message);
 
-export function createAccounts({ store, now = Date.now }) {
+/**
+ * @param {object} options
+ * @param {object} [options.workspaces] - Gerenciador de espaços: sem ele (testes), todas as contas usam o mesmo espaço
+ */
+export function createAccounts({ store, now = Date.now, workspaces = null }) {
   // Chave do servidor para o HMAC dos códigos (o banco guarda só o hash)
   let key = store.getSecret("activation_key");
   if (!key) {
@@ -64,12 +68,23 @@ export function createAccounts({ store, now = Date.now }) {
 
   // ───────── Administração (só administradores chegam aqui) ─────────
 
-  function createUser(admin, { name, email, role = "member" } = {}) {
+  /**
+   * Convida uma pessoa. space = "own" (padrão): espaço novo, com contatos e WhatsApp próprios;
+   * "team": entra no espaço de quem convidou e vê os mesmos dados.
+   */
+  function createUser(admin, { name, email, role = "member", space = "own" } = {}) {
     const cleanName = String(name ?? "").trim();
     const cleanEmail = normalizeEmail(email);
-    const problem = (cleanName.length < 2 && "Informe o nome") || emailProblem(cleanEmail) || (!ROLES.includes(role) && "Papel inválido");
+    const problem =
+      (cleanName.length < 2 && "Informe o nome") ||
+      emailProblem(cleanEmail) ||
+      (!ROLES.includes(role) && "Papel inválido") ||
+      (!["own", "team"].includes(space) && "Escolha onde a pessoa vai trabalhar");
     if (problem) throw badRequest(problem);
-    const user = store.createUser({ name: cleanName, email: cleanEmail, role, status: "pending", createdBy: admin.id });
+    if (store.getUserWithPassword(cleanEmail)) throw new AppError(409, "Já existe uma conta com este e-mail");
+
+    const workspaceId = space === "own" && workspaces ? workspaces.create(cleanName) : admin.workspace_id ?? null;
+    const user = store.createUser({ name: cleanName, email: cleanEmail, role, status: "pending", createdBy: admin.id, workspaceId });
     return { user, ...issueCode(user.id) };
   }
 
@@ -102,9 +117,10 @@ export function createAccounts({ store, now = Date.now }) {
   }
 
   /**
-   * Remove a conta. Devolve as sessões encerradas.
+   * Remove a conta. Se o espaço dela ficar vazio, ele é arquivado (WhatsApp desconectado, dados guardados).
+   * Devolve as sessões encerradas.
    */
-  function deleteUser(admin, userId) {
+  async function deleteUser(admin, userId) {
     const user = store.requireUser(userId);
     if (user.id === admin.id) throw badRequest("Você não pode remover a própria conta");
     if (user.role === "admin" && user.status === "active" && store.countActiveAdmins() <= 1) {
@@ -112,6 +128,7 @@ export function createAccounts({ store, now = Date.now }) {
     }
     const revoked = store.deleteUserWebSessions(user.id);
     store.deleteUser(user.id);
+    if (workspaces && user.workspace_id && store.countWorkspaceUsers(user.workspace_id) === 0) await workspaces.archive(user.workspace_id);
     return revoked;
   }
 

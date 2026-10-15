@@ -53,8 +53,9 @@ function whatsappHero(wa) {
     qr: ["Falta só ler o QR Code", "Abra o WhatsApp no celular e conecte o CRM para enviar e receber mensagens."],
     connecting: ["Conectando ao WhatsApp...", "Isso leva só alguns segundos."],
     disconnected: ["Conecte seu WhatsApp", "Sem a conexão, campanhas e agendamentos ficam parados."],
+    first: ["Conecte o seu WhatsApp", "Este espaço é só seu: leia o QR Code com o seu número para enviar e receber mensagens."],
   };
-  const [title, text] = texts[wa.status] ?? texts.disconnected;
+  const [title, text] = texts[wa.status === "disconnected" && wa.hasSession === false ? "first" : wa.status] ?? texts.disconnected;
   return h(
     "section",
     { class: "hero" },

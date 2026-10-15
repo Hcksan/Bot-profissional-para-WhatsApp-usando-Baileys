@@ -24,7 +24,20 @@ export class FakeWhatsApp extends EventEmitter {
   }
 
   getState() {
-    return { status: this.connected ? "open" : "disconnected", qr: null, me: null, limits: this.limits };
+    return { status: this.connected ? "open" : "disconnected", qr: null, me: null, limits: this.limits, hasSession: this.connected };
+  }
+
+  hasSession() {
+    return this.connected;
+  }
+
+  async connect() {}
+
+  async disconnect() {}
+
+  async unlink() {
+    this.unlinked = true;
+    this.connected = false;
   }
 
   async resolveJid(phone) {

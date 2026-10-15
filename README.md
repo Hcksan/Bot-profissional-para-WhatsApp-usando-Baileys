@@ -116,7 +116,15 @@ sudo bash /opt/crm/deploy/update.sh     # atualizar para a versão mais nova do 
 O login é por **e-mail e senha** (Argon2id), no mesmo modelo do MyLife. A primeira conta é criada pelo próprio painel em
 **Primeiro acesso**, confirmada pelo código `CRM_PASSWORD`, e vira **administradora**. Depois disso o código não serve mais.
 
-Para dar acesso a outra pessoa: **Usuários → Convidar pessoa** (nome, e-mail e permissão). O CRM gera um **código de 8
+Para dar acesso a outra pessoa: **Usuários → Convidar pessoa** (nome, e-mail, onde ela vai trabalhar e permissão).
+
+- **Espaço próprio** (padrão): a pessoa tem contatos, Kanban, campanhas, agendamentos, configurações e **o próprio
+  WhatsApp**, separados de todo mundo (um banco em `data/workspaces/ws-N.db` e uma sessão em `sessions/ws-N`).
+  Ninguém vê os dados de outro espaço, nem o administrador. Ela conecta o número dela em **WhatsApp → Gerar QR Code**.
+- **Minha equipe**: a pessoa entra no seu espaço e vê os mesmos contatos e o mesmo WhatsApp que você.
+
+Remover a última conta de um espaço desconecta o WhatsApp dela e guarda o banco em `data/removidos/`.
+ O CRM gera um **código de 8
 caracteres, válido por 7 dias**, e uma mensagem pronta para copiar e enviar. A pessoa abre o painel, clica em
 **Primeiro acesso com código**, confirma o nome e cria a própria senha.
 

@@ -11,7 +11,9 @@ const toMs = (value) => {
 };
 
 function connectionCard(wa) {
-  const restart = button("Reconectar", { icon: "refresh-cw" });
+  // Número que nunca foi conectado neste espaço: o QR Code só é gerado quando a pessoa pede
+  const neverConnected = wa.status === "disconnected" && wa.hasSession === false;
+  const restart = neverConnected ? button("Gerar QR Code", { icon: "qr-code", variant: "primary" }) : button("Reconectar", { icon: "refresh-cw" });
   restart.addEventListener("click", () => withBusy(restart, () => post("/whatsapp/restart")));
 
   const logout = button("Desconectar aparelho", { icon: "log-out", variant: "danger" });
@@ -54,10 +56,27 @@ function connectionCard(wa) {
     connecting: [
       h("div", { class: "wa-hero" }, h("span", { class: "icon-bubble amber" }, icon("loader-circle")), h("div", {}, h("h2", {}, "Conectando..."), h("p", { class: "muted" }, "Isso leva só alguns segundos"))),
     ],
-    disconnected: [
-      h("div", { class: "wa-hero" }, h("span", { class: "icon-bubble red" }, icon("smartphone")), h("div", {}, h("h2", {}, "WhatsApp desconectado"), h("p", { class: "muted" }, "Tentando reconectar automaticamente..."))),
-      wa.lastError ? callout(wa.lastError) : null,
-    ],
+    disconnected: neverConnected
+      ? [
+          h(
+            "div",
+            { class: "wa-hero" },
+            h("span", { class: "icon-bubble" }, icon("smartphone")),
+            h("div", {}, h("h2", {}, "Conecte o seu WhatsApp"), h("p", { class: "muted" }, "Este espaço usa o seu próprio número. Ninguém mais vê suas conversas."))
+          ),
+          h(
+            "ol",
+            { class: "steps" },
+            h("li", {}, "Clique em Gerar QR Code"),
+            h("li", {}, "No celular: WhatsApp → Aparelhos conectados → Conectar um aparelho"),
+            h("li", {}, "Aponte a câmera para o QR Code que vai aparecer aqui")
+          ),
+          wa.lastError ? callout(wa.lastError) : null,
+        ]
+      : [
+          h("div", { class: "wa-hero" }, h("span", { class: "icon-bubble red" }, icon("smartphone")), h("div", {}, h("h2", {}, "WhatsApp desconectado"), h("p", { class: "muted" }, "Tentando reconectar automaticamente..."))),
+          wa.lastError ? callout(wa.lastError) : null,
+        ],
   };
 
   return h(

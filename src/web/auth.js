@@ -62,7 +62,7 @@ function createLoginLimiter({ now = Date.now, perIp = 5, global = 30, windowMs =
  * A primeira conta é criada pelo próprio painel ("Primeiro acesso"), confirmada pelo código de configuração
  * (CRM_PASSWORD no .env). Depois que existe uma conta, o código não serve mais para entrar.
  */
-export function createAuth({ store, password, production = false, cookieSecure = false, sessionDays = 30, publicUrl = "", now = Date.now }) {
+export function createAuth({ store, password, production = false, cookieSecure = false, sessionDays = 30, publicUrl = "", now = Date.now, workspaces = null }) {
   let setupCode = password;
 
   if (store.countUsers() === 0) {
@@ -87,7 +87,7 @@ export function createAuth({ store, password, production = false, cookieSecure =
   const cookieName = cookieSecure ? "__Host-crm_session" : "crm_session";
   const cookieOptions = { httpOnly: true, sameSite: "lax", secure: cookieSecure, path: "/" };
   const limiter = createLoginLimiter({ now });
-  const accounts = createAccounts({ store, now });
+  const accounts = createAccounts({ store, now, workspaces });
   const tokenHash = (token) => sha256(token).toString("hex");
   const text = (value, max) => (typeof value === "string" && value.length <= max ? value : "");
   // Atraso fixo depois de um erro, para desacelerar tentativas automáticas
@@ -206,7 +206,8 @@ export function createAuth({ store, password, production = false, cookieSecure =
     const passwordHash = await hashPassword(newPassword);
     // Confere de novo depois do hash: outra requisição pode ter criado a conta nesse meio-tempo
     if (store.countUsers() > 0) return res.status(409).json({ error: "A conta já foi criada. Entre com seu e-mail e senha." });
-    const user = store.createUser({ name, email, passwordHash, role: "admin" });
+    // A primeira conta fica com o espaço 1 (os dados e o WhatsApp que já existiam)
+    const user = store.createUser({ name, email, passwordHash, role: "admin", workspaceId: store.getWorkspace(1) ? 1 : null });
     limiter.succeed(req.ip);
     logger.success(`👤 Conta criada: ${user.email}`);
     return startSession(req, res, user);
@@ -259,8 +260,10 @@ export function createAuth({ store, password, production = false, cookieSecure =
   function socketAuth(socket, next) {
     if (!isSameOrigin(socket.request, publicUrl)) return next(new Error("forbidden"));
     const session = sessionFrom(socket.handshake.headers.cookie);
-    if (!session) return next(new Error("unauthorized"));
+    const user = session && store.getUser(session.user_id);
+    if (!user) return next(new Error("unauthorized"));
     socket.data.sessionHash = session.token_hash;
+    socket.data.workspaceId = user.workspace_id;
     return next();
   }
 

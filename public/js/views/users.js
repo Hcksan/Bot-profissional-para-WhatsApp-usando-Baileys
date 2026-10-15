@@ -7,6 +7,7 @@ import { del, get, patch, post } from "../api.js";
 let root = null;
 
 const ROLE = { admin: ["Administrador", "badge-primary"], member: ["Membro", ""] };
+let myWorkspace = null;
 
 async function load() {
   render(await get("/users"));
@@ -66,13 +67,19 @@ function showCode(user, { code, expires_at: expiresAt }, { isNew }) {
 function openInvite() {
   const name = h("input", { required: true, minlength: "2", maxlength: "120", autocomplete: "off", placeholder: "Nome da pessoa" });
   const email = h("input", { type: "email", required: true, maxlength: "254", autocomplete: "off", placeholder: "pessoa@email.com" });
-  const roleOption = (value, title, text, checked = false) =>
-    h("label", { class: "role-option" }, h("input", { type: "radio", name: "role", value, checked }), h("span", {}, h("strong", {}, title), h("small", {}, text)));
+  const option = (group, value, title, text, checked = false) =>
+    h("label", { class: "role-option" }, h("input", { type: "radio", name: group, value, checked }), h("span", {}, h("strong", {}, title), h("small", {}, text)));
+  const spaces = h(
+    "div",
+    { class: "grid-2" },
+    option("space", "own", "Espaço próprio", "Contatos, Kanban, campanhas e WhatsApp só dela. Ela conecta o próprio número.", true),
+    option("space", "team", "Minha equipe", "Trabalha junto com você: vê os mesmos contatos e usa o mesmo WhatsApp.")
+  );
   const roles = h(
     "div",
     { class: "grid-2" },
-    roleOption("member", "Membro", "Usa o CRM: contatos, Kanban, campanhas e agendamentos.", true),
-    roleOption("admin", "Administrador", "Tudo do membro e também gerencia as contas.")
+    option("role", "member", "Membro", "Usa o CRM normalmente.", true),
+    option("role", "admin", "Administrador", "Também convida e gerencia as contas.")
   );
   const error = h("p", { class: "form-error", role: "alert" });
   const save = button("Criar convite", { icon: "user-plus", variant: "primary", type: "submit", form: "invite-form" });
@@ -90,7 +97,8 @@ function openInvite() {
           withBusy(save, async () => {
             try {
               const role = roles.querySelector("input:checked").value;
-              const result = await post("/users", { name: name.value, email: email.value, role });
+              const space = spaces.querySelector("input:checked").value;
+              const result = await post("/users", { name: name.value, email: email.value, role, space });
               modal.close();
               showCode(result.user, result, { isNew: true });
               load();
@@ -101,6 +109,7 @@ function openInvite() {
         },
       },
       h("div", { class: "grid-2" }, field("Nome", name), field("E-mail", email, "É com ele que a pessoa vai entrar")),
+      field("Onde a pessoa vai trabalhar", spaces),
       field("Permissão", roles),
       callout("A pessoa recebe um código de 8 letras e números, válido por 7 dias. No primeiro acesso ela confirma o nome e cria a própria senha.", { type: "info" }),
       error
@@ -140,7 +149,11 @@ function actionsFor(user) {
 
   const remove = iconButton("trash-2", "Remover conta", { danger: true });
   remove.addEventListener("click", async () => {
-    if (!(await confirmDialog(`Remover a conta de ${user.name}? Os contatos e campanhas do CRM não são apagados.`, { danger: true, confirmText: "Remover" }))) return;
+    const ownSpace = user.workspace_id !== myWorkspace && user.workspace_members <= 1;
+    const message = ownSpace
+      ? `Remover a conta de ${user.name}? O espaço dela é desligado: o WhatsApp dela é desconectado e os contatos e campanhas ficam guardados no servidor (pasta data/removidos).`
+      : `Remover a conta de ${user.name}? Os contatos e campanhas da equipe continuam como estão.`;
+    if (!(await confirmDialog(message, { danger: true, confirmText: "Remover" }))) return;
     run(remove, () => del(`/users/${user.id}`));
   });
   list.push(remove);
@@ -150,6 +163,11 @@ function actionsFor(user) {
 function render(users) {
   if (!root) return;
   const pending = users.filter((user) => user.status === "pending").length;
+  myWorkspace = users.find((user) => user.is_me)?.workspace_id ?? null;
+  const spaceLabel = (user) =>
+    user.workspace_id === myWorkspace
+      ? h("span", { class: "badge badge-info", title: "Vê os mesmos contatos e usa o mesmo WhatsApp que você" }, icon("users-round"), user.is_me ? "Seu espaço" : "Sua equipe")
+      : h("span", { class: "badge", title: user.workspace_members > 1 ? `${user.workspace_members} pessoas neste espaço` : "Dados e WhatsApp só desta pessoa" }, icon("lock"), "Espaço próprio");
   fill(root, 
     pageHead("Usuários", `${users.length} conta(s)${pending ? ` · ${pending} aguardando primeiro acesso` : ""}`, button("Convidar pessoa", { icon: "user-plus", variant: "primary", onClick: openInvite })),
     h(
@@ -158,7 +176,7 @@ function render(users) {
       h(
         "table",
         {},
-        h("thead", {}, h("tr", {}, h("th", {}, "Pessoa"), h("th", {}, "Permissão"), h("th", {}, "Situação"), h("th", {}, "Último acesso"), h("th", {}, ""))),
+        h("thead", {}, h("tr", {}, h("th", {}, "Pessoa"), h("th", {}, "Espaço"), h("th", {}, "Permissão"), h("th", {}, "Situação"), h("th", {}, "Último acesso"), h("th", {}, ""))),
         h(
           "tbody",
           {},
@@ -167,6 +185,7 @@ function render(users) {
               "tr",
               {},
               h("td", {}, h("div", { class: "row" }, person(user.name, user.email, { seed: user.email }), user.is_me ? h("span", { class: "badge" }, "você") : null)),
+              h("td", {}, spaceLabel(user)),
               h("td", {}, h("span", { class: `badge ${ROLE[user.role][1]}` }, ROLE[user.role][0])),
               h("td", {}, statusBadge(user)),
               h("td", { class: "nowrap muted", title: user.last_login_at ? formatDateTime(user.last_login_at) : "" }, user.last_login_at ? timeAgo(user.last_login_at) : "nunca"),
@@ -179,7 +198,12 @@ function render(users) {
     h(
       "div",
       { style: { marginTop: "16px" } },
-      callout("Esqueceu a senha? Gere um código (ícone de chave) e envie para a pessoa: ela usa “Primeiro acesso com código” na tela de login e cria uma senha nova.", { type: "info", icon: "key-round" })
+      h(
+        "div",
+        { class: "stack" },
+        callout("Cada pessoa com “Espaço próprio” tem contatos, campanhas, agendamentos e WhatsApp separados: ninguém vê os dados de outro espaço, nem você.", { type: "info", icon: "lock" }),
+        callout("Esqueceu a senha? Gere um código (ícone de chave) e envie para a pessoa: ela usa “Primeiro acesso com código” na tela de login e cria uma senha nova.", { type: "info", icon: "key-round" })
+      )
     )
   );
 }
