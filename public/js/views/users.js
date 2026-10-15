@@ -1,4 +1,4 @@
-import { h, icon, button, iconButton, pageHead, person, callout, openModal, field, toast, withBusy, confirmDialog, formatDateTime, timeAgo } from "../dom.js";
+import { h, fill, icon, button, iconButton, pageHead, person, callout, openModal, field, toast, withBusy, confirmDialog, formatDateTime, timeAgo } from "../dom.js";
 import { del, get, patch, post } from "../api.js";
 
 /**
@@ -150,7 +150,7 @@ function actionsFor(user) {
 function render(users) {
   if (!root) return;
   const pending = users.filter((user) => user.status === "pending").length;
-  root.replaceChildren(
+  fill(root, 
     pageHead("Usuários", `${users.length} conta(s)${pending ? ` · ${pending} aguardando primeiro acesso` : ""}`, button("Convidar pessoa", { icon: "user-plus", variant: "primary", onClick: openInvite })),
     h(
       "div",

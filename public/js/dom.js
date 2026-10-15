@@ -36,6 +36,13 @@ export function h(tag, props = {}, ...children) {
 
 export const $ = (selector, root = document) => root.querySelector(selector);
 
+/**
+ * Troca o conteúdo de um elemento ignorando itens vazios (null/false), como o h() faz
+ */
+export function fill(el, ...children) {
+  el.replaceChildren(...children.flat(Infinity).filter((child) => child !== null && child !== undefined && child !== false));
+}
+
 // ───────── Avisos ─────────
 
 export function toast(message, type = "info") {
@@ -188,7 +195,8 @@ export function emptyState({ icon: name = "inbox", title, text, action, compact 
  * Avatar com as iniciais e uma cor fixa por pessoa
  */
 export function avatar(name, seed = name, size = "") {
-  const words = String(name || "").trim().split(/\s+/).filter(Boolean);
+  // Só letras viram iniciais; sem nome (ou só números) mostra "#"
+  const words = String(name || "").trim().split(/\s+/).filter((word) => /\p{L}/u.test(word[0] ?? ""));
   const initials = words.length ? (words[0][0] + (words.length > 1 ? words.at(-1)[0] : "")).toUpperCase() : "#";
   let hash = 0;
   for (const char of String(seed ?? "")) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
@@ -200,11 +208,11 @@ export function avatar(name, seed = name, size = "") {
 /**
  * Pessoa: avatar + nome + linha secundária
  */
-export function person(name, secondary, { seed, size = "" } = {}) {
+export function person(name, secondary, { seed, size = "", avatarName = name } = {}) {
   return h(
     "span",
     { class: "person" },
-    avatar(name, seed ?? name, size),
+    avatar(avatarName, seed ?? name, size),
     h("span", { class: "person-text" }, h("strong", {}, name), secondary ? h("small", {}, secondary) : null)
   );
 }

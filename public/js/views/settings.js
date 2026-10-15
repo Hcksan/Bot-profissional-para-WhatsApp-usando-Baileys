@@ -1,4 +1,4 @@
-import { h, icon, pageHead, person, field, toast, withBusy, confirmDialog, formatDateTime, timeAgo } from "../dom.js";
+import { h, fill, icon, pageHead, person, field, toast, withBusy, confirmDialog, formatDateTime, timeAgo } from "../dom.js";
 import { del, get, patch, post } from "../api.js";
 import { hooks, state } from "../state.js";
 
@@ -12,7 +12,7 @@ function render() {
   const keywords = h("input", { value: (settings.opt_out_keywords ?? []).join(", ") });
   const save = h("button", { class: "btn btn-primary", type: "submit" }, icon("check"), "Salvar");
 
-  root.replaceChildren(
+  fill(root, 
     pageHead("Configurações", "Envios, sua conta e os aparelhos conectados ao painel"),
     h(
       "form",

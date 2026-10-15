@@ -1,4 +1,4 @@
-import { h, icon, button, pageHead, emptyState, person, stagePill, openModal, field, stageOptions, toast, withBusy, formatPhone, timeAgo, tagList, readFileBase64 } from "../dom.js";
+import { h, fill, icon, button, pageHead, emptyState, person, stagePill, openModal, field, stageOptions, toast, withBusy, formatPhone, timeAgo, tagList, readFileBase64 } from "../dom.js";
 import { get, post, query } from "../api.js";
 import { hooks, state, stageById } from "../state.js";
 import { openContact, openNewContact } from "./contactModal.js";
@@ -79,7 +79,7 @@ function render() {
         h(
           "button",
           { class: "link", type: "button", onClick: () => openContact(contact.id, { onSaved: load }) },
-          person(contact.name || "Sem nome", contact.opted_out ? "não quer receber mensagens" : null, { seed: contact.phone })
+          person(contact.name || "Sem nome", contact.opted_out ? "não quer receber mensagens" : null, { seed: contact.phone, avatarName: contact.name })
         )
       ),
       h("td", { class: "nowrap" }, formatPhone(contact.phone)),
@@ -90,7 +90,7 @@ function render() {
   );
 
   const selected = state.selection.size;
-  root.replaceChildren(
+  fill(root, 
     pageHead(
       "Contatos",
       `${contacts.length} contato(s) nesta lista`,

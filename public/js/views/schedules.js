@@ -1,4 +1,4 @@
-import { h, icon, button, pageHead, emptyState, person, withBusy, confirmDialog, formatPhone, formatDateTime } from "../dom.js";
+import { h, fill, icon, button, pageHead, emptyState, person, withBusy, confirmDialog, formatPhone, formatDateTime } from "../dom.js";
 import { del, get, post } from "../api.js";
 import { openScheduleModal } from "./contactModal.js";
 
@@ -32,7 +32,7 @@ function render(schedules) {
     return h(
       "tr",
       {},
-      h("td", {}, person(schedule.contact_name || "Sem nome", formatPhone(schedule.contact_phone), { seed: schedule.contact_phone })),
+      h("td", {}, person(schedule.contact_name || "Sem nome", formatPhone(schedule.contact_phone), { seed: schedule.contact_phone, avatarName: schedule.contact_name })),
       h("td", { style: { maxWidth: "380px" } }, h("div", { class: "small", style: { whiteSpace: "pre-wrap" } }, schedule.text)),
       h("td", { class: "nowrap" }, h("span", { class: "row", style: { gap: "6px" } }, icon("clock", { size: 15 }), formatDateTime(schedule.send_at)), late ? h("div", { class: "small", style: { color: "var(--warning)" } }, "aguardando conexão") : null),
       h("td", { class: "nowrap" }, RECURRENCE[schedule.recurrence], schedule.sent_count ? h("div", { class: "muted small" }, `${schedule.sent_count}× enviada`) : null),
@@ -46,7 +46,7 @@ function render(schedules) {
     );
   });
 
-  root.replaceChildren(
+  fill(root, 
     pageHead(
       "Agendamentos",
       "Mensagens programadas para um contato, uma vez ou repetindo.",

@@ -145,7 +145,7 @@ input, select, textarea {
 input:hover, select:hover, textarea:hover { border-color: var(--muted); }
 input:focus-visible, select:focus-visible, textarea:focus-visible { border-color: var(--primary); }
 textarea { min-height: 100px; resize: vertical; }
-input[type="checkbox"] { width: 17px; min-height: 17px; height: 17px; padding: 0; accent-color: var(--primary); cursor: pointer; }
+input[type="checkbox"], input[type="radio"] { width: 17px; min-height: 17px; height: 17px; padding: 0; margin: 0; flex: none; accent-color: var(--primary); cursor: pointer; }
 input[type="color"] { padding: 3px; min-width: 64px; cursor: pointer; }
 .check { display: inline-flex; gap: 9px; align-items: center; cursor: pointer; }
 .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
@@ -535,7 +535,7 @@ ul.steps li::before { content: "✓"; background: var(--success-soft); color: va
 .invite-text { white-space: pre-wrap; font-size: 13px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--border); color: var(--text-2); }
 .role-option { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); cursor: pointer; }
 .role-option:has(input:checked) { border-color: var(--primary); background: var(--primary-soft); }
-.role-option input { margin-top: 2px; }
+.role-option input { margin-top: 3px; }
 .role-option span { display: flex; flex-direction: column; }
 .role-option small { color: var(--muted); }
 

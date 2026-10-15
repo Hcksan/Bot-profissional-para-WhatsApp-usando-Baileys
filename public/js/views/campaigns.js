@@ -1,4 +1,4 @@
-import { h, icon, button, pageHead, emptyState, callout, person, openModal, field, stageOptions, toast, withBusy, confirmDialog, formatPhone, formatDateTime, formatDuration } from "../dom.js";
+import { h, fill, icon, button, pageHead, emptyState, callout, person, openModal, field, stageOptions, toast, withBusy, confirmDialog, formatPhone, formatDateTime, formatDuration } from "../dom.js";
 import { del, get, patch, post, query } from "../api.js";
 import { state } from "../state.js";
 
@@ -124,7 +124,7 @@ function campaignCard(campaign) {
 
 function render() {
   const { daily_limit: limit } = state.settings;
-  root.replaceChildren(
+  fill(root, 
     pageHead(
       "Campanhas",
       `Uma mensagem para vários contatos, enviada um de cada vez. Hoje: ${state.sent_today ?? 0} de ${limit} do limite diário.`,
@@ -349,7 +349,7 @@ async function openDetails(id) {
               h(
                 "tr",
                 {},
-                h("td", {}, person(item.contact_name || "Sem nome", formatPhone(item.contact_phone), { seed: item.contact_phone, size: "sm" })),
+                h("td", {}, person(item.contact_name || "Sem nome", formatPhone(item.contact_phone), { seed: item.contact_phone, size: "sm", avatarName: item.contact_name })),
                 h("td", {}, h("span", { class: `badge ${ITEM_STATUS[item.status].badge}` }, ITEM_STATUS[item.status].label)),
                 h("td", { class: "nowrap" }, formatDateTime(item.sent_at) || "—"),
                 h("td", { class: "small" }, item.error ?? item.rendered ?? "")

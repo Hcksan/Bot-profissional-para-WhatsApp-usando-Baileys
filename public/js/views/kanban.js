@@ -1,4 +1,4 @@
-import { h, icon, button, iconButton, pageHead, avatar, openModal, field, toast, withBusy, confirmDialog, formatPhone, timeAgo, tagList } from "../dom.js";
+import { h, fill, icon, button, iconButton, pageHead, avatar, openModal, field, toast, withBusy, confirmDialog, formatPhone, timeAgo, tagList } from "../dom.js";
 import { del, get, patch, post, query } from "../api.js";
 import { hooks, state } from "../state.js";
 import { openContact, openNewContact } from "./contactModal.js";
@@ -165,7 +165,7 @@ function render(contacts) {
   );
 
   const scroll = root.querySelector(".board")?.scrollLeft ?? 0;
-  root.replaceChildren(
+  fill(root, 
     pageHead(
       "Kanban",
       `${contacts.length} contato(s). Arraste os cards para mudar de etapa.`,

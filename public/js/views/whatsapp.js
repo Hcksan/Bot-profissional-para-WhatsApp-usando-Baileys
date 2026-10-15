@@ -1,4 +1,4 @@
-import { h, icon, button, pageHead, callout, withBusy, confirmDialog, formatDateTime, toast } from "../dom.js";
+import { h, fill, icon, button, pageHead, callout, withBusy, confirmDialog, formatDateTime, toast } from "../dom.js";
 import { post } from "../api.js";
 import { hooks, state } from "../state.js";
 
@@ -113,7 +113,7 @@ function limitsCard(wa) {
 function render() {
   if (!root) return;
   const wa = state.whatsapp ?? { status: "disconnected" };
-  root.replaceChildren(
+  fill(root, 
     pageHead("WhatsApp", "Conexão do seu número com o CRM"),
     h("div", { class: "wa-layout" }, connectionCard(wa), limitsCard(wa))
   );

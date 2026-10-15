@@ -1,4 +1,4 @@
-import { h, icon, button, person, emptyState, formatPhone, formatDateTime, timeAgo } from "../dom.js";
+import { h, fill, icon, button, person, emptyState, formatPhone, formatDateTime, timeAgo } from "../dom.js";
 import { get } from "../api.js";
 import { state } from "../state.js";
 import { openContact, openNewContact } from "./contactModal.js";
@@ -211,7 +211,7 @@ function render() {
   const sentPct = limit ? Math.min(100, Math.round((data.campaign_sent_today / limit) * 100)) : 0;
   const today = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
-  root.replaceChildren(
+  fill(root, 
     h(
       "div",
       { class: "page-head" },
