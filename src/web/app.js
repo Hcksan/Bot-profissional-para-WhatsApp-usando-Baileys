@@ -1,3 +1,5 @@
+import crypto from "crypto";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
@@ -8,6 +10,24 @@ import { applyMapping, exportContacts, guessMapping, parseSpreadsheet } from "..
 import { blockCrossSite, describeDevice, securityHeaders } from "./security.js";
 
 const publicDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../public");
+
+/**
+ * Versão dos arquivos do painel (muda a cada atualização). A Cloudflare manda o navegador guardar CSS/JS por horas;
+ * com a versão no caminho (/v/<versão>/...), uma atualização nunca mistura HTML novo com CSS/JS antigos.
+ * Os import relativos dos módulos herdam o caminho versionado sozinhos.
+ */
+function assetVersion(dir) {
+  const hash = crypto.createHash("sha256");
+  const walk = (folder) => {
+    for (const entry of fs.readdirSync(folder, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      const file = path.join(folder, entry.name);
+      if (entry.isDirectory()) walk(file);
+      else hash.update(entry.name).update(fs.readFileSync(file));
+    }
+  };
+  walk(dir);
+  return hash.digest("hex").slice(0, 12);
+}
 
 /**
  * Cria o app Express com a API do CRM e o painel web
@@ -229,7 +249,11 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   app.use("/api", (req, res) => res.status(404).json({ error: "Rota não encontrada" }));
 
   // ───────────── Painel ─────────────
-  app.use(express.static(publicDir, { index: "index.html" }));
+  const version = assetVersion(publicDir);
+  const indexHtml = fs.readFileSync(path.join(publicDir, "index.html"), "utf8").replaceAll("/__V__/", `/v/${version}/`);
+  app.get(["/", "/index.html"], (req, res) => res.set("Cache-Control", "no-cache").type("html").send(indexHtml));
+  app.use("/v/:version", express.static(publicDir, { index: false, maxAge: "365d", immutable: true }));
+  app.use(express.static(publicDir, { index: false }));
 
   // Erros
   app.use((error, req, res, _next) => {

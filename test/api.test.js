@@ -59,7 +59,17 @@ test("rotas exigem login", async () => {
 test("painel é servido", async () => {
   const response = await fetch(`${base}/`);
   assert.equal(response.status, 200);
-  assert.match(await response.text(), /CRM Pessoal/);
+  assert.equal(response.headers.get("cache-control"), "no-cache");
+  const html = await response.text();
+  assert.match(html, /CRM Pessoal/);
+
+  // CSS e JS com a versão no caminho (a Cloudflare guarda por horas no navegador)
+  assert.doesNotMatch(html, /__V__/);
+  const [, css] = /href="(\/v\/[0-9a-f]{12}\/css\/app\.css)"/.exec(html);
+  const asset = await fetch(`${base}${css}`);
+  assert.equal(asset.status, 200);
+  assert.match(asset.headers.get("cache-control"), /immutable/);
+  assert.equal((await fetch(`${base}${css.replace("css/app.css", "js/dom.js")}`)).status, 200);
 });
 
 test("contatos via API: criar, validar, mover e enviar", async () => {
