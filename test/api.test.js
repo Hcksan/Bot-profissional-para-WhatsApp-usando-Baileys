@@ -6,6 +6,7 @@ import { setup } from "./helpers.js";
 import { CampaignRunner } from "../src/crm/CampaignRunner.js";
 import { createAuth } from "../src/web/auth.js";
 import { createApp } from "../src/web/app.js";
+import { hashPassword } from "../src/web/password.js";
 
 let server;
 let base;
@@ -31,7 +32,8 @@ async function call(path, { method = "GET", body, auth = true } = {}) {
 before(async () => {
   ctx = setup();
   const runner = new CampaignRunner({ store: ctx.store, crm: ctx.crm, wa: ctx.wa, now: ctx.now });
-  const auth = createAuth({ store: ctx.store, password: "senha-teste" });
+  ctx.store.createUser({ name: "Teste", email: "teste@exemplo.com", passwordHash: await hashPassword("senha-teste-1") });
+  const auth = createAuth({ store: ctx.store, password: "codigo-teste" });
   const app = createApp({ store: ctx.store, crm: ctx.crm, wa: ctx.wa, runner, auth });
   server = http.createServer(app);
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
@@ -42,9 +44,9 @@ after(() => server.close());
 
 test("rotas exigem login", async () => {
   assert.equal((await call("/api/contacts", { auth: false })).status, 401);
-  assert.equal((await call("/api/login", { method: "POST", body: { password: "errada" }, auth: false })).status, 401);
+  assert.equal((await call("/api/login", { method: "POST", body: { email: "teste@exemplo.com", password: "errada" }, auth: false })).status, 401);
 
-  const login = await call("/api/login", { method: "POST", body: { password: "senha-teste" }, auth: false });
+  const login = await call("/api/login", { method: "POST", body: { email: "teste@exemplo.com", password: "senha-teste-1" }, auth: false });
   assert.equal(login.status, 200);
   const setCookie = login.headers.get("set-cookie");
   assert.match(setCookie, /HttpOnly/i);

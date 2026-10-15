@@ -6,20 +6,126 @@
     <meta name="color-scheme" content="light dark" />
     <title>CRM Pessoal</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316a34a'/%3E%3Crect x='7' y='8' width='5' height='16' rx='1.5' fill='white'/%3E%3Crect x='14' y='8' width='5' height='11' rx='1.5' fill='white'/%3E%3Crect x='21' y='8' width='5' height='7' rx='1.5' fill='white'/%3E%3C/svg%3E" />
+    <link rel="preload" href="/fonts/poppins-800-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/css/app.css" />
   </head>
   <body>
-    <div id="login" class="login" hidden>
-      <form class="login-card" id="login-form">
-        <div class="brand brand-lg"><span class="brand-mark" aria-hidden="true"></span>CRM Pessoal</div>
-        <p class="muted">Digite a senha do painel (a que está em <code>CRM_PASSWORD</code> no arquivo <code>.env</code>).</p>
-        <label class="field">
-          <span>Senha</span>
-          <input type="password" name="password" autocomplete="current-password" required autofocus />
-        </label>
-        <p class="form-error" id="login-error" role="alert"></p>
-        <button class="btn btn-primary btn-block" type="submit">Entrar</button>
-      </form>
+    <!-- Tela de acesso (mesmo visual do MyLife: sempre escura, tema espacial) -->
+    <div id="login" class="auth" hidden>
+      <div class="auth-art">
+        <svg class="auth-scene" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+        <defs>
+          <radialGradient id="auth-sky" cx="45%" cy="40%" r="75%"><stop offset="0%" stop-color="#3a1878" /><stop offset="55%" stop-color="#24104f" /><stop offset="100%" stop-color="#140833" /></radialGradient>
+          <radialGradient id="auth-planet" cx="62%" cy="72%" r="80%"><stop offset="0%" stop-color="#8be3f7" /><stop offset="45%" stop-color="#3bb6dd" /><stop offset="100%" stop-color="#13708f" /></radialGradient>
+          <radialGradient id="auth-planet-shade" cx="20%" cy="15%" r="90%"><stop offset="55%" stop-color="#0b1d3a" stop-opacity="0" /><stop offset="100%" stop-color="#0b1d3a" stop-opacity="0.55" /></radialGradient>
+          <radialGradient id="auth-moon" cx="35%" cy="30%" r="80%"><stop offset="0%" stop-color="#f3dcff" /><stop offset="50%" stop-color="#c9a2ec" /><stop offset="100%" stop-color="#6d3fa8" /></radialGradient>
+          <radialGradient id="auth-dwarf" cx="35%" cy="30%" r="80%"><stop offset="0%" stop-color="#b48ad8" /><stop offset="100%" stop-color="#3c1d6e" /></radialGradient>
+          <linearGradient id="auth-comet" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ffffff" stop-opacity="0" /><stop offset="100%" stop-color="#ffffff" stop-opacity="0.9" /></linearGradient>
+          <filter id="auth-blur40" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="40" /></filter>
+          <filter id="auth-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14" /></filter>
+          <clipPath id="auth-planet-clip"><circle cx="150" cy="170" r="330" /></clipPath>
+          <clipPath id="auth-moon-clip"><circle cx="560" cy="500" r="72" /></clipPath>
+        </defs>
+        <rect width="800" height="1000" fill="url(#auth-sky)" />
+        <!-- nebulosas -->
+        <ellipse cx="420" cy="420" rx="260" ry="180" fill="#6d28d9" opacity="0.35" filter="url(#auth-blur40)" />
+        <ellipse cx="230" cy="760" rx="240" ry="160" fill="#7e22ce" opacity="0.3" filter="url(#auth-blur40)" />
+        <ellipse cx="680" cy="880" rx="200" ry="140" fill="#be185d" opacity="0.12" filter="url(#auth-blur40)" />
+        <!-- estrelas -->
+        <g fill="#fff"><circle cx="201.9" cy="88.1" r="0.84" opacity="0.59" /><circle cx="20.5" cy="447.3" r="1.56" opacity="1.00" /><circle cx="682.6" cy="499.7" r="1.55" opacity="0.74" /><circle cx="72.6" cy="140.2" r="2.71" opacity="0.93" /><circle cx="440.4" cy="180.5" r="0.88" opacity="0.96" /><circle cx="657.2" cy="155.3" r="1.11" opacity="0.39" /><circle cx="18" cy="537.3" r="1.53" opacity="0.79" /><circle cx="304.6" cy="585.7" r="1.38" opacity="0.82" /><circle cx="792.2" cy="449.8" r="0.81" opacity="0.64" /><circle cx="101.6" cy="768.8" r="1.49" opacity="0.60" /><circle cx="172.6" cy="272.1" r="0.91" opacity="0.57" /><circle cx="706.3" cy="955.9" r="1.56" opacity="0.73" /><circle cx="269.3" cy="314.3" r="1.68" opacity="0.42" /><circle cx="737.2" cy="805.7" r="1.38" opacity="0.55" /><circle cx="94.9" cy="509.2" r="0.87" opacity="0.74" /><circle cx="558.3" cy="490.7" r="0.85" opacity="0.80" /><circle cx="705.5" cy="817" r="1.52" opacity="0.61" /><circle cx="122.5" cy="126.3" r="1.32" opacity="0.99" /><circle cx="340.8" cy="747" r="0.65" opacity="0.40" /><circle cx="660.6" cy="978.7" r="0.79" opacity="0.60" /><circle cx="226.5" cy="489.9" r="1.61" opacity="0.48" /><circle cx="252.8" cy="530" r="1.04" opacity="0.36" /><circle cx="518.4" cy="366.7" r="0.88" opacity="0.74" /><circle cx="560.6" cy="552.8" r="0.86" opacity="0.60" /><circle cx="334.7" cy="936" r="1.61" opacity="0.97" /><circle cx="457.1" cy="924.9" r="0.88" opacity="0.70" /><circle cx="401.8" cy="952.2" r="2.45" opacity="0.88" /><circle cx="247" cy="564" r="0.65" opacity="0.57" /><circle cx="367.6" cy="766.3" r="1.65" opacity="0.72" /><circle cx="242.6" cy="645.1" r="1.11" opacity="0.52" /><circle cx="576.9" cy="506.1" r="1.53" opacity="0.83" /><circle cx="723.3" cy="738.6" r="1.70" opacity="0.99" /><circle cx="496.8" cy="784.9" r="1.20" opacity="0.75" /><circle cx="199.6" cy="747.2" r="1.63" opacity="0.64" /><circle cx="282.1" cy="575.3" r="0.63" opacity="0.61" /><circle cx="471.7" cy="69.6" r="0.72" opacity="0.52" /><circle cx="226" cy="560.6" r="1.67" opacity="0.78" /><circle cx="478.9" cy="361.4" r="0.91" opacity="0.95" /><circle cx="705.7" cy="555.1" r="1.42" opacity="0.73" /><circle cx="222" cy="147.2" r="0.71" opacity="0.57" /><circle cx="353.1" cy="778.4" r="1.51" opacity="0.54" /><circle cx="554.1" cy="426.3" r="1.40" opacity="0.69" /><circle cx="602.9" cy="684.5" r="1.48" opacity="0.97" /><circle cx="636.4" cy="880.9" r="1.25" opacity="0.69" /><circle cx="558.1" cy="8.5" r="0.66" opacity="0.89" /><circle cx="182" cy="386.6" r="2.40" opacity="0.74" /><circle cx="94.9" cy="499.7" r="1.62" opacity="0.44" /><circle cx="122.8" cy="816.4" r="2.52" opacity="0.43" /><circle cx="179.1" cy="785.8" r="2.65" opacity="0.91" /><circle cx="73.1" cy="679.7" r="2.35" opacity="0.72" /><circle cx="712.6" cy="761.9" r="1.09" opacity="0.86" /><circle cx="190.5" cy="499.7" r="0.86" opacity="0.45" /><circle cx="338.9" cy="138.9" r="1.35" opacity="0.50" /><circle cx="184.3" cy="91.4" r="1.68" opacity="0.61" /><circle cx="347.1" cy="123.5" r="1.53" opacity="0.52" /><circle cx="358.9" cy="592.7" r="1.39" opacity="0.54" /><circle cx="185.4" cy="960.8" r="0.65" opacity="0.91" /><circle cx="147.1" cy="307.2" r="1.61" opacity="0.87" /><circle cx="370" cy="49.4" r="1.08" opacity="0.93" /><circle cx="32.7" cy="693.3" r="1.41" opacity="0.53" /><circle cx="207.1" cy="859.9" r="0.67" opacity="0.88" /><circle cx="143.8" cy="238.4" r="0.80" opacity="0.60" /><circle cx="785.3" cy="759.6" r="1.17" opacity="0.81" /><circle cx="156.9" cy="61.9" r="1.33" opacity="1.00" /><circle cx="187.6" cy="384.2" r="2.30" opacity="0.53" /><circle cx="743.2" cy="950.5" r="1.31" opacity="1.00" /><circle cx="276.6" cy="206.5" r="1.20" opacity="0.41" /><circle cx="62" cy="708.6" r="2.37" opacity="0.85" /><circle cx="360.2" cy="757.4" r="0.76" opacity="0.59" /><circle cx="409.2" cy="272.6" r="0.64" opacity="0.37" /><circle cx="610.5" cy="355.3" r="1.09" opacity="0.89" /><circle cx="313.9" cy="544" r="1.91" opacity="0.74" /><circle cx="126.7" cy="518.9" r="1.12" opacity="0.52" /><circle cx="794.5" cy="415.2" r="1.69" opacity="0.72" /><circle cx="660.1" cy="281.1" r="1.58" opacity="0.73" /><circle cx="179.8" cy="546.6" r="1.67" opacity="0.57" /><circle cx="100.4" cy="707" r="1.69" opacity="0.71" /><circle cx="532.7" cy="175.4" r="1.04" opacity="0.58" /><circle cx="710" cy="849" r="0.92" opacity="0.75" /><circle cx="123.4" cy="149.6" r="1.41" opacity="0.48" /><circle cx="639.5" cy="477.5" r="1.38" opacity="0.43" /><circle cx="39" cy="556.1" r="1.54" opacity="0.57" /><circle cx="306.6" cy="993.1" r="1.47" opacity="0.49" /><circle cx="741.1" cy="300.9" r="0.92" opacity="0.92" /><circle cx="629.2" cy="297.2" r="1.01" opacity="0.39" /><circle cx="35.2" cy="880.2" r="1.10" opacity="0.94" /><circle cx="314.6" cy="859.5" r="1.06" opacity="0.67" /><circle cx="152.4" cy="899" r="1.70" opacity="0.57" /><circle cx="478.8" cy="102.6" r="1.48" opacity="0.43" /><circle cx="708.7" cy="724" r="1.05" opacity="0.51" /><circle cx="43.8" cy="329.5" r="1.08" opacity="0.46" /><circle cx="56.4" cy="557.7" r="0.98" opacity="0.39" /><circle cx="693.3" cy="66.2" r="2.46" opacity="0.93" /><circle cx="619.8" cy="251.4" r="0.74" opacity="0.71" /><circle cx="507" cy="687.9" r="0.82" opacity="0.75" /><circle cx="467.7" cy="903.7" r="1.97" opacity="0.41" /><circle cx="384" cy="858.8" r="2.34" opacity="0.74" /><circle cx="268.6" cy="775.4" r="1.46" opacity="0.84" /><circle cx="273.5" cy="453" r="1.02" opacity="0.58" /><circle cx="143" cy="858.7" r="0.98" opacity="0.61" /><circle cx="279.7" cy="550.5" r="2.04" opacity="0.68" /><circle cx="235.6" cy="624.9" r="1.15" opacity="0.44" /><circle cx="179" cy="632.4" r="1.80" opacity="0.80" /><circle cx="712.4" cy="610.9" r="1.27" opacity="0.61" /><circle cx="601" cy="538.6" r="1.24" opacity="0.94" /><circle cx="5.9" cy="645.4" r="1.40" opacity="0.43" /><circle cx="554.8" cy="922.6" r="1.53" opacity="0.50" /><circle cx="726.6" cy="227" r="1.40" opacity="0.65" /><circle cx="360.8" cy="146.2" r="1.75" opacity="0.56" /><circle cx="592.5" cy="912" r="1.98" opacity="0.92" /><circle cx="439.8" cy="614.9" r="2.76" opacity="0.62" /><circle cx="432.8" cy="110" r="0.88" opacity="0.89" /><circle cx="52.6" cy="779.1" r="0.70" opacity="0.77" /><circle cx="668.9" cy="481.8" r="1.10" opacity="0.69" /><circle cx="436.4" cy="226.8" r="2.60" opacity="0.56" /><circle cx="693" cy="754.2" r="1.15" opacity="0.67" /><circle cx="290.1" cy="783.1" r="0.79" opacity="0.99" /><circle cx="124.6" cy="265.2" r="1.18" opacity="0.70" /><circle cx="673.8" cy="120.8" r="0.76" opacity="0.65" /><circle cx="454.6" cy="501.5" r="1.14" opacity="0.69" /><circle cx="359.2" cy="392.8" r="0.97" opacity="0.83" /><circle cx="356.1" cy="342.7" r="1.07" opacity="0.93" /><circle cx="740.1" cy="629.4" r="0.63" opacity="0.46" /><circle cx="589.4" cy="251.4" r="0.81" opacity="0.56" /><circle cx="47.1" cy="410.8" r="0.81" opacity="0.93" /><circle cx="404.8" cy="306.8" r="1.62" opacity="0.74" /><circle cx="647.9" cy="450.4" r="1.37" opacity="0.98" /><circle cx="509.6" cy="329" r="0.95" opacity="0.69" /><circle cx="308.6" cy="509.8" r="1.01" opacity="0.83" /><circle cx="255.6" cy="456" r="1.90" opacity="0.76" /><circle cx="492.9" cy="327.5" r="1.22" opacity="0.94" /><circle cx="576.4" cy="962" r="0.91" opacity="0.72" /><circle cx="133.2" cy="297.2" r="1.63" opacity="0.78" /><circle cx="408.3" cy="919.9" r="1.49" opacity="0.38" /><circle cx="670.1" cy="283.9" r="1.13" opacity="0.82" /><circle cx="312.3" cy="73" r="0.68" opacity="0.59" /><circle cx="776.6" cy="532.9" r="2.27" opacity="0.46" /><circle cx="633.5" cy="42.2" r="1.37" opacity="0.46" /><circle cx="710.1" cy="922.3" r="1.19" opacity="0.64" /><circle cx="229.2" cy="336.7" r="1.95" opacity="0.49" /></g>
+        <g fill="#fff" opacity="0.9"><path d="M470 286 L472.5 297.5 L484 300 L472.5 302.5 L470 314 L467.5 302.5 L456 300 L467.5 297.5 Z" /><path d="M640 630 L641.8 638.2 L650 640 L641.8 641.8 L640 650 L638.2 641.8 L630 640 L638.2 638.2 Z" /><path d="M120 628 L122.2 637.8 L132 640 L122.2 642.2 L120 652 L117.8 642.2 L108 640 L117.8 637.8 Z" /><path d="M520 751 L521.6 758.4 L529 760 L521.6 761.6 L520 769 L518.4 761.6 L511 760 L518.4 758.4 Z" /><path d="M720 172 L721.4 178.6 L728 180 L721.4 181.4 L720 188 L718.6 181.4 L712 180 L718.6 178.6 Z" /></g>
+        <!-- cometas -->
+        <g opacity="0.85" fill="url(#auth-comet)">
+          <rect width="210" height="2" rx="1" transform="translate(430 250) rotate(38)" />
+          <rect width="140" height="1.6" rx="1" transform="translate(150 610) rotate(40)" />
+          <rect width="120" height="1.6" rx="1" transform="translate(470 820) rotate(42)" />
+        </g>
+        <!-- planeta principal -->
+        <circle cx="150" cy="170" r="340" fill="#67e8f9" opacity="0.25" filter="url(#auth-glow)" />
+        <circle cx="150" cy="170" r="330" fill="url(#auth-planet)" />
+        <g clip-path="url(#auth-planet-clip)" fill="#0e6d8f" opacity="0.55">
+          <path d="M-40 250 C 40 190, 120 260, 190 220 S 330 180, 380 250 S 420 360, 330 380 S 160 330, 90 380 S -60 330, -40 250 Z" />
+          <path d="M120 40 C 180 10, 260 60, 300 30 S 400 40, 420 90 S 350 150, 290 130 S 170 140, 130 110 S 80 70, 120 40 Z" opacity="0.8" />
+          <path d="M240 400 C 290 380, 360 420, 410 400 L 480 470 L 220 480 Z" opacity="0.7" />
+        </g>
+        <g clip-path="url(#auth-planet-clip)" fill="#a5f3fc" opacity="0.25">
+          <path d="M30 120 C 70 100, 110 140, 150 120 S 220 100, 240 130 S 190 170, 140 160 S 40 160, 30 120 Z" />
+        </g>
+        <circle cx="150" cy="170" r="330" fill="url(#auth-planet-shade)" />
+        <!-- anéis de órbita -->
+        <g fill="none" stroke="#e9d5ff" stroke-opacity="0.22" stroke-width="1.2">
+          <ellipse cx="380" cy="360" rx="250" ry="58" transform="rotate(28 380 360)" />
+          <ellipse cx="400" cy="380" rx="300" ry="74" transform="rotate(28 400 380)" stroke-opacity="0.12" />
+        </g>
+        <!-- lua -->
+        <circle cx="560" cy="500" r="80" fill="#c084fc" opacity="0.3" filter="url(#auth-glow)" />
+        <circle cx="560" cy="500" r="72" fill="url(#auth-moon)" />
+        <g clip-path="url(#auth-moon-clip)" fill="#7c4bb8" opacity="0.35">
+          <ellipse cx="530" cy="480" rx="14" ry="10" /><ellipse cx="585" cy="520" rx="18" ry="12" /><ellipse cx="555" cy="550" rx="9" ry="6" /><ellipse cx="600" cy="470" rx="7" ry="5" />
+        </g>
+        <!-- planeta anão -->
+        <circle cx="660" cy="760" r="54" fill="url(#auth-dwarf)" opacity="0.9" />
+        <circle cx="660" cy="760" r="54" fill="none" stroke="#c4b5fd" stroke-opacity="0.15" />
+      </svg>
+        <div class="auth-fade" aria-hidden="true"></div>
+        <div class="auth-logo brand"><span class="brand-mark" aria-hidden="true"></span>CRM Pessoal</div>
+        <div class="auth-slogan">
+          <p class="auth-headline">Seus clientes em<br /><span>órbita!</span></p>
+          <p class="auth-tagline">Contatos, campanhas e WhatsApp organizados em um só lugar.</p>
+        </div>
+      </div>
+
+      <div class="auth-panel">
+        <div class="auth-body">
+          <h1 class="auth-title" id="auth-title">Entrar</h1>
+          <p class="auth-subtitle" id="auth-subtitle">Entre com seu e-mail</p>
+          <div class="auth-error" id="auth-error" role="alert" hidden></div>
+
+          <form class="auth-form" id="login-form">
+            <label class="auth-input">
+              <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></svg>
+              <input type="email" name="email" required autocomplete="email" placeholder="seunome@email.com" aria-label="E-mail" maxlength="254" />
+            </label>
+            <label class="auth-input">
+              <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+              <input type="password" name="password" required autocomplete="current-password" placeholder="Sua senha" aria-label="Senha" maxlength="128" /><button class="auth-eye" type="button" aria-label="Mostrar senha"><svg class="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg><svg hidden class="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" /><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" /><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" /><path d="m2 2 20 20" /></svg></button>
+            </label>
+            <button class="auth-button" type="submit">Entrar</button>
+            <div class="auth-divider"></div>
+            <p class="auth-note">Esqueceu a senha? Ela pode ser redefinida no servidor (veja “Contas do painel” no README).</p>
+          </form>
+
+          <form class="auth-form" id="setup-form" hidden>
+            <p class="auth-note">Para confirmar que é você, use o <strong>código de primeiro acesso</strong>: o valor de CRM_PASSWORD no arquivo .env do servidor.</p>
+            <label class="auth-input">
+              <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg>
+              <input type="password" name="code" required autocomplete="off" placeholder="Código de primeiro acesso" aria-label="Código de primeiro acesso" maxlength="200" />
+            </label>
+            <label class="auth-input">
+              <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+              <input type="text" name="name" required autocomplete="name" placeholder="Seu nome" aria-label="Nome" minlength="2" maxlength="120" />
+            </label>
+            <label class="auth-input">
+              <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7" /><rect x="2" y="4" width="20" height="16" rx="2" /></svg>
+              <input type="email" name="email" required autocomplete="email" placeholder="seunome@email.com" aria-label="E-mail" maxlength="254" />
+            </label>
+            <label class="auth-input">
+              <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+              <input type="password" name="password" required autocomplete="new-password" placeholder="Crie uma senha" aria-label="Senha" minlength="8" maxlength="128" /><button class="auth-eye" type="button" aria-label="Mostrar senha"><svg class="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></svg><svg hidden class="i-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" /><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" /><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" /><path d="m2 2 20 20" /></svg></button>
+            </label>
+            <label class="auth-input">
+              <svg class="auth-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+              <input type="password" name="confirm" required autocomplete="new-password" placeholder="Repita a senha" aria-label="Repita a senha" minlength="8" maxlength="128" />
+            </label>
+            <p class="auth-note">Mínimo de 8 caracteres, com letras e números.</p>
+            <button class="auth-button" type="submit">Criar conta e entrar</button>
+          </form>
+        </div>
+        <p class="auth-footer">
+          © <span id="auth-year">2026</span> CRM Pessoal · Desenvolvido por
+          <a href="https://github.com/Hcksan" target="_blank" rel="noreferrer">Gabriel Santana Oliveira</a>
+        </p>
+      </div>
     </div>
 
     <div id="app" class="app" hidden>
@@ -37,6 +143,7 @@
           <a href="#whatsapp" class="status-pill" id="wa-pill" data-status="disconnected">
             <span class="dot" aria-hidden="true"></span><span class="label">Desconectado</span>
           </a>
+          <span class="user-name" id="user-name"></span>
           <button class="btn btn-ghost btn-sm" id="logout-btn" type="button">Sair</button>
         </div>
       </header>

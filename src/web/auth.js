@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import logger from "../utils/logger.js";
+import { badRequest } from "../utils/errors.js";
 import { describeDevice, isSameOrigin } from "./security.js";
+import { emailProblem, fakeVerify, hashPassword, normalizeEmail, passwordProblem, verifyPassword } from "./password.js";
 
 const sha256 = (value) => crypto.createHash("sha256").update(String(value)).digest();
 const MIN_PRODUCTION_PASSWORD = 12;
@@ -55,57 +57,39 @@ function createLoginLimiter({ now = Date.now, perIp = 5, global = 30, windowMs =
 }
 
 /**
- * Se a senha mudou desde a última execução, encerra todas as sessões abertas com a senha antiga
- */
-function invalidateSessionsOnPasswordChange(store, secret) {
-  const stored = store.getSecret("password_check");
-  const matches = (check) => {
-    const hash = crypto.scryptSync(secret, Buffer.from(check.salt, "base64"), 32);
-    return crypto.timingSafeEqual(hash, Buffer.from(check.hash, "base64"));
-  };
-
-  if (stored && matches(stored)) return;
-
-  if (stored) {
-    const closed = store.deleteOtherWebSessions(null).length;
-    if (closed) logger.warn(`🔑 A senha do painel mudou: ${closed} sessão(ões) aberta(s) com a senha antiga foram encerradas.`);
-  }
-  const salt = crypto.randomBytes(16);
-  store.setSecret("password_check", {
-    salt: salt.toString("base64"),
-    hash: crypto.scryptSync(secret, salt, 32).toString("base64"),
-  });
-}
-
-/**
- * Login com senha única + sessões em cookie HttpOnly (uma por aparelho/navegador)
+ * Login com e-mail e senha (contas com Argon2id) + sessões em cookie HttpOnly (uma por aparelho/navegador).
+ * A primeira conta é criada pelo próprio painel ("Primeiro acesso"), confirmada pelo código de configuração
+ * (CRM_PASSWORD no .env). Depois que existe uma conta, o código não serve mais para entrar.
  */
 export function createAuth({ store, password, production = false, cookieSecure = false, sessionDays = 30, publicUrl = "", now = Date.now }) {
-  let secret = password;
+  let setupCode = password;
 
-  if (production && (!secret || secret.length < MIN_PRODUCTION_PASSWORD)) {
-    throw new Error(`Em produção, defina CRM_PASSWORD no .env com pelo menos ${MIN_PRODUCTION_PASSWORD} caracteres.`);
-  }
-  if (!secret) {
-    secret = store.getSecret("generated_password");
-    if (!secret) {
-      secret = crypto.randomBytes(9).toString("base64url");
-      store.setSecret("generated_password", secret);
+  if (store.countUsers() === 0) {
+    if (production && (!setupCode || setupCode.length < MIN_PRODUCTION_PASSWORD)) {
+      throw new Error(`Em produção, defina CRM_PASSWORD no .env com pelo menos ${MIN_PRODUCTION_PASSWORD} caracteres (é o código do primeiro acesso).`);
     }
-    logger.warn(`🔑 Senha do painel: ${secret}  (defina CRM_PASSWORD no arquivo .env para escolher a sua)`);
+    if (!setupCode) {
+      setupCode = store.getSecret("generated_password");
+      if (!setupCode) {
+        setupCode = crypto.randomBytes(9).toString("base64url");
+        store.setSecret("generated_password", setupCode);
+      }
+      logger.warn(`🔑 Código do primeiro acesso: ${setupCode}  (defina CRM_PASSWORD no arquivo .env para escolher o seu)`);
+    }
+    logger.info("👤 Nenhuma conta criada ainda: abra o painel e use \"Primeiro acesso\" para criar a sua.");
   }
   if (production && !cookieSecure) {
     logger.warn("⚠️ Produção sem COOKIE_SECURE=true: o cookie de login pode trafegar sem HTTPS.");
   }
-
-  invalidateSessionsOnPasswordChange(store, secret);
-  const expected = sha256(secret);
 
   // Com HTTPS usa o prefixo __Host-, que impede o cookie de ser alterado por subdomínios
   const cookieName = cookieSecure ? "__Host-crm_session" : "crm_session";
   const cookieOptions = { httpOnly: true, sameSite: "lax", secure: cookieSecure, path: "/" };
   const limiter = createLoginLimiter({ now });
   const tokenHash = (token) => sha256(token).toString("hex");
+  const text = (value, max) => (typeof value === "string" && value.length <= max ? value : "");
+  // Atraso fixo depois de um erro, para desacelerar tentativas automáticas
+  const slowDown = () => new Promise((resolve) => setTimeout(resolve, 400));
 
   const sessionFrom = (cookieHeader, ip) => {
     const token = parseCookies(cookieHeader)[cookieName];
@@ -115,29 +99,91 @@ export function createAuth({ store, password, production = false, cookieSecure =
     return session ? { ...session, token_hash: hash } : null;
   };
 
-  async function login(req, res) {
-    const ip = req.ip;
-    if (limiter.blocked(ip)) {
-      logger.warn("Login bloqueado por excesso de tentativas", { ip });
-      return res.status(429).json({ error: "Muitas tentativas. Aguarde 15 minutos e tente de novo." });
-    }
+  const publicUser = ({ id, name, email }) => ({ id, name, email });
 
-    const given = sha256(req.body?.password ?? "");
-    if (!crypto.timingSafeEqual(given, expected)) {
-      limiter.fail(ip);
-      logger.warn("Tentativa de login com senha incorreta", { ip });
-      // Atraso fixo para desacelerar tentativas automáticas
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      return res.status(401).json({ error: "Senha incorreta" });
-    }
-
-    limiter.succeed(ip);
+  function startSession(req, res, user) {
     const token = crypto.randomBytes(32).toString("base64url");
     const maxAge = sessionDays * 24 * 60 * 60 * 1000;
-    store.createWebSession(tokenHash(token), now() + maxAge, { userAgent: req.headers["user-agent"], ip });
+    store.createWebSession(tokenHash(token), now() + maxAge, { userId: user.id, userAgent: req.headers["user-agent"], ip: req.ip });
+    store.touchUserLogin(user.id);
     res.cookie(cookieName, token, { ...cookieOptions, maxAge });
-    logger.info("🔓 Novo login no painel", { ip, device: describeDevice(req.headers["user-agent"]) });
-    return res.json({ ok: true });
+    logger.info("🔓 Novo login no painel", { user: user.email, ip: req.ip, device: describeDevice(req.headers["user-agent"]) });
+    return res.json({ ok: true, user: publicUser(user) });
+  }
+
+  function tooManyAttempts(req, res) {
+    if (!limiter.blocked(req.ip)) return false;
+    logger.warn("Login bloqueado por excesso de tentativas", { ip: req.ip });
+    res.status(429).json({ error: "Muitas tentativas. Aguarde 15 minutos e tente de novo." });
+    return true;
+  }
+
+  async function login(req, res) {
+    if (tooManyAttempts(req, res)) return;
+
+    const email = normalizeEmail(text(req.body?.email, 254));
+    const given = text(req.body?.password, 128);
+    const user = email ? store.getUserWithPassword(email) : null;
+    // Sem conta com esse e-mail, gasta o mesmo tempo de uma conferência real
+    const ok = user ? await verifyPassword(user.password_hash, given) : (await fakeVerify(given), false);
+
+    if (!ok) {
+      limiter.fail(req.ip);
+      logger.warn("Tentativa de login com e-mail ou senha incorretos", { ip: req.ip });
+      await slowDown();
+      return res.status(401).json({ error: "E-mail ou senha inválidos" });
+    }
+
+    limiter.succeed(req.ip);
+    return startSession(req, res, user);
+  }
+
+  /**
+   * Primeiro acesso: cria a conta (só enquanto não existe nenhuma) e já entra
+   */
+  async function setup(req, res) {
+    if (store.countUsers() > 0) return res.status(409).json({ error: "A conta já foi criada. Entre com seu e-mail e senha." });
+    if (tooManyAttempts(req, res)) return;
+
+    const code = sha256(text(req.body?.code, 200));
+    if (!setupCode || !crypto.timingSafeEqual(code, sha256(setupCode))) {
+      limiter.fail(req.ip);
+      logger.warn("Primeiro acesso com código incorreto", { ip: req.ip });
+      await slowDown();
+      return res.status(401).json({ error: "Código de primeiro acesso incorreto" });
+    }
+
+    const name = text(req.body?.name, 120).trim();
+    const email = normalizeEmail(text(req.body?.email, 254));
+    const newPassword = req.body?.password;
+    const problem = (name.length < 2 && "Informe seu nome") || emailProblem(email) || passwordProblem(newPassword);
+    if (problem) return res.status(400).json({ error: problem });
+
+    const passwordHash = await hashPassword(newPassword);
+    // Confere de novo depois do hash: outra requisição pode ter criado a conta nesse meio-tempo
+    if (store.countUsers() > 0) return res.status(409).json({ error: "A conta já foi criada. Entre com seu e-mail e senha." });
+    const user = store.createUser({ name, email, passwordHash });
+    limiter.succeed(req.ip);
+    logger.success(`👤 Conta criada: ${user.email}`);
+    return startSession(req, res, user);
+  }
+
+  /**
+   * Troca a senha da conta logada e encerra as sessões dos outros aparelhos. Devolve os hashes encerrados.
+   */
+  async function changePassword(session, { currentPassword, newPassword } = {}) {
+    const hash = store.getUserPasswordHash(session.user_id);
+    if (!hash || !(await verifyPassword(hash, text(currentPassword, 128)))) {
+      await slowDown();
+      throw badRequest("Senha atual incorreta");
+    }
+    const problem = passwordProblem(newPassword);
+    if (problem) throw badRequest(problem);
+    if (newPassword === currentPassword) throw badRequest("A nova senha deve ser diferente da atual");
+
+    store.setUserPassword(session.user_id, await hashPassword(newPassword));
+    logger.info("🔑 Senha da conta alterada", { user: session.user_id });
+    return store.deleteOtherWebSessions(session.user_id, session.token_hash);
   }
 
   function logout(req, res) {
@@ -149,13 +195,21 @@ export function createAuth({ store, password, production = false, cookieSecure =
 
   function requireAuth(req, res, next) {
     const session = sessionFrom(req.headers.cookie, req.ip);
-    if (!session) return res.status(401).json({ error: "Faça login novamente" });
+    const user = session && store.getUser(session.user_id);
+    if (!user) return res.status(401).json({ error: "Faça login novamente" });
     req.session = session;
+    req.user = user;
     return next();
   }
 
-  function isAuthenticated(req) {
-    return Boolean(sessionFrom(req.headers.cookie));
+  /**
+   * Situação para a tela inicial: logado? falta criar a primeira conta?
+   */
+  function status(req) {
+    const session = sessionFrom(req.headers.cookie);
+    const user = session && store.getUser(session.user_id);
+    if (user) return { authenticated: true, user: publicUser(user) };
+    return { authenticated: false, setupRequired: store.countUsers() === 0 };
   }
 
   function socketAuth(socket, next) {
@@ -166,7 +220,7 @@ export function createAuth({ store, password, production = false, cookieSecure =
     return next();
   }
 
-  return { login, logout, requireAuth, isAuthenticated, socketAuth, cookieName };
+  return { login, setup, changePassword, logout, requireAuth, status, socketAuth, cookieName };
 }
 
 export default createAuth;

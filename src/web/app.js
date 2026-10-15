@@ -18,12 +18,13 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   app.set("trust proxy", config.trustProxy ?? "loopback");
   app.use(securityHeaders({ hsts: Boolean(config.cookieSecure) }));
   app.use("/api", blockCrossSite({ publicUrl: config.publicUrl }));
-  app.use("/api/login", express.json({ limit: "4kb" }));
+  app.use(["/api/login", "/api/setup"], express.json({ limit: "4kb" }));
   app.use(express.json({ limit: "25mb" }));
 
   // ───────────── Login ─────────────
-  app.get("/api/session", (req, res) => res.json({ authenticated: auth.isAuthenticated(req) }));
+  app.get("/api/session", (req, res) => res.json(auth.status(req)));
   app.post("/api/login", auth.login);
+  app.post("/api/setup", auth.setup);
   app.post("/api/logout", auth.logout);
 
   const api = express.Router();
@@ -171,7 +172,7 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
   // ───────────── Sessões de login (aparelhos conectados ao painel) ─────────────
   api.get("/sessions", (req, res) => {
     res.json(
-      store.listWebSessions().map(({ token_hash: hash, ...session }) => ({
+      store.listWebSessions(req.user.id).map(({ token_hash: hash, ...session }) => ({
         ...session,
         device: describeDevice(session.user_agent),
         current: hash === req.session.token_hash,
@@ -179,14 +180,22 @@ export function createApp({ store, crm, wa, runner, auth, config = {}, onSession
     );
   });
   api.delete("/sessions/:id", (req, res) => {
-    const hash = store.deleteWebSessionById(id(req));
+    const hash = store.deleteWebSessionById(id(req), req.user.id);
     onSessionsRevoked([hash]);
     res.status(204).end();
   });
   api.post("/sessions/revoke-others", (req, res) => {
-    const hashes = store.deleteOtherWebSessions(req.session.token_hash);
+    const hashes = store.deleteOtherWebSessions(req.user.id, req.session.token_hash);
     onSessionsRevoked(hashes);
     res.json({ closed: hashes.length });
+  });
+
+  // ───────────── Minha conta ─────────────
+  api.get("/account", (req, res) => res.json(req.user));
+  api.post("/account/password", async (req, res) => {
+    const hashes = await auth.changePassword(req.session, req.body ?? {});
+    onSessionsRevoked(hashes);
+    res.json({ ok: true, closed: hashes.length });
   });
 
   // ───────────── Configurações ─────────────

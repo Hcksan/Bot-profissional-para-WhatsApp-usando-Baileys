@@ -672,21 +672,71 @@ export class CrmStore {
     return row?.stage_id ?? null;
   }
 
-  // ───────────────────────── Sessões do painel ─────────────────────────
+  // ───────────────────────── Contas do painel ─────────────────────────
 
-  createWebSession(tokenHash, expiresAt, { userAgent = "", ip = "" } = {}) {
-    const now = this.now();
-    this.db.prepare("DELETE FROM web_sessions WHERE expires_at < ?").run(now);
-    this.db
-      .prepare("INSERT INTO web_sessions (token_hash, expires_at, created_at, last_seen_at, user_agent, ip) VALUES (?, ?, ?, ?, ?, ?)")
-      .run(tokenHash, expiresAt, now, now, clean(userAgent, 300), clean(ip, 64));
+  countUsers() {
+    return this.db.prepare("SELECT COUNT(*) AS total FROM users").get().total;
+  }
+
+  createUser({ name, email, passwordHash }) {
+    try {
+      const { lastInsertRowid } = this.db
+        .prepare("INSERT INTO users (name, email, password_hash, created_at, password_changed_at) VALUES (?, ?, ?, ?, ?)")
+        .run(clean(name, 120), clean(email, 254).toLowerCase(), passwordHash, this.now(), this.now());
+      return this.getUser(lastInsertRowid);
+    } catch (error) {
+      if (String(error.message).includes("UNIQUE")) throw conflict("Já existe uma conta com este e-mail");
+      throw error;
+    }
   }
 
   /**
-   * Sessão válida (não expirada) ou null. Atualiza o "último acesso" no máximo uma vez por minuto.
+   * Conta pelo id, sem o hash da senha
+   */
+  getUser(id) {
+    return this.db.prepare("SELECT id, name, email, created_at, password_changed_at, last_login_at FROM users WHERE id = ?").get(Number(id)) ?? null;
+  }
+
+  /**
+   * Conta pelo e-mail, com o hash da senha (só para conferir o login)
+   */
+  getUserWithPassword(email) {
+    return this.db.prepare("SELECT * FROM users WHERE email = ?").get(String(email ?? "").toLowerCase()) ?? null;
+  }
+
+  getUserPasswordHash(id) {
+    return this.db.prepare("SELECT password_hash FROM users WHERE id = ?").get(Number(id))?.password_hash ?? null;
+  }
+
+  listUsers() {
+    return this.db.prepare("SELECT id, name, email, created_at, password_changed_at, last_login_at FROM users ORDER BY id").all();
+  }
+
+  setUserPassword(id, passwordHash) {
+    this.db.prepare("UPDATE users SET password_hash = ?, password_changed_at = ? WHERE id = ?").run(passwordHash, this.now(), Number(id));
+  }
+
+  touchUserLogin(id) {
+    this.db.prepare("UPDATE users SET last_login_at = ? WHERE id = ?").run(this.now(), Number(id));
+  }
+
+  // ───────────────────────── Sessões do painel ─────────────────────────
+
+  createWebSession(tokenHash, expiresAt, { userId, userAgent = "", ip = "" } = {}) {
+    const now = this.now();
+    this.db.prepare("DELETE FROM web_sessions WHERE expires_at < ?").run(now);
+    this.db
+      .prepare("INSERT INTO web_sessions (token_hash, expires_at, created_at, last_seen_at, user_agent, ip, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)")
+      .run(tokenHash, expiresAt, now, now, clean(userAgent, 300), clean(ip, 64), Number(userId));
+  }
+
+  /**
+   * Sessão válida (não expirada e de uma conta existente) ou null. Atualiza o "último acesso" no máximo uma vez por minuto.
    */
   getWebSession(tokenHash, { ip } = {}) {
-    const row = this.db.prepare("SELECT rowid AS id, * FROM web_sessions WHERE token_hash = ?").get(tokenHash);
+    const row = this.db
+      .prepare("SELECT s.rowid AS id, s.* FROM web_sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ?")
+      .get(tokenHash);
     if (!row || row.expires_at <= this.now()) return null;
     if (!row.last_seen_at || this.now() - row.last_seen_at > 60000) {
       this.db
@@ -696,32 +746,34 @@ export class CrmStore {
     return row;
   }
 
-  listWebSessions() {
+  listWebSessions(userId) {
     return this.db
       .prepare(
         `SELECT rowid AS id, token_hash, created_at, last_seen_at, user_agent, ip, expires_at
-         FROM web_sessions WHERE expires_at > ? ORDER BY last_seen_at DESC`
+         FROM web_sessions WHERE expires_at > ? AND user_id = ? ORDER BY last_seen_at DESC`
       )
-      .all(this.now());
+      .all(this.now(), Number(userId));
   }
 
   deleteWebSession(tokenHash) {
     this.db.prepare("DELETE FROM web_sessions WHERE token_hash = ?").run(tokenHash);
   }
 
-  deleteWebSessionById(id) {
-    const row = this.db.prepare("SELECT token_hash FROM web_sessions WHERE rowid = ?").get(Number(id));
+  deleteWebSessionById(id, userId) {
+    const row = this.db.prepare("SELECT token_hash FROM web_sessions WHERE rowid = ? AND user_id = ?").get(Number(id), Number(userId));
     if (!row) throw notFound("Sessão não encontrada");
     this.deleteWebSession(row.token_hash);
     return row.token_hash;
   }
 
   /**
-   * Encerra todas as sessões, menos a informada. Devolve os hashes encerrados.
+   * Encerra todas as sessões da conta, menos a informada. Devolve os hashes encerrados.
    */
-  deleteOtherWebSessions(keepTokenHash) {
-    const others = this.db.prepare("SELECT token_hash FROM web_sessions WHERE token_hash != ?").all(keepTokenHash ?? "");
-    this.db.prepare("DELETE FROM web_sessions WHERE token_hash != ?").run(keepTokenHash ?? "");
+  deleteOtherWebSessions(userId, keepTokenHash) {
+    const others = this.db
+      .prepare("SELECT token_hash FROM web_sessions WHERE user_id = ? AND token_hash != ?")
+      .all(Number(userId), keepTokenHash ?? "");
+    this.db.prepare("DELETE FROM web_sessions WHERE user_id = ? AND token_hash != ?").run(Number(userId), keepTokenHash ?? "");
     return others.map((row) => row.token_hash);
   }
 }

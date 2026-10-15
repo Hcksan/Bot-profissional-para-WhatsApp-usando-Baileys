@@ -2,6 +2,8 @@
  * Estado compartilhado entre as telas (preenchido por /api/bootstrap)
  */
 export const state = {
+  // Conta logada: { id, name, email }
+  user: null,
   whatsapp: null,
   stages: [],
   tags: [],

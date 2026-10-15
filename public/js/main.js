@@ -15,30 +15,86 @@ let socket = null;
 let refreshTimer = null;
 const pendingChanges = new Set();
 
-// ───────── Login ─────────
+// ───────── Login e primeiro acesso ─────────
 
-function showLogin() {
-  socket?.disconnect();
-  socket = null;
-  $("#app").hidden = true;
-  $("#login").hidden = false;
-  $("#login-form input[name=password]").focus();
+const screens = {
+  login: { title: "Entrar", subtitle: "Entre com seu e-mail" },
+  setup: { title: "Primeiro acesso", subtitle: "Crie a conta de acesso ao painel" },
+};
+
+function showAuthError(message) {
+  const box = $("#auth-error");
+  box.textContent = message ?? "";
+  box.hidden = !message;
 }
 
-setUnauthorizedHandler(showLogin);
+function showLogin({ setupRequired = false } = {}) {
+  socket?.disconnect();
+  socket = null;
+  state.user = null;
+  const screen = setupRequired ? "setup" : "login";
+  $("#auth-title").textContent = screens[screen].title;
+  $("#auth-subtitle").textContent = screens[screen].subtitle;
+  $("#login-form").hidden = setupRequired;
+  $("#setup-form").hidden = !setupRequired;
+  showAuthError(null);
+  $("#app").hidden = true;
+  $("#login").hidden = false;
+  $(`#${screen}-form input`).focus();
+}
 
-$("#login-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const form = event.currentTarget;
-  const error = $("#login-error");
-  error.textContent = "";
-  try {
-    await post("/login", { password: form.password.value });
-    form.reset();
-    await startApp();
-  } catch (err) {
-    error.textContent = err.message;
-  }
+setUnauthorizedHandler(() => showLogin());
+
+// Mostrar/ocultar senha
+for (const button of document.querySelectorAll(".auth-eye")) {
+  button.addEventListener("click", () => {
+    const input = button.parentElement.querySelector("input");
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    button.setAttribute("aria-label", show ? "Ocultar senha" : "Mostrar senha");
+    button.querySelector(".i-eye").toggleAttribute("hidden", show);
+    button.querySelector(".i-eye-off").toggleAttribute("hidden", !show);
+  });
+}
+$("#auth-year").textContent = String(new Date().getFullYear());
+
+/**
+ * Envia um formulário da tela de acesso: trava o botão, mostra o erro ou entra no painel
+ */
+function onAuthSubmit(form, { busyText, send }) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const button = form.querySelector("button[type=submit]");
+    const label = button.textContent;
+    showAuthError(null);
+    button.disabled = true;
+    button.textContent = busyText;
+    try {
+      const { user } = await send(form);
+      form.reset();
+      await startApp(user);
+    } catch (err) {
+      // A conta já existe (criada em outra aba): volta para o login
+      if (err.status === 409) showLogin();
+      showAuthError(err.message);
+    } finally {
+      button.disabled = false;
+      button.textContent = label;
+    }
+  });
+}
+
+onAuthSubmit($("#login-form"), {
+  busyText: "Entrando...",
+  send: (form) => post("/login", { email: form.email.value, password: form.password.value }),
+});
+
+onAuthSubmit($("#setup-form"), {
+  busyText: "Criando conta...",
+  send: (form) => {
+    if (form.password.value !== form.confirm.value) throw new Error("As senhas não conferem");
+    return post("/setup", { code: form.code.value, name: form.name.value, email: form.email.value, password: form.password.value });
+  },
 });
 
 $("#logout-btn").addEventListener("click", async () => {
@@ -135,7 +191,10 @@ window.addEventListener("hashchange", () => {
   if (!$("#app").hidden) route();
 });
 
-async function startApp() {
+async function startApp(user) {
+  state.user = user;
+  $("#user-name").textContent = user?.name ?? "";
+  $("#user-name").title = user?.email ?? "";
   await loadBootstrap();
   $("#login").hidden = true;
   $("#app").hidden = false;
@@ -145,9 +204,9 @@ async function startApp() {
 
 (async () => {
   try {
-    const { authenticated } = await get("/session");
-    if (authenticated) await startApp();
-    else showLogin();
+    const session = await get("/session");
+    if (session.authenticated) await startApp(session.user);
+    else showLogin(session);
   } catch {
     showLogin();
   }

@@ -30,10 +30,10 @@ npm install
 copy .env.example .env
 ```
 
-4. Abra o arquivo `.env` no Bloco de Notas e defina sua senha do painel:
+4. Abra o arquivo `.env` no Bloco de Notas e defina o código do primeiro acesso:
 
 ```
-CRM_PASSWORD="uma-senha-forte-aqui"
+CRM_PASSWORD="um-codigo-forte-aqui"
 ```
 
 5. Inicie:
@@ -42,7 +42,9 @@ CRM_PASSWORD="uma-senha-forte-aqui"
 npm start
 ```
 
-6. Abra **http://localhost:3000** no navegador, entre com a senha e vá na aba **WhatsApp**.
+6. Abra **http://localhost:3000** no navegador. Na primeira vez aparece **Primeiro acesso**: informe o código do passo 4,
+   seu nome, e-mail e uma senha (mínimo de 8 caracteres, com letras e números). Depois disso você entra sempre com
+   **e-mail e senha**. Vá na aba **WhatsApp**.
 7. No celular: WhatsApp → **Aparelhos conectados** → **Conectar um aparelho** → leia o QR Code.
 
 Pronto. Você continua usando o WhatsApp normalmente no celular. Para parar o CRM, feche o terminal ou aperte `Ctrl + C`
@@ -64,7 +66,7 @@ cloudflared tunnel --url http://localhost:3000
 ```
 
 Ele mostra um endereço `https://....trycloudflare.com`. Quando usar HTTPS, coloque `COOKIE_SECURE="true"` no `.env`.
-Use sempre uma senha forte em `CRM_PASSWORD`.
+Use sempre um código forte em `CRM_PASSWORD` e crie a sua conta logo depois de publicar.
 
 > O CRM precisa estar rodando no seu computador para enviar as mensagens agendadas e as campanhas. Se quiser que
 > funcione 24h, dá para instalar o mesmo projeto num servidor (VPS) com Node.js 22.
@@ -72,7 +74,7 @@ Use sempre uma senha forte em `CRM_PASSWORD`.
 ## 🚀 Produção (VM Ubuntu/Debian + Nginx + Cloudflare)
 
 Um comando instala tudo na VM: usuário de sistema próprio (`crm`, sem root), serviço no systemd com isolamento,
-site no Nginx para o domínio, backup diário do banco e uma senha forte gerada na hora.
+site no Nginx para o domínio, backup diário do banco e um código de primeiro acesso forte gerado na hora.
 
 ```bash
 # Na VM, como root:
@@ -90,7 +92,8 @@ Padrões (mude com variáveis antes do comando, ex.: `sudo DOMAIN=crm.exemplo.co
 | `SSL_CERT` / `SSL_KEY` | `/etc/ssl/promocoesbrasil/origin.crt` / `.key` (certificado de origem da Cloudflare) |
 
 Depois, na **Cloudflare → DNS**, crie: tipo `A`, nome `crm`, conteúdo = IP da VM, **proxy ligado (nuvem laranja)**.
-O script mostra o IP no final. Então abra `https://crm.promocoesbrasil.com.br`, entre com a senha e leia o QR Code.
+O script mostra o IP no final. Então abra `https://crm.promocoesbrasil.com.br`, crie sua conta em **Primeiro acesso**
+(o código é o `CRM_PASSWORD` do `/opt/crm/.env`: `sudo grep CRM_PASSWORD /opt/crm/.env`) e leia o QR Code.
 
 O que a instalação protege:
 
@@ -106,7 +109,20 @@ No dia a dia:
 journalctl -u crm -f                    # logs ao vivo
 systemctl restart crm                   # reiniciar (não desconecta o WhatsApp)
 sudo bash /opt/crm/deploy/update.sh     # atualizar para a versão mais nova do GitHub (faz backup antes)
-nano /opt/crm/.env && systemctl restart crm   # trocar a senha (encerra todas as sessões abertas)
+```
+
+### Contas do painel
+
+O login é por **e-mail e senha** (Argon2id), no mesmo modelo do MyLife. A primeira conta é criada pelo próprio painel em
+**Primeiro acesso**, confirmada pelo código `CRM_PASSWORD`; depois que ela existe, o código não serve mais para entrar.
+A senha se troca em **Configurações → Minha conta** (os outros aparelhos saem do painel).
+
+Esqueceu a senha? Na VM:
+
+```bash
+cd /opt/crm
+sudo runuser -u crm -- node deploy/user.mjs list                              # contas existentes
+sudo runuser -u crm -- node deploy/user.mjs reset-password voce@email.com     # gera uma senha nova e encerra as sessões
 ```
 
 Backups diários ficam em `/opt/crm/data/backups/` (últimos 14 dias).
@@ -115,8 +131,8 @@ Backups diários ficam em `/opt/crm/data/backups/` (últimos 14 dias).
 
 | Variável | Padrão | Para que serve |
 |---|---|---|
-| `NODE_ENV` | `development` | `production` exige senha forte (12+ caracteres) |
-| `CRM_PASSWORD` | (gerada) | Senha do painel. Se vazia, uma senha aleatória é criada e mostrada no terminal. Trocar encerra todas as sessões |
+| `NODE_ENV` | `development` | `production` exige código forte (12+ caracteres) enquanto não houver conta |
+| `CRM_PASSWORD` | (gerado) | Código do **primeiro acesso** (cria a conta de e-mail e senha). Se vazio, um código aleatório é criado e mostrado no terminal. Depois que a conta existe, não é mais usado |
 | `PUBLIC_URL` | (vazio) | Endereço público, ex.: `https://crm.promocoesbrasil.com.br` |
 | `TRUST_PROXY` | `loopback` | Proxies confiáveis para descobrir o IP do visitante |
 | `PORT` | `3000` | Porta do painel |
@@ -183,9 +199,11 @@ Funcionam quando **você** envia a mensagem (de qualquer conversa):
 
 - Tudo fica no seu computador: `data/` (contatos e mensagens) e `sessions/` (login do WhatsApp). As duas pastas estão no `.gitignore`.
 - **Nunca compartilhe a pasta `sessions/`**: com ela, qualquer pessoa usa seu WhatsApp.
-- Painel protegido por senha, sessão em cookie `HttpOnly` e bloqueio após 5 tentativas erradas (por IP) ou 30 no total em 15 minutos.
+- Painel protegido por e-mail e senha (hash Argon2id), sessão em cookie `HttpOnly` e bloqueio após 5 tentativas erradas (por IP) ou 30 no total em 15 minutos.
+  A resposta é a mesma para e-mail inexistente ou senha errada (não dá para descobrir quais e-mails têm conta).
 - Dá para ficar logado em **vários aparelhos ao mesmo tempo** (PC, celular...). Em **Configurações → Aparelhos conectados**
-  você vê cada um (navegador, IP, último acesso) e pode encerrar um ou todos os outros.
+  você vê cada um (navegador, IP, último acesso) e pode encerrar um ou todos os outros. Trocar a senha em
+  **Configurações → Minha conta** também desconecta os outros aparelhos.
 - Para trocar de número ou "deslogar", use **WhatsApp → Desconectar aparelho** no painel.
 
 ## 🛠️ Desenvolvimento

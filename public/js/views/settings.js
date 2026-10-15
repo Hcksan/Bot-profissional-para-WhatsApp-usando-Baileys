@@ -24,7 +24,7 @@ function render() {
             await hooks.reload();
             toast("Configurações salvas");
             render();
-            root?.append(await sessionsCard());
+            root?.append(accountCard(), await sessionsCard());
           });
         },
       },
@@ -52,10 +52,54 @@ function render() {
 }
 
 /**
+ * Minha conta: dados de acesso e troca de senha
+ */
+function accountCard() {
+  const current = h("input", { type: "password", autocomplete: "current-password", required: true, maxlength: "128" });
+  const next = h("input", { type: "password", autocomplete: "new-password", required: true, minlength: "8", maxlength: "128" });
+  const confirm = h("input", { type: "password", autocomplete: "new-password", required: true, minlength: "8", maxlength: "128" });
+  const error = h("p", { class: "form-error", role: "alert" });
+  const save = h("button", { class: "btn btn-primary", type: "submit" }, "Trocar senha");
+  const { name, email } = state.user ?? {};
+
+  return h(
+    "form",
+    {
+      class: "card stack",
+      style: { maxWidth: "720px" },
+      onSubmit: (event) => {
+        event.preventDefault();
+        error.textContent = "";
+        if (next.value !== confirm.value) {
+          error.textContent = "As senhas novas não conferem";
+          return;
+        }
+        withBusy(save, async () => {
+          try {
+            const { closed } = await post("/account/password", { currentPassword: current.value, newPassword: next.value });
+            event.target.reset();
+            toast(closed ? `Senha alterada. ${closed} outro(s) aparelho(s) foram desconectados.` : "Senha alterada");
+            if (closed) document.querySelector("#sessions-card")?.replaceWith(await sessionsCard());
+          } catch (err) {
+            error.textContent = err.message;
+          }
+        });
+      },
+    },
+    h("h2", {}, "Minha conta"),
+    h("p", { class: "muted small", style: { margin: 0 } }, `${name ?? ""} · ${email ?? ""}`),
+    h("div", { class: "grid-3" }, field("Senha atual", current), field("Nova senha", next), field("Repita a nova senha", confirm)),
+    h("p", { class: "muted small", style: { margin: 0 } }, "Mínimo de 8 caracteres, com letras e números. Ao trocar, os outros aparelhos saem do painel."),
+    error,
+    h("div", { class: "row" }, save)
+  );
+}
+
+/**
  * Aparelhos com login no painel (cada navegador tem a sua sessão)
  */
 async function sessionsCard() {
-  const card = h("section", { class: "card stack", style: { maxWidth: "720px" } });
+  const card = h("section", { class: "card stack", id: "sessions-card", style: { maxWidth: "720px" } });
   const sessions = await get("/sessions");
   const others = sessions.filter((session) => !session.current).length;
 
@@ -94,7 +138,7 @@ async function sessionsCard() {
 
   card.append(
     h("div", { class: "row" }, h("h2", { class: "grow" }, "Aparelhos conectados ao painel"), revokeOthers),
-    h("p", { class: "muted small", style: { margin: 0 } }, "Você pode ficar logado em vários aparelhos ao mesmo tempo (PC, celular...). Se não reconhecer algum, encerre e troque a senha."),
+    h("p", { class: "muted small", style: { margin: 0 } }, "Você pode ficar logado em vários aparelhos ao mesmo tempo (PC, celular...). Se não reconhecer algum, encerre e troque a senha em “Minha conta”."),
     h(
       "div",
       { class: "table-wrap" },
@@ -108,7 +152,7 @@ export default {
   async mount(container) {
     root = container;
     render();
-    root.append(await sessionsCard());
+    root.append(accountCard(), await sessionsCard());
   },
   destroy() {
     root = null;

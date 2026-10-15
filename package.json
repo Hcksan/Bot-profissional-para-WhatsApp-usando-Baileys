@@ -22,6 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/boom": "10.0.1",
+    "argon2": "0.44.0",
     "baileys": "7.0.0-rc14",
     "express": "5.2.1",
     "pino": "9.5.0",

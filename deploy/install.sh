@@ -15,7 +15,7 @@
 #   SSL_CERT / SSL_KEY                       certificado de origem da Cloudflare
 #                                            (/etc/ssl/promocoesbrasil/origin.crt e .key)
 #
-# Pode rodar de novo quando quiser: não apaga dados, sessão do WhatsApp nem a senha.
+# Pode rodar de novo quando quiser: não apaga dados, contas, sessão do WhatsApp nem o .env.
 set -euo pipefail
 
 DOMAIN="${DOMAIN:-crm.promocoesbrasil.com.br}"
@@ -103,13 +103,14 @@ done
 # ───────────────────────── Configuração (.env) ─────────────────────────
 NEW_PASSWORD=""
 if [ ! -f "$APP_DIR/.env" ]; then
-  say "Criando $APP_DIR/.env com uma senha forte gerada agora..."
+  say "Criando $APP_DIR/.env com um código de primeiro acesso forte gerado agora..."
   NEW_PASSWORD="$(openssl rand -base64 24 | tr -d '/+=' | cut -c1-24)"
   cat > "$APP_DIR/.env" <<EOF
 # Gerado por deploy/install.sh em $(date -Iseconds)
 NODE_ENV="production"
 
-# Senha do painel (mínimo de 12 caracteres em produção). Depois de trocar: systemctl restart crm
+# Código do primeiro acesso (mínimo de 12 caracteres em produção): cria a conta de e-mail e senha pelo painel.
+# Depois que a conta existe, ele não serve mais para entrar.
 CRM_PASSWORD="$NEW_PASSWORD"
 
 # Só o Nginx desta máquina acessa o CRM; o público entra por https://$DOMAIN
@@ -123,7 +124,7 @@ DATA_DIR="./data"
 COMMANDS_ENABLED="true"
 EOF
 else
-  say "Mantendo o .env existente (senha e configurações atuais)."
+  say "Mantendo o .env existente (código e configurações atuais)."
 fi
 chown "$APP_USER:$APP_USER" "$APP_DIR/.env"
 chmod 600 "$APP_DIR/.env"
@@ -233,13 +234,13 @@ cat <<EOF
  Falta só o DNS na Cloudflare (uma vez):
    Tipo A   Nome: ${DOMAIN%%.*}   Conteúdo: $PUBLIC_IP   Proxy: LIGADO (nuvem laranja)
 
- Depois abra: https://$DOMAIN  → aba WhatsApp → leia o QR Code
+ Depois abra: https://$DOMAIN  → "Primeiro acesso" (crie sua conta) → aba WhatsApp → leia o QR Code
 EOF
 if [ -n "$NEW_PASSWORD" ]; then
 cat <<EOF
 
- 🔑 Senha do painel: $NEW_PASSWORD
-    (guarde num gerenciador de senhas; ela também está em $APP_DIR/.env)
+ 🔑 Código do primeiro acesso: $NEW_PASSWORD
+    (também está em $APP_DIR/.env; serve só para criar a sua conta de e-mail e senha)
 EOF
 fi
 cat <<EOF

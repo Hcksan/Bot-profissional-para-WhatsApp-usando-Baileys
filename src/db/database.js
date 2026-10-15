@@ -109,6 +109,21 @@ const migrations = [
   ALTER TABLE web_sessions ADD COLUMN user_agent TEXT;
   ALTER TABLE web_sessions ADD COLUMN ip TEXT;
   `,
+  // Contas com e-mail e senha (Argon2id). As sessões abertas com a senha única antiga deixam de valer.
+  `
+  CREATE TABLE users (
+    id                  INTEGER PRIMARY KEY,
+    name                TEXT    NOT NULL,
+    email               TEXT    NOT NULL UNIQUE,
+    password_hash       TEXT    NOT NULL,
+    created_at          INTEGER NOT NULL,
+    password_changed_at INTEGER,
+    last_login_at       INTEGER
+  );
+
+  DELETE FROM web_sessions;
+  ALTER TABLE web_sessions ADD COLUMN user_id INTEGER REFERENCES users(id) ON DELETE CASCADE;
+  `,
 ];
 
 const defaultStages = [

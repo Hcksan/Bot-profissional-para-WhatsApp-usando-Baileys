@@ -25,7 +25,8 @@ export const appConfig = {
   host: process.env.HOST || "0.0.0.0",
   port: toInt(process.env.PORT, 3000),
 
-  // Senha de acesso ao painel. Se não for definida, uma senha aleatória é gerada e mostrada no terminal
+  // Código do primeiro acesso (cria a conta de e-mail e senha pelo painel). Se não for definido, um código aleatório
+  // é gerado e mostrado no terminal. Depois que a conta existe, ele não serve mais para entrar
   password: process.env.CRM_PASSWORD || "",
 
   // Use "true" quando o painel estiver atrás de HTTPS (ex.: Cloudflare Tunnel, Nginx com certificado)

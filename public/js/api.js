@@ -4,6 +4,9 @@
 
 let onUnauthorized = () => {};
 
+// Nestas rotas o 401 é "senha/código incorreto", não "sessão expirada"
+const AUTH_PATHS = new Set(["/login", "/setup"]);
+
 export function setUnauthorizedHandler(handler) {
   onUnauthorized = handler;
 }
@@ -19,11 +22,11 @@ export async function api(path, { method = "GET", body } = {}) {
   if (response.status === 204) return null;
 
   const data = await response.json().catch(() => ({}));
-  if (response.status === 401 && path !== "/login") {
+  if (response.status === 401 && !AUTH_PATHS.has(path)) {
     onUnauthorized();
   }
   if (!response.ok) {
-    throw new Error(data.error || `Erro ${response.status}`);
+    throw Object.assign(new Error(data.error || `Erro ${response.status}`), { status: response.status });
   }
   return data;
 }

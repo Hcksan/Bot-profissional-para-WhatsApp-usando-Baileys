@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Atualiza o CRM para a versão mais nova do GitHub (mantém dados, senha e sessão do WhatsApp).
+# Atualiza o CRM para a versão mais nova do GitHub (mantém dados, contas e sessão do WhatsApp).
 # Uso, na VM:  sudo bash /opt/crm/deploy/update.sh
 set -euo pipefail
 
