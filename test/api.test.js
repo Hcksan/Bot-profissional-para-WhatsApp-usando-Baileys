@@ -13,6 +13,8 @@ let cookie = "";
 let ctx;
 
 async function call(path, { method = "GET", body, auth = true } = {}) {
+  // O painel sempre envia JSON nas ações (exigido pela proteção contra CSRF)
+  if (body === undefined && ["POST", "PATCH", "PUT"].includes(method)) body = {};
   const response = await fetch(`${base}${path}`, {
     method,
     headers: {
@@ -117,6 +119,15 @@ test("importa planilha .xlsx com mapeamento automático e exporta", async () => 
 
   const bad = await call("/api/import/preview", { method: "POST", body: { data: "" } });
   assert.equal(bad.status, 400);
+
+  // CSV salvo pelo Excel do Windows (ANSI / Windows-1252, separado por ;) mantém os acentos
+  const ansi = Buffer.from("Nome;Telefone\nJosé Conceição;(11) 97777-6666\n", "latin1").toString("base64");
+  const ansiPreview = await call("/api/import/preview", { method: "POST", body: { data: ansi } });
+  assert.equal(ansiPreview.data.sample[0].Nome, "José Conceição");
+
+  const utf8 = Buffer.from("﻿Nome,Telefone\nAndré Gonçalves,11966665555\n", "utf8").toString("base64");
+  const utf8Preview = await call("/api/import/preview", { method: "POST", body: { data: utf8 } });
+  assert.equal(utf8Preview.data.sample[0].Nome, "André Gonçalves");
 });
 
 test("campanha por tag via API", async () => {

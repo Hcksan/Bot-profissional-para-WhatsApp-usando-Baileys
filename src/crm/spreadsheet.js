@@ -20,6 +20,27 @@ const simplify = (value) =>
     .trim();
 
 /**
+ * .xlsx/.ods (zip) e .xls (OLE) são binários; o resto é tratado como texto (CSV)
+ */
+function isBinarySpreadsheet(buffer) {
+  const zip = buffer[0] === 0x50 && buffer[1] === 0x4b;
+  const ole = buffer[0] === 0xd0 && buffer[1] === 0xcf && buffer[2] === 0x11 && buffer[3] === 0xe0;
+  return zip || ole;
+}
+
+/**
+ * CSV salvo pelo Excel no Windows costuma vir em Windows-1252 (ANSI), não em UTF-8.
+ * Tenta UTF-8 primeiro; se não for válido, usa Windows-1252 para manter os acentos.
+ */
+function decodeText(buffer) {
+  try {
+    return new TextDecoder("utf-8", { fatal: true }).decode(buffer).replace(/^﻿/, "");
+  } catch {
+    return new TextDecoder("windows-1252").decode(buffer);
+  }
+}
+
+/**
  * Lê uma planilha (.xlsx, .xls, .csv, .ods) enviada em base64
  * @returns {{ headers: string[], rows: object[] }}
  */
@@ -28,7 +49,10 @@ export function parseSpreadsheet(base64) {
 
   let workbook;
   try {
-    workbook = XLSX.read(Buffer.from(base64, "base64"), { type: "buffer", raw: false, codepage: 65001 });
+    const buffer = Buffer.from(base64, "base64");
+    workbook = isBinarySpreadsheet(buffer)
+      ? XLSX.read(buffer, { type: "buffer", raw: false })
+      : XLSX.read(decodeText(buffer), { type: "string", raw: false });
   } catch {
     throw badRequest("Não foi possível ler o arquivo. Use .xlsx, .xls ou .csv");
   }

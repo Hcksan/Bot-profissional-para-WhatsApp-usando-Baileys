@@ -674,18 +674,55 @@ export class CrmStore {
 
   // ───────────────────────── Sessões do painel ─────────────────────────
 
-  createWebSession(tokenHash, expiresAt) {
-    this.db.prepare("DELETE FROM web_sessions WHERE expires_at < ?").run(this.now());
-    this.db.prepare("INSERT INTO web_sessions (token_hash, expires_at) VALUES (?, ?)").run(tokenHash, expiresAt);
+  createWebSession(tokenHash, expiresAt, { userAgent = "", ip = "" } = {}) {
+    const now = this.now();
+    this.db.prepare("DELETE FROM web_sessions WHERE expires_at < ?").run(now);
+    this.db
+      .prepare("INSERT INTO web_sessions (token_hash, expires_at, created_at, last_seen_at, user_agent, ip) VALUES (?, ?, ?, ?, ?, ?)")
+      .run(tokenHash, expiresAt, now, now, clean(userAgent, 300), clean(ip, 64));
   }
 
-  hasWebSession(tokenHash) {
-    const row = this.db.prepare("SELECT expires_at FROM web_sessions WHERE token_hash = ?").get(tokenHash);
-    return Boolean(row && row.expires_at > this.now());
+  /**
+   * Sessão válida (não expirada) ou null. Atualiza o "último acesso" no máximo uma vez por minuto.
+   */
+  getWebSession(tokenHash, { ip } = {}) {
+    const row = this.db.prepare("SELECT rowid AS id, * FROM web_sessions WHERE token_hash = ?").get(tokenHash);
+    if (!row || row.expires_at <= this.now()) return null;
+    if (!row.last_seen_at || this.now() - row.last_seen_at > 60000) {
+      this.db
+        .prepare("UPDATE web_sessions SET last_seen_at = ?, ip = COALESCE(?, ip) WHERE token_hash = ?")
+        .run(this.now(), ip ? clean(ip, 64) : null, tokenHash);
+    }
+    return row;
+  }
+
+  listWebSessions() {
+    return this.db
+      .prepare(
+        `SELECT rowid AS id, token_hash, created_at, last_seen_at, user_agent, ip, expires_at
+         FROM web_sessions WHERE expires_at > ? ORDER BY last_seen_at DESC`
+      )
+      .all(this.now());
   }
 
   deleteWebSession(tokenHash) {
     this.db.prepare("DELETE FROM web_sessions WHERE token_hash = ?").run(tokenHash);
+  }
+
+  deleteWebSessionById(id) {
+    const row = this.db.prepare("SELECT token_hash FROM web_sessions WHERE rowid = ?").get(Number(id));
+    if (!row) throw notFound("Sessão não encontrada");
+    this.deleteWebSession(row.token_hash);
+    return row.token_hash;
+  }
+
+  /**
+   * Encerra todas as sessões, menos a informada. Devolve os hashes encerrados.
+   */
+  deleteOtherWebSessions(keepTokenHash) {
+    const others = this.db.prepare("SELECT token_hash FROM web_sessions WHERE token_hash != ?").all(keepTokenHash ?? "");
+    this.db.prepare("DELETE FROM web_sessions WHERE token_hash != ?").run(keepTokenHash ?? "");
+    return others.map((row) => row.token_hash);
   }
 }
 

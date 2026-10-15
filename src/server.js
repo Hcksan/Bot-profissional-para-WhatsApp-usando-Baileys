@@ -37,8 +37,10 @@ class BotServer {
       const auth = createAuth({
         store: this.store,
         password: appConfig.password,
+        production: appConfig.production,
         cookieSecure: appConfig.cookieSecure,
         sessionDays: appConfig.sessionDays,
+        publicUrl: appConfig.publicUrl,
       });
       const app = createApp({
         store: this.store,
@@ -46,10 +48,18 @@ class BotServer {
         wa: this.whatsappService,
         runner: this.runner,
         auth,
+        config: appConfig,
+        // Sessão encerrada pelo painel: derruba também a conexão em tempo real daquele aparelho
+        onSessionsRevoked: (hashes) => {
+          const revoked = new Set(hashes);
+          for (const socket of this.io?.sockets.sockets.values() ?? []) {
+            if (revoked.has(socket.data.sessionHash)) socket.disconnect(true);
+          }
+        },
       });
 
       this.httpServer = http.createServer(app);
-      this.io = new SocketServer(this.httpServer, { serveClient: true });
+      this.io = new SocketServer(this.httpServer, { serveClient: true, maxHttpBufferSize: 1e5 });
       this.io.use(auth.socketAuth);
       this.io.on("connection", (socket) => {
         socket.emit("whatsapp", this.whatsappService.getState());

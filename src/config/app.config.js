@@ -8,7 +8,19 @@ const toInt = (value, fallback) => {
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 
+const production = process.env.NODE_ENV === "production";
+
 export const appConfig = {
+  // Em produção: senha obrigatória e forte, e o painel só aceita o próprio domínio
+  production,
+
+  // Endereço público do painel (ex.: https://crm.promocoesbrasil.com.br). Usado para validar a origem das requisições.
+  publicUrl: (process.env.PUBLIC_URL || "").replace(/\/+$/, ""),
+
+  // Quais proxies são confiáveis para descobrir o IP real do visitante (Express "trust proxy").
+  // "loopback" = só o Nginx rodando na mesma máquina.
+  trustProxy: process.env.TRUST_PROXY || "loopback",
+
   // Endereço do painel web. 0.0.0.0 permite acessar de outros aparelhos da rede (ex.: celular no mesmo Wi-Fi)
   host: process.env.HOST || "0.0.0.0",
   port: toInt(process.env.PORT, 3000),

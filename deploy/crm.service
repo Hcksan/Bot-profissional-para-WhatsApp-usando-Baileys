@@ -1,0 +1,46 @@
+# CRM Pessoal (WhatsApp) — serviço do systemd
+# Instalado por deploy/install.sh em /etc/systemd/system/crm.service
+# Os marcadores __APP_DIR__, __APP_USER__ e __NODE__ são trocados na instalação.
+
+[Unit]
+Description=CRM Pessoal para WhatsApp
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__APP_USER__
+Group=__APP_USER__
+WorkingDirectory=__APP_DIR__
+ExecStart=__NODE__ --env-file-if-exists=.env --disable-warning=ExperimentalWarning src/server.js
+Restart=always
+RestartSec=5
+# SIGINT = encerramento gracioso: fecha a conexão SEM desconectar o aparelho do WhatsApp
+KillSignal=SIGINT
+TimeoutStopSec=20
+
+# ── Isolamento: o processo só escreve nas próprias pastas de dados ──
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=__APP_DIR__/data __APP_DIR__/sessions __APP_DIR__/logs
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+RestrictNamespaces=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+AmbientCapabilities=
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
