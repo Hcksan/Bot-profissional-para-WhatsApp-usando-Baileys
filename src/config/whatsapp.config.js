@@ -1,3 +1,5 @@
+import { Browsers } from "baileys";
+
 /**
  * Configurações do WhatsApp Bot
  */
@@ -8,18 +10,14 @@ export const whatsappConfig = {
     sessionPath: "./sessions/auth",
   },
 
-  // Configurações do browser
-  browser: {
-    name: "Bot WhatsApp Business",
-    browserName: "Chrome",
-    version: "1.0.0",
-  },
+  // Como o aparelho aparece em "Aparelhos conectados" no celular
+  browser: Browsers.windows("Chrome"),
 
-  // Configurações de reconexão
+  // Configurações de reconexão (em ms)
   reconnect: {
-    maxRetries: 10,
     delayOnError: 3000,
     delayOnConflict: 10000,
+    maxDelay: 60000,
   },
 
   // Configurações de logs

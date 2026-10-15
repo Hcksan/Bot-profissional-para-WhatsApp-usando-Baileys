@@ -152,8 +152,8 @@ async function extrairMembros(sock, chatId, msg, args) {
   for (let i = 0; i < participants.length; i++) {
     const participant = participants[i];
     
-    // Verificar o tipo de ID
-    const fullId = participant.id;
+    // Verificar o tipo de ID (o Baileys 7 informa o número real em phoneNumber quando o ID é um LID)
+    const fullId = participant.phoneNumber || participant.id;
     const isPhoneNumber = fullId.includes("@s.whatsapp.net");
     const isLidAccount = fullId.includes("@lid");
     
@@ -168,7 +168,7 @@ async function extrairMembros(sock, chatId, msg, args) {
     // Identificar o tipo de conta
     let tipoConta = "WhatsApp";
     if (isLidAccount) {
-      tipoConta = "Facebook/Instagram";
+      tipoConta = "Número oculto (LID)";
       idsInternos++;
     } else if (isPhoneNumber) {
       numerosReais++;
@@ -384,7 +384,7 @@ async function mostrarAjuda(sock, chatId) {
 
 ⚠️ *Sobre os tipos de conta:*
 • *WhatsApp* - Número de telefone normal
-• *Facebook/Instagram* - Conta vinculada (ID começa com "ID:")
+• *Número oculto (LID)* - O WhatsApp escondeu o número desta pessoa no grupo (ID começa com "ID:")
 • Os IDs internos aparecem como "ID:xxxxx" para diferenciá-los
 
 📋 *Exemplos práticos:*
